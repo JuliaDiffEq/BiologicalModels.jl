@@ -131,7 +131,8 @@ let
 end
 
 # Perform jump simulations (singular and ensemble).
-let
+# Currently broken due to https://github.com/SciML/ModelingToolkit.jl/issues/3297
+@test_broken let
     # Creates normal and ensemble problems.
     base_dprob = DiscreteProblem(model, u0_alts[1], tspan, p_alts[1])
     base_jprob = JumpProblem(model, base_dprob, Direct(); rng)

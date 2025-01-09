@@ -117,7 +117,8 @@ end
 # Test remake function.
 let
     @test_broken false # Cannot check result for JumpProblem: https://github.com/SciML/ModelingToolkit.jl/issues/2838
-    for prob in deepcopy([oprob, sprob, dprob, nprob, ssprob, eoprob, esprob, edprob, enprob, essprob])
+    @test_broken false # Broken for SDEProblems: https://github.com/SciML/ModelingToolkit.jl/issues/3295, https://github.com/SciML/Catalyst.jl/pull/1159
+    for prob in deepcopy([oprob, dprob, nprob, ssprob, eoprob, edprob, enprob, essprob])
         # Remake for all u0s.
         rp = remake(prob; u0 = [X => 1, Y => 2])
         @test rp[[X, Y]] == [1, 2]
