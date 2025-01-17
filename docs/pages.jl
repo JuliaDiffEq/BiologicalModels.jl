@@ -22,8 +22,7 @@ pages = Any[
             "model_creation/examples/basic_CRN_library.md",
             "model_creation/examples/programmatic_generative_linear_pathway.md",
             "model_creation/examples/hodgkin_huxley_equation.md",
-            "model_creation/examples/smoluchowski_coagulation_equation.md"
-        ]
+            "model_creation/examples/smoluchowski_coagulation_equation.md"]
     ],
     "Model simulation and visualization" => Any[
         "model_simulation/simulation_introduction.md",
@@ -51,8 +50,8 @@ pages = Any[
         # "inverse_problems/structural_identifiability.md",
         "inverse_problems/global_sensitivity_analysis.md",
         "Examples" => Any[
-            "inverse_problems/examples/ode_fitting_oscillation.md"
-        ]
+            "inverse_problems/examples/ode_fitting_oscillation.md",
+            "inverse_problems/examples/SPR_fitting.md"]
     ],
     "Spatial modelling" => Any[
         "spatial_modelling/lattice_reaction_systems.md",
@@ -65,3 +64,4 @@ pages = Any[
     "API" => "api.md",
     "Developer Documentation" => "devdocs/dev_guide.md"
 ]
+
