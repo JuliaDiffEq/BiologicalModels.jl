@@ -24,7 +24,7 @@ function BK.BifurcationProblem(rs::ReactionSystem, u0_bif, ps, bif_par, args...;
     Catalyst.conservationlaw_errorcheck(rs, vcat(ps, u0))
     nsys = convert(NonlinearSystem, rs; defaults = Dict(u0),
         remove_conserved = true, remove_conserved_warn = false)
-    nsys = complete(nsys)
+    nsys = complete(nsys; split = false)
 
     # Makes BifurcationProblem (this call goes through the ModelingToolkit-based BifurcationKit extension).
     return BK.BifurcationProblem(nsys, u0_bif, ps, bif_par, args...; plot_var,
