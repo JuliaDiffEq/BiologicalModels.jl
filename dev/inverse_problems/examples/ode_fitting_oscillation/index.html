@@ -24,13 +24,13 @@ sample_vals .*= (1 .+ .1 * rand(Float64, size(sample_vals)) .- .05)</code></pre>
 default(; lw = 3, framestyle = :box, size = (800, 400))
 
 plot(sol_real; legend = nothing, color = [:darkblue :darkred])
-scatter!(sample_times, sample_vals&#39;; color = [:blue :red], legend = nothing)</code></pre><img src="b29b265c.svg" alt="Example block output"/><p>Next, we create a function to fit the parameters using the <code>ADAM</code> optimizer. For a given initial estimate of the parameter values, <code>pinit</code>, this function will fit parameter values, <code>p</code>, to our data samples. We use <code>tend</code> to indicate the time interval over which we fit the model.</p><pre><code class="language-julia hljs">function optimise_p(pinit, tend)
+scatter!(sample_times, sample_vals&#39;; color = [:blue :red], legend = nothing)</code></pre><img src="29fc0f19.svg" alt="Example block output"/><p>Next, we create a function to fit the parameters using the <code>ADAM</code> optimizer. For a given initial estimate of the parameter values, <code>pinit</code>, this function will fit parameter values, <code>p</code>, to our data samples. We use <code>tend</code> to indicate the time interval over which we fit the model.</p><pre><code class="language-julia hljs">function optimise_p(pinit, tend)
     function loss(p, _)
         newtimes = filter(&lt;=(tend), sample_times)
         newprob = remake(prob; tspan = (0.0, tend), p = p)
         sol = Array(solve(newprob, Rosenbrock23(); saveat = newtimes))
         loss = sum(abs2, sol .- sample_vals[:, 1:size(sol,2)])
-        return loss, sol
+        return loss
     end
 
     # optimize for the parameters that minimize the loss
@@ -41,21 +41,21 @@ scatter!(sample_times, sample_vals&#39;; color = [:blue :red], legend = nothing)
     # return the parameters we found
     return sol.u
 end</code></pre><p>Next, we will fit a parameter set to the data on the interval <code>(0, 10)</code>.</p><pre><code class="language-julia hljs">p_estimate = optimise_p([5.0, 5.0], 10.0)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Float64}:
- 0.9239747139797214
- 1.8212839304406294</code></pre><p>We can compare this to the real solution, as well as the sample data</p><pre><code class="language-julia hljs">newprob = remake(prob; tspan = (0., 10.), p = p_estimate)
+ 1.031520880389414
+ 2.0990748697035686</code></pre><p>We can compare this to the real solution, as well as the sample data</p><pre><code class="language-julia hljs">newprob = remake(prob; tspan = (0., 10.), p = p_estimate)
 sol_estimate = solve(newprob, Rosenbrock23())
 plot(sol_real; color = [:blue :red], label = [&quot;X real&quot; &quot;Y real&quot;], linealpha = 0.2)
 scatter!(sample_times, sample_vals&#39;; color = [:blue :red],
          label = [&quot;Samples of X&quot; &quot;Samples of Y&quot;], alpha = 0.4)
 plot!(sol_estimate; color = [:darkblue :darkred], linestyle = :dash,
-                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="28f28423.svg" alt="Example block output"/><p>Next, we use this parameter estimate as the input to the next iteration of our fitting process, this time on the interval <code>(0, 20)</code>.</p><pre><code class="language-julia hljs">p_estimate = optimise_p(p_estimate, 20.)
+                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="6bce3c6c.svg" alt="Example block output"/><p>Next, we use this parameter estimate as the input to the next iteration of our fitting process, this time on the interval <code>(0, 20)</code>.</p><pre><code class="language-julia hljs">p_estimate = optimise_p(p_estimate, 20.)
 newprob = remake(prob; tspan = (0., 20.), p = p_estimate)
 sol_estimate = solve(newprob, Rosenbrock23())
 plot(sol_real; color = [:blue :red], label = [&quot;X real&quot; &quot;Y real&quot;], linealpha = 0.2)
 scatter!(sample_times, sample_vals&#39;; color = [:blue :red],
          label = [&quot;Samples of X&quot; &quot;Samples of Y&quot;], alpha = 0.4)
 plot!(sol_estimate; color = [:darkblue :darkred], linestyle = :dash,
-                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="2f562498.svg" alt="Example block output"/><p>Finally, we use this estimate as the input to fit a parameter set on the full time interval of the sampled data.</p><pre><code class="language-julia hljs">p_estimate = optimise_p(p_estimate, 30.0)
+                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="07265591.svg" alt="Example block output"/><p>Finally, we use this estimate as the input to fit a parameter set on the full time interval of the sampled data.</p><pre><code class="language-julia hljs">p_estimate = optimise_p(p_estimate, 30.0)
 
 newprob = remake(prob; tspan = (0., 30.0), p = p_estimate)
 sol_estimate = solve(newprob, Rosenbrock23())
@@ -63,9 +63,9 @@ plot(sol_real; color = [:blue :red], label = [&quot;X real&quot; &quot;Y real&qu
 scatter!(sample_times, sample_vals&#39;; color = [:blue :red],
          label = [&quot;Samples of X&quot; &quot;Samples of Y&quot;], alpha = 0.4)
 plot!(sol_estimate; color = [:darkblue :darkred], linestyle = :dash,
-                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="13363e89.svg" alt="Example block output"/><p>The final parameter estimate is then</p><pre><code class="language-julia hljs">p_estimate</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Float64}:
- 1.2316247422111142
- 1.8330664369037895</code></pre><p>which is close to the actual parameter set of <code>[1.0, 2.0]</code>.</p><h2 id="Why-we-fit-the-parameters-in-iterations"><a class="docs-heading-anchor" href="#Why-we-fit-the-parameters-in-iterations">Why we fit the parameters in iterations</a><a id="Why-we-fit-the-parameters-in-iterations-1"></a><a class="docs-heading-anchor-permalink" href="#Why-we-fit-the-parameters-in-iterations" title="Permalink"></a></h2><p>As previously mentioned, the reason we chose to fit the model on a smaller interval to begin with, and then extend the interval, is to avoid getting stuck in a local minimum. Here specifically, we chose our initial interval to be smaller than a full cycle of the oscillation. If we had chosen to fit a parameter set on the full interval immediately we would have obtained poor fit and an inaccurate estimate for the parameters.</p><pre><code class="language-julia hljs">p_estimate = optimise_p([5.0,5.0], 30.0)
+                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="1421b867.svg" alt="Example block output"/><p>The final parameter estimate is then</p><pre><code class="language-julia hljs">p_estimate</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Float64}:
+ 1.000832132867962
+ 2.000634020142215</code></pre><p>which is close to the actual parameter set of <code>[1.0, 2.0]</code>.</p><h2 id="Why-we-fit-the-parameters-in-iterations"><a class="docs-heading-anchor" href="#Why-we-fit-the-parameters-in-iterations">Why we fit the parameters in iterations</a><a id="Why-we-fit-the-parameters-in-iterations-1"></a><a class="docs-heading-anchor-permalink" href="#Why-we-fit-the-parameters-in-iterations" title="Permalink"></a></h2><p>As previously mentioned, the reason we chose to fit the model on a smaller interval to begin with, and then extend the interval, is to avoid getting stuck in a local minimum. Here specifically, we chose our initial interval to be smaller than a full cycle of the oscillation. If we had chosen to fit a parameter set on the full interval immediately we would have obtained poor fit and an inaccurate estimate for the parameters.</p><pre><code class="language-julia hljs">p_estimate = optimise_p([5.0,5.0], 30.0)
 
 newprob = remake(prob; tspan = (0.0,30.0), p = p_estimate)
 sol_estimate = solve(newprob, Rosenbrock23())
@@ -73,4 +73,4 @@ plot(sol_real; color = [:blue :red], label = [&quot;X real&quot; &quot;Y real&qu
 scatter!(sample_times,sample_vals&#39;; color = [:blue :red],
          label = [&quot;Samples of X&quot; &quot;Samples of Y&quot;], alpha = 0.4)
 plot!(sol_estimate; color = [:darkblue :darkred], linestyle = :dash,
-                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="b4b477f0.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../global_sensitivity_analysis/">« Global Sensitivity Analysis</a><a class="docs-footer-nextpage" href="../../../spatial_modelling/lattice_reaction_systems/">Introduction to Spatial Modelling with Catalyst »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Wednesday 15 January 2025 18:44">Wednesday 15 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+                    label = [&quot;X estimated&quot; &quot;Y estimated&quot;], xlimit = tspan)</code></pre><img src="35ba8680.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../global_sensitivity_analysis/">« Global Sensitivity Analysis</a><a class="docs-footer-nextpage" href="../../../spatial_modelling/lattice_reaction_systems/">Introduction to Spatial Modelling with Catalyst »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Friday 17 January 2025 15:05">Friday 17 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
