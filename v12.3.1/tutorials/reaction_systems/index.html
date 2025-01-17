@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Programmatic Construction of Symbolic Reaction Systems · Catalyst.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/tutorials/reaction_systems/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Catalyst.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../using_catalyst/">Using Catalyst</a></li><li><a class="tocitem" href="../dsl/">The Reaction DSL</a></li><li class="is-active"><a class="tocitem" href>Programmatic Construction of Symbolic Reaction Systems</a><ul class="internal"><li><a class="tocitem" href="#Directly-Building-the-Repressilator-with-ReactionSystems"><span>Directly Building the Repressilator with <code>ReactionSystem</code>s</span></a></li><li><a class="tocitem" href="#More-General-Reactions"><span>More General <code>Reaction</code>s</span></a></li><li><a class="tocitem" href="#@reaction-macro-for-constructing-Reactions"><span><code>@reaction</code> macro for constructing <code>Reaction</code>s</span></a></li><li><a class="tocitem" href="#Basic-Querying-of-ReactionSystems"><span>Basic Querying of <code>ReactionSystems</code></span></a></li></ul></li><li><a class="tocitem" href="../basic_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="../compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../symbolic_stoich/">Parametric Stoichiometry</a></li><li><a class="tocitem" href="../reaction_network_representation/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../homotopy_continuation_tutorial/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="../bifurcation_diagram/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../parameter_estimation/">Parameter Estimation</a></li><li><a class="tocitem" href="../generating_reactions_programmatically/">Smoluchowski Coagulation Equation</a></li></ul></li><li><a class="tocitem" href="../../faqs/">FAQs</a></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../../api/catalyst_api/">Catalyst.jl API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Programmatic Construction of Symbolic Reaction Systems</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Programmatic Construction of Symbolic Reaction Systems</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/tutorials/reaction_systems.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Programmatic-Construction-of-Symbolic-Reaction-Systems"><a class="docs-heading-anchor" href="#Programmatic-Construction-of-Symbolic-Reaction-Systems">Programmatic Construction of Symbolic Reaction Systems</a><a id="Programmatic-Construction-of-Symbolic-Reaction-Systems-1"></a><a class="docs-heading-anchor-permalink" href="#Programmatic-Construction-of-Symbolic-Reaction-Systems" title="Permalink"></a></h1><p>While the DSL provides a simple interface for creating <code>ReactionSystem</code>s, it can often be convenient to build or augment a <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> programmatically. In this tutorial we show how to build the repressilator model of the <a href="../using_catalyst/#Using-Catalyst">Using Catalyst</a> tutorial directly using symbolic variables, and then summarize the basic API functionality for accessing information stored within <code>ReactionSystem</code>s.</p><h2 id="Directly-Building-the-Repressilator-with-ReactionSystems"><a class="docs-heading-anchor" href="#Directly-Building-the-Repressilator-with-ReactionSystems">Directly Building the Repressilator with <code>ReactionSystem</code>s</a><a id="Directly-Building-the-Repressilator-with-ReactionSystems-1"></a><a class="docs-heading-anchor-permalink" href="#Directly-Building-the-Repressilator-with-ReactionSystems" title="Permalink"></a></h2><p>We first load Catalyst</p><pre><code class="language-julia hljs">using Catalyst</code></pre><p>and then define symbolic variables for each parameter and species in the system (the latter corresponding to a <code>variable</code> or <code>state</code> in ModelingToolkit terminology)</p><pre><code class="language-julia hljs">@parameters α K n δ γ β μ
+@variables t m₁(t) m₂(t) m₃(t) P₁(t) P₂(t) P₃(t)</code></pre><p><em>Note, each species is declared as a variable that is a function of time!</em></p><p>Next we specify the chemical reactions that comprise the system using Catalyst <a href="../../api/catalyst_api/#Catalyst.Reaction"><code>Reaction</code></a>s</p><pre><code class="language-julia hljs">rxs = [Reaction(hillr(P₃,α,K,n), nothing, [m₁]),
+       Reaction(hillr(P₁,α,K,n), nothing, [m₂]),
+       Reaction(hillr(P₂,α,K,n), nothing, [m₃]),
+       Reaction(δ, [m₁], nothing),
+       Reaction(γ, nothing, [m₁]),
+       Reaction(δ, [m₂], nothing),
+       Reaction(γ, nothing, [m₂]),
+       Reaction(δ, [m₃], nothing),
+       Reaction(γ, nothing, [m₃]),
+       Reaction(β, [m₁], [m₁,P₁]),
+       Reaction(β, [m₂], [m₂,P₂]),
+       Reaction(β, [m₃], [m₃,P₃]),
+       Reaction(μ, [P₁], nothing),
+       Reaction(μ, [P₂], nothing),
+       Reaction(μ, [P₃], nothing)]</code></pre><p>Here we use <code>nothing</code> where the DSL used <span>$\varnothing$</span>. Finally, we are ready to construct our <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> as</p><pre><code class="language-julia hljs">@named repressilator = ReactionSystem(rxs, t)</code></pre><p>Notice, the model is named <code>repressilator</code>. A name must always be specified when directly constructing a <code>ReactionSystem</code> (the DSL will auto-generate one if left out). Using <code>@named</code> when constructing a <code>ReactionSystem</code> causes the name of the system to be the same as the name of the variable storing the system. Alternatively, one can use the <code>name=:repressilator</code> keyword argument to the <code>ReactionSystem</code> constructor.</p><p>We can check that this is the same model as the one we defined via the DSL as follows (this requires that we use the same names for rates, species and the system)</p><pre><code class="language-julia hljs">repressilator2 = @reaction_network repressilator begin
+    hillr(P₃,α,K,n), ∅ --&gt; m₁
+    hillr(P₁,α,K,n), ∅ --&gt; m₂
+    hillr(P₂,α,K,n), ∅ --&gt; m₃
+    (δ,γ), m₁ &lt;--&gt; ∅
+    (δ,γ), m₂ &lt;--&gt; ∅
+    (δ,γ), m₃ &lt;--&gt; ∅
+    β, m₁ --&gt; m₁ + P₁
+    β, m₂ --&gt; m₂ + P₂
+    β, m₃ --&gt; m₃ + P₃
+    μ, P₁ --&gt; ∅
+    μ, P₂ --&gt; ∅
+    μ, P₃ --&gt; ∅
+end α K n δ γ β μ
+repressilator == repressilator2</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">true</code></pre><p>For more options in building <code>ReactionSystem</code>s, see the <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> API docs.</p><h2 id="More-General-Reactions"><a class="docs-heading-anchor" href="#More-General-Reactions">More General <code>Reaction</code>s</a><a id="More-General-Reactions-1"></a><a class="docs-heading-anchor-permalink" href="#More-General-Reactions" title="Permalink"></a></h2><p>In the example above all the specified <code>Reaction</code>s were first or zero order. The three-argument form of <code>Reaction</code> implicitly assumes all species have a stoichiometric coefficient of one, i.e. for substrates <code>[S₁,...,Sₘ]</code> and products <code>[P₁,...,Pₙ]</code> it has the possible forms</p><pre><code class="language-julia hljs"># rate, S₁ + ... + Sₘ --&gt; P₁ + ... + Pₙ
+Reaction(rate, [S₁,...,Sₘ], [P₁,...,Pₙ])
+
+# rate, S₁ + ... + Sₘ --&gt; ∅
+Reaction(rate, [S₁,...,Sₘ], nothing)
+
+# rate, ∅ --&gt; P₁ + ... + Pₙ
+Reaction(rate, nothing, [P₁,...,Pₙ])</code></pre><p>To allow for other stoichiometric coefficients we also provide a five argument form</p><pre><code class="language-julia hljs"># rate, α₁*S₁ + ... + αₘ*Sₘ --&gt; β₁*P₁ + ... + βₙ*Pₙ
+Reaction(rate, [S₁,...,Sₘ], [P₁,...,Pₙ], [α₁,...,αₘ], [β₁,...,βₙ])
+
+# rate, α₁*S₁ + ... + αₘ*Sₘ --&gt; ∅
+Reaction(rate, [S₁,...,Sₘ], nothing, [α₁,...,αₘ], nothing)
+
+# rate, ∅ --&gt; β₁*P₁ + ... + βₙ*Pₙ
+Reaction(rate, nothing, [P₁,...,Pₙ], nothing, [β₁,...,βₙ])</code></pre><p>Finally, we note that the rate constant, <code>rate</code> above, does not need to be a constant or fixed function, but can be a general symbolic expression:</p><pre><code class="language-julia hljs">@parameters α, β
+@variables t, A(t), B(t)
+rx = Reaction(α+β*t*A, [A], [B])</code></pre><p><a href="../../faqs/#user_functions">See the FAQs</a> for info on using general user-specified functions for the rate constant.</p><h2 id="@reaction-macro-for-constructing-Reactions"><a class="docs-heading-anchor" href="#@reaction-macro-for-constructing-Reactions"><code>@reaction</code> macro for constructing <code>Reaction</code>s</a><a id="@reaction-macro-for-constructing-Reactions-1"></a><a class="docs-heading-anchor-permalink" href="#@reaction-macro-for-constructing-Reactions" title="Permalink"></a></h2><p>In some cases one wants to build reactions incrementally, as in the repressilator example, but it would be nice to still have a short hand as in the <a href="../../api/catalyst_api/#Catalyst.@reaction_network"><code>@reaction_network</code></a> DSL. In this case one can construct individual reactions using the <a href="../../api/catalyst_api/#Catalyst.@reaction"><code>@reaction</code></a> macro.</p><p>For example, the repressilator reactions could also have been constructed like</p><pre><code class="language-julia hljs">@variables t P₁(t) P₂(t) P₃(t)
+rxs = [(@reaction hillr($P₃,α,K,n), ∅ --&gt; m₁),
+       (@reaction hillr($P₁,α,K,n), ∅ --&gt; m₂),
+       (@reaction hillr($P₂,α,K,n), ∅ --&gt; m₃),
+       (@reaction δ, m₁ --&gt; ∅),
+       (@reaction γ, ∅ --&gt; m₁),
+       (@reaction δ, m₂ --&gt; ∅),
+       (@reaction γ, ∅ --&gt; m₂),
+       (@reaction δ, m₃ --&gt; ∅),
+       (@reaction γ, ∅ --&gt; m₃),
+       (@reaction β, m₁ --&gt; m₁ + P₁),
+       (@reaction β, m₂ --&gt; m₂ + P₂),
+       (@reaction β, m₃ --&gt; m₃ + P₃),
+       (@reaction μ, P₁ --&gt; ∅),
+       (@reaction μ, P₂ --&gt; ∅),
+       (@reaction μ, P₃ --&gt; ∅)]
+@named repressilator = ReactionSystem(rxs, t)</code></pre><p>Note, there are a few differences when using the <code>@reaction</code> macro to specify one reaction versus using the full <code>@reaction_network</code> macro to create a <code>ReactionSystem</code>. First, only one reaction (i.e. a single forward arrow type) can be used, i.e. reversible arrows like <code>&lt;--&gt;</code> will not work (since they define more than one reaction). Second, the <code>@reaction</code> macro must try to infer which symbols are species versus parameters, and uses the heuristic that anything appearing in the rate expression is a parameter. Coefficients in the reaction part are also inferred as parameters, while rightmost symbols (i.e. substrates and products) are inferred as species. As such, the following are equivalent</p><pre><code class="language-julia hljs">rx = @reaction hillr(P,α,K,n), A --&gt; B</code></pre><p>is equivalent to</p><pre><code class="language-julia hljs">@parameters P α K n
+@variables t A(t) B(t)
+rx = Reaction(hillr(P,α,K,n), [A], [B])</code></pre><p>Here <code>(P,α,K,n)</code> are parameters and <code>(A,B)</code> are species.</p><p>This behavior is the reason that in the repressilator example above we pre-declared <code>(P₁(t),P₂(t),P₃(t))</code> as variables, and then used them via interpolating their values into the rate law expressions using <code>$</code> in the macro. This ensured they were properly treated as species and not parameters. See the <a href="../../api/catalyst_api/#Catalyst.@reaction"><code>@reaction</code></a> macro docstring for more information.</p><h2 id="Basic-Querying-of-ReactionSystems"><a class="docs-heading-anchor" href="#Basic-Querying-of-ReactionSystems">Basic Querying of <code>ReactionSystems</code></a><a id="Basic-Querying-of-ReactionSystems-1"></a><a class="docs-heading-anchor-permalink" href="#Basic-Querying-of-ReactionSystems" title="Permalink"></a></h2><p>The <a href="../../api/catalyst_api/#Catalyst.jl-API">Catalyst.jl API</a> provides a large variety of functionality for querying properties of a reaction network. Here we go over a few of the most useful basic functions. Given the <code>repressillator</code> defined above we have that</p><pre><code class="language-julia hljs">species(repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6-element Vector{Term{Real, Base.ImmutableDict{DataType, Any}}}:
+ m₁(t)
+ m₂(t)
+ m₃(t)
+ P₁(t)
+ P₂(t)
+ P₃(t)</code></pre><pre><code class="language-julia hljs">parameters(repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">7-element Vector{Sym{Real, Base.ImmutableDict{DataType, Any}}}:
+ α
+ K
+ n
+ δ
+ γ
+ β
+ μ</code></pre><pre><code class="language-julia hljs">reactions(repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">15-element Vector{Reaction}:
+ Catalyst.hillr(P₃(t), α, K, n), ∅ --&gt; m₁
+ Catalyst.hillr(P₁(t), α, K, n), ∅ --&gt; m₂
+ Catalyst.hillr(P₂(t), α, K, n), ∅ --&gt; m₃
+ δ, m₁ --&gt; ∅
+ γ, ∅ --&gt; m₁
+ δ, m₂ --&gt; ∅
+ γ, ∅ --&gt; m₂
+ δ, m₃ --&gt; ∅
+ γ, ∅ --&gt; m₃
+ β, m₁ --&gt; m₁ + P₁
+ β, m₂ --&gt; m₂ + P₂
+ β, m₃ --&gt; m₃ + P₃
+ μ, P₁ --&gt; ∅
+ μ, P₂ --&gt; ∅
+ μ, P₃ --&gt; ∅</code></pre><p>We can test if a <code>Reaction</code> is mass action, i.e. the rate does not depend on <code>t</code> or other species, as</p><pre><code class="language-julia hljs"># Catalyst.hillr(P₃(t), α, K, n), ∅ --&gt; m₁
+rx1 = reactions(repressilator)[1]
+ismassaction(rx1,repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">false</code></pre><p>while</p><pre><code class="language-julia hljs"># δ, m₁ --&gt; ∅
+rx2 = reactions(repressilator)[4]
+ismassaction(rx2,repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">true</code></pre><p>Similarly, we can determine which species a reaction&#39;s rate law will depend on like</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+       k*W, 2X + 3Y --&gt; 5Z + W
+     end k
+dependents(reactions(rn)[1], rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{Any}:
+ W(t)
+ X(t)
+ Y(t)</code></pre><p>Basic stoichiometry matrices can be obtained from a <code>ReactionSystem</code> as</p><pre><code class="language-julia hljs">substoichmat(repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6×15 Matrix{Int64}:
+ 0  0  0  1  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  1  0  0  0  0  1  0  0  0  0
+ 0  0  0  0  0  0  0  1  0  0  0  1  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  1  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  1  0
+ 0  0  0  0  0  0  0  0  0  0  0  0  0  0  1</code></pre><pre><code class="language-julia hljs">prodstoichmat(repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6×15 Matrix{Int64}:
+ 1  0  0  0  1  0  0  0  0  1  0  0  0  0  0
+ 0  1  0  0  0  0  1  0  0  0  1  0  0  0  0
+ 0  0  1  0  0  0  0  0  1  0  0  1  0  0  0
+ 0  0  0  0  0  0  0  0  0  1  0  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  1  0  0  0  0
+ 0  0  0  0  0  0  0  0  0  0  0  1  0  0  0</code></pre><pre><code class="language-julia hljs">netstoichmat(repressilator)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">6×15 Matrix{Int64}:
+ 1  0  0  -1  1   0  0   0  0  0  0  0   0   0   0
+ 0  1  0   0  0  -1  1   0  0  0  0  0   0   0   0
+ 0  0  1   0  0   0  0  -1  1  0  0  0   0   0   0
+ 0  0  0   0  0   0  0   0  0  1  0  0  -1   0   0
+ 0  0  0   0  0   0  0   0  0  0  1  0   0  -1   0
+ 0  0  0   0  0   0  0   0  0  0  0  1   0   0  -1</code></pre><p>Here the <span>$(i,j)$</span> entry gives the corresponding stoichiometric coefficient of species <span>$i$</span> for reaction <span>$j$</span>.</p><p>Finally, we can directly access fields of individual reactions like</p><pre><code class="language-julia hljs">rx1.rate</code></pre><p class="math-container">\[ \begin{equation}
+\mathrm{hillr}\left( P_3\left( t \right), \alpha, K, n \right)
+\end{equation}
+ \]</p><pre><code class="language-julia hljs">rx1.substrates</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Term{Real, Base.ImmutableDict{DataType, Any}}[]</code></pre><pre><code class="language-julia hljs">rx1.products</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1-element Vector{Term{Real, Base.ImmutableDict{DataType, Any}}}:
+ m₁(t)</code></pre><pre><code class="language-julia hljs">rx1.substoich</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Int64[]</code></pre><pre><code class="language-julia hljs">rx1.prodstoich</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1-element Vector{Int64}:
+ 1</code></pre><pre><code class="language-julia hljs">rx1.netstoich</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1-element Vector{Pair{Any, Int64}}:
+ m₁(t) =&gt; 1</code></pre><p>See the <a href="../../api/catalyst_api/#Catalyst.jl-API">Catalyst.jl API</a> for much more detail on the various querying and analysis functions provided by Catalyst.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../dsl/">« The Reaction DSL</a><a class="docs-footer-nextpage" href="../basic_examples/">Basic Chemical Reaction Network Examples »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Tuesday 25 October 2022 01:29">Tuesday 25 October 2022</span>. Using Julia version 1.8.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

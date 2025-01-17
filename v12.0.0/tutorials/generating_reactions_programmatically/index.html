@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Smoluchowski Coagulation Equation · Catalyst.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Catalyst.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../using_catalyst/">Using Catalyst</a></li><li><a class="tocitem" href="../dsl/">The Reaction DSL</a></li><li><a class="tocitem" href="../reaction_systems/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="../basic_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="../compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../symbolic_stoich/">Parametric Stoichiometry</a></li><li><a class="tocitem" href="../reaction_network_representation/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../bifurcation_diagram/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../parameter_estimation/">Parameter Estimation</a></li><li class="is-active"><a class="tocitem" href>Smoluchowski Coagulation Equation</a><ul class="internal"><li><a class="tocitem" href="#Sources"><span>Sources</span></a></li></ul></li></ul></li><li><a class="tocitem" href="../../faqs/">FAQs</a></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../../api/catalyst_api/">Catalyst.jl API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Smoluchowski Coagulation Equation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Smoluchowski Coagulation Equation</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/tutorials/generating_reactions_programmatically.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Smoluchowski-Coagulation-Equation"><a class="docs-heading-anchor" href="#Smoluchowski-Coagulation-Equation">Smoluchowski Coagulation Equation</a><a id="Smoluchowski-Coagulation-Equation-1"></a><a class="docs-heading-anchor-permalink" href="#Smoluchowski-Coagulation-Equation" title="Permalink"></a></h1><p>This tutorial shows how to programmatically construct a <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> corresponding to the chemistry underlying the <a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">Smoluchowski coagulation model</a> using <a href="https://mtk.sciml.ai/stable/">ModelingToolkit</a>/<a href="https://catalyst.sciml.ai/dev/">Catalyst</a>. A jump process version of the model is then constructed from the <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>, and compared to the model&#39;s analytical solution obtained by the <a href="https://journals.ametsoc.org/view/journals/atsc/25/1/1520-0469_1968_025_0054_asocdc_2_0_co_2.xml">method of Scott</a> (see also <a href="https://doi.org/10.1006/jcph.2002.7017">3</a>).</p><p>The Smoluchowski coagulation equation describes a system of reactions in which monomers may collide to form dimers, monomers and dimers may collide to form trimers, and so on. This models a variety of chemical/physical processes, including polymerization and flocculation.</p><p>We begin by importing some necessary packages.</p><pre><code class="language-julia hljs">using ModelingToolkit, Catalyst, LinearAlgebra
+using DiffEqBase, DiffEqJump
+using Plots, SpecialFunctions</code></pre><p>Suppose the maximum cluster size is <code>N</code>. We assume an initial concentration of monomers, <code>Nₒ</code>, and let <code>uₒ</code> denote the initial number of monomers in the system. We have <code>nr</code> total reactions, and label by <code>V</code> the bulk volume of the system (which plays an important role in the calculation of rate laws since we have bimolecular reactions). Our basic parameters are then</p><pre><code class="language-julia hljs">## Parameter
+N = 10                       # maximum cluster size
+Vₒ = (4π/3)*(10e-06*100)^3   # volume of a monomers in cm³
+Nₒ = 1e-06/Vₒ                # initial conc. = (No. of init. monomers) / bulk volume
+uₒ = 10000                   # No. of monomers initially
+V = uₒ/Nₒ                    # Bulk volume of system in cm³
+
+integ(x) = Int(floor(x))
+n        = integ(N/2)
+nr       = N%2 == 0 ? (n*(n + 1) - n) : (n*(n + 1)) # No. of forward reactions</code></pre><p>The <a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">Smoluchowski coagulation equation</a> Wikipedia page illustrates the set of possible reactions that can occur. We can easily enumerate the <code>pair</code>s of multimer reactants that can combine when allowing a maximal cluster size of <code>N</code> monomers. We initialize the volumes of the reactant multimers as <code>volᵢ</code> and <code>volⱼ</code></p><pre><code class="language-julia hljs"># possible pairs of reactant multimers
+pair = []
+for i = 2:N
+    push!(pair,[1:integ(i/2)  i .- (1:integ(i/2))])
+end
+pair = vcat(pair...)
+vᵢ = @view pair[:,1]   # Reactant 1 indices
+vⱼ = @view pair[:,2]   # Reactant 2 indices
+volᵢ = Vₒ*vᵢ           # cm⁻³
+volⱼ = Vₒ*vⱼ           # cm⁻³
+sum_vᵢvⱼ = @. vᵢ + vⱼ  # Product index</code></pre><p>We next specify the rates (i.e. kernel) at which reactants collide to form products. For simplicity, we allow a user-selected additive kernel or constant kernel. The constants(<code>B</code> and <code>C</code>) are adopted from Scott&#39;s paper <a href="https://journals.ametsoc.org/view/journals/atsc/25/1/1520-0469_1968_025_0054_asocdc_2_0_co_2.xml">2</a></p><pre><code class="language-julia hljs"># set i to  1 for additive kernel, 2  for constant
+i = 1
+if i==1
+    B = 1.53e03                # s⁻¹
+    kv = @. B*(volᵢ + volⱼ)/V  # dividing by volume as its a bi-molecular reaction chain
+elseif i==2
+    C = 1.84e-04               # cm³ s⁻¹
+    kv = fill(C/V, nr)
+end</code></pre><p>We&#39;ll store the reaction rates in <code>pars</code> as <code>Pair</code>s, and set the initial condition that only monomers are present at <span>$t=0$</span> in <code>u₀map</code>.</p><pre><code class="language-julia hljs"># state variables are X, pars stores rate parameters for each rx
+@parameters t
+@variables k[1:nr]  X[1:N](t)
+pars = Pair.(collect(k), kv)
+
+# time-span
+if i == 1
+    tspan = (0. ,2000.)
+elseif i == 2
+    tspan = (0. ,350.)
+end
+
+ # initial condition of monomers
+u₀    = zeros(Int64, N)
+u₀[1] = uₒ
+u₀map = Pair.(collect(X), u₀)   # map variable to its initial value</code></pre><p>Here we generate the reactions programmatically. We systematically create Catalyst <code>Reaction</code>s for each possible reaction shown in the figure on <a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">Wikipedia</a>. When <code>vᵢ[n] == vⱼ[n]</code>, we set the stoichiometric coefficient of the reactant multimer to two.</p><pre><code class="language-julia hljs"># vector to store the Reactions in
+rx = []
+for n = 1:nr
+    # for clusters of the same size, double the rate
+    if (vᵢ[n] == vⱼ[n])
+        push!(rx, Reaction(k[n], [X[vᵢ[n]]], [X[sum_vᵢvⱼ[n]]], [2], [1]))
+    else
+        push!(rx, Reaction(k[n], [X[vᵢ[n]], X[vⱼ[n]]], [X[sum_vᵢvⱼ[n]]],
+                           [1, 1], [1]))
+    end
+end
+@named rs = ReactionSystem(rx, t, collect(X), collect(k))</code></pre><p>We now convert the <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> into a <code>ModelingToolkit.JumpSystem</code>, and solve it using Gillespie&#39;s direct method. For details on other possible solvers (SSAs), see the <a href="https://diffeq.sciml.ai/latest/types/jump_types/">DifferentialEquations.jl</a> documentation</p><pre><code class="language-julia hljs"># solving the system
+jumpsys = convert(JumpSystem, rs)
+dprob   = DiscreteProblem(jumpsys, u₀map, tspan, pars)
+jprob   = JumpProblem(jumpsys, dprob, Direct(), save_positions=(false,false))
+jsol    = solve(jprob, SSAStepper(), saveat = tspan[2]/30)</code></pre><p>Lets check the results for the first three polymers/cluster sizes. We compare to the analytical solution for this system:</p><pre><code class="language-julia hljs"># Results for first three polymers...i.e. monomers, dimers and trimers
+v_res = [1;2;3]
+
+# comparison with analytical solution
+# we only plot the stochastic solution at a small number of points
+# to ease distinguishing it from the exact solution
+t   = jsol.t
+sol = zeros(length(v_res), length(t))
+if i == 1
+    ϕ = @. 1 - exp(-B*Nₒ*Vₒ*t)
+    for j in v_res
+        sol[j,:] = @. Nₒ*(1 - ϕ)*(((j*ϕ)^(j-1))/gamma(j+1))*exp(-j*ϕ)
+    end
+elseif i == 2
+    ϕ = @. (C*Nₒ*t)
+    for j in v_res
+        sol[j,:] = @. 4Nₒ*((ϕ^(j-1))/((ϕ + 2)^(j+1)))
+    end
+end
+
+# plotting normalised concentration vs analytical solution
+default(lw=2, xlabel=&quot;Time (sec)&quot;)
+scatter(ϕ, jsol(t)[1,:]/uₒ, label=&quot;X1 (monomers)&quot;, markercolor=:blue)
+plot!(ϕ, sol[1,:]/Nₒ, line = (:dot,4,:blue), label=&quot;Analytical sol--X1&quot;)
+
+scatter!(ϕ, jsol(t)[2,:]/uₒ, label=&quot;X2 (dimers)&quot;, markercolor=:orange)
+plot!(ϕ, sol[2,:]/Nₒ, line = (:dot,4,:orange), label=&quot;Analytical sol--X2&quot;)
+
+scatter!(ϕ, jsol(t)[3,:]/uₒ, label=&quot;X3 (trimers)&quot;, markercolor=:purple)
+plot!(ϕ, sol[3,:]/Nₒ, line = (:dot,4,:purple), label=&quot;Analytical sol--X3&quot;,
+      ylabel = &quot;Normalized Concentration&quot;)</code></pre><p>For the <strong>additive kernel</strong> we find</p><p><img src="../../assets/additive_kernel.svg" alt="additive_kernel"/></p><h2 id="Sources"><a class="docs-heading-anchor" href="#Sources">Sources</a><a id="Sources-1"></a><a class="docs-heading-anchor-permalink" href="#Sources" title="Permalink"></a></h2><ol><li>https://en.wikipedia.org/wiki/Smoluchowski<em>coagulation</em>equation</li><li>Scott, W. T. (1968). Analytic Studies of Cloud Droplet Coalescence I, Journal of Atmospheric Sciences, 25(1), 54-65. Retrieved Feb 18, 2021, from https://journals.ametsoc.org/view/journals/atsc/25/1/1520-0469<em>1968</em>025<em>0054</em>asocdc<em>2</em>0<em>co</em>2.xml</li><li>Ian J. Laurenzi, John D. Bartels, Scott L. Diamond, A General Algorithm for Exact Simulation of Multicomponent Aggregation Processes, Journal of Computational Physics, Volume 177, Issue 2, 2002, Pages 418-449, ISSN 0021-9991, https://doi.org/10.1006/jcph.2002.7017.</li></ol></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../parameter_estimation/">« Parameter Estimation</a><a class="docs-footer-nextpage" href="../../faqs/">FAQs »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Wednesday 15 June 2022 14:22">Wednesday 15 June 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

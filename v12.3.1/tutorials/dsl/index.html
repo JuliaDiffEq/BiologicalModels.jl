@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>The Reaction DSL · Catalyst.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/tutorials/dsl/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Catalyst.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../using_catalyst/">Using Catalyst</a></li><li class="is-active"><a class="tocitem" href>The Reaction DSL</a><ul class="internal"><li><a class="tocitem" href="#basic_examples"><span>Basic syntax</span></a></li><li><a class="tocitem" href="#Defining-parameters-and-species"><span>Defining parameters and species</span></a></li><li><a class="tocitem" href="#Production,-Destruction-and-Stoichiometry"><span>Production, Destruction and Stoichiometry</span></a></li><li><a class="tocitem" href="#Arrow-variants"><span>Arrow variants</span></a></li><li><a class="tocitem" href="#Bi-directional-arrows-for-reversible-reactions"><span>Bi-directional arrows for reversible reactions</span></a></li><li><a class="tocitem" href="#Combining-several-reactions-in-one-line"><span>Combining several reactions in one line</span></a></li><li><a class="tocitem" href="#Variable-reaction-rates"><span>Variable reaction rates</span></a></li><li><a class="tocitem" href="#Naming-the-generated-ReactionSystem"><span>Naming the generated <code>ReactionSystem</code></span></a></li><li><a class="tocitem" href="#Pre-defined-functions"><span>Pre-defined functions</span></a></li><li><a class="tocitem" href="#Interpolation-of-Julia-Variables"><span>Interpolation of Julia Variables</span></a></li></ul></li><li><a class="tocitem" href="../reaction_systems/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="../basic_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="../compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../symbolic_stoich/">Parametric Stoichiometry</a></li><li><a class="tocitem" href="../reaction_network_representation/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../homotopy_continuation_tutorial/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="../bifurcation_diagram/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../parameter_estimation/">Parameter Estimation</a></li><li><a class="tocitem" href="../generating_reactions_programmatically/">Smoluchowski Coagulation Equation</a></li></ul></li><li><a class="tocitem" href="../../faqs/">FAQs</a></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../../api/catalyst_api/">Catalyst.jl API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>The Reaction DSL</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>The Reaction DSL</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/tutorials/dsl.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="The-Reaction-DSL"><a class="docs-heading-anchor" href="#The-Reaction-DSL">The Reaction DSL</a><a id="The-Reaction-DSL-1"></a><a class="docs-heading-anchor-permalink" href="#The-Reaction-DSL" title="Permalink"></a></h1><p>This tutorial covers some of the basic syntax for building chemical reaction network models using Catalyst&#39;s domain specific language (DSL). Examples showing how to both construct and solve ODE, SDE, and jump models are provided in <a href="../basic_examples/#Basic-Chemical-Reaction-Network-Examples">Basic Chemical Reaction Network Examples</a>. To learn more about the symbolic <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>s generated by the DSL, and how to use them directly, see the tutorial on <a href="../reaction_systems/#Programmatic-Construction-of-Symbolic-Reaction-Systems">Programmatic Construction of Symbolic Reaction Systems</a>.</p><p>We first load the needed packages for the code in the tutorial to run</p><pre><code class="language-julia hljs">using Catalyst</code></pre><h2 id="basic_examples"><a class="docs-heading-anchor" href="#basic_examples">Basic syntax</a><a id="basic_examples-1"></a><a class="docs-heading-anchor-permalink" href="#basic_examples" title="Permalink"></a></h2><p>The <code>@reaction_network</code> macro allows the (symbolic) specification of reaction networks with a simple format. Its input is a set of chemical reactions, and from them it generates a symbolic <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> reaction network object. The <code>ReactionSystem</code> can be used as input to ModelingToolkit <code>ODEProblem</code>, <code>NonlinearProblem</code>, <code>SteadyStateProblem</code>, <code>SDEProblem</code>, <code>JumpProblem</code>, and more. <code>ReactionSystem</code>s can also be incrementally extended as needed, allowing for programmatic construction of networks and network composition.</p><p>The basic syntax is:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  2.0, X + Y --&gt; XY
+  1.0, XY --&gt; Z1 + Z2
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;-&gt;[$2.0$] XY}\\
+\ce{ XY &amp;-&gt;[$1.0$] Z1 + Z2}
+\end{align*}
+ \]</p><p>where each line of the <a href="../../api/catalyst_api/#Catalyst.@reaction_network"><code>@reaction_network</code></a> macro corresponds to a chemical reaction. Each reaction consists of a reaction rate (the expression on the left hand side of  <code>,</code>), a set of substrates (the expression in-between <code>,</code> and <code>--&gt;</code>), and a set of products (the expression on the right hand side of <code>--&gt;</code>). The substrates and the products may contain one or more reactants, separated by <code>+</code>. The naming convention for these are the same as for normal variables in Julia.</p><p>The chemical reaction model is generated by the <code>@reaction_network</code> macro and stored in the <code>rn</code> variable (a normal Julia variable, which does not need to be called <code>rn</code>). It corresponds to a <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>, a symbolic representation of the chemical network.  The generated <code>ReactionSystem</code> can be converted to a symbolic differential equation model via</p><pre><code class="language-julia hljs">osys  = convert(ODESystem, rn)</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} X\left( t \right)}{\mathrm{d}t} =&amp;  - 2.0 X\left( t \right) Y\left( t \right) \\
+\frac{\mathrm{d} Y\left( t \right)}{\mathrm{d}t} =&amp;  - 2.0 X\left( t \right) Y\left( t \right) \\
+\frac{\mathrm{d} \mathrm{XY}\left( t \right)}{\mathrm{d}t} =&amp;  - \mathrm{XY}\left( t \right) + 2.0 X\left( t \right) Y\left( t \right) \\
+\frac{\mathrm{d} \mathrm{Z1}\left( t \right)}{\mathrm{d}t} =&amp; \mathrm{XY}\left( t \right) \\
+\frac{\mathrm{d} \mathrm{Z2}\left( t \right)}{\mathrm{d}t} =&amp; \mathrm{XY}\left( t \right)
+\end{align}
+ \]</p><p>We can then convert the symbolic ODE model into a compiled, optimized representation for use in the SciML ODE solvers by constructing an <code>ODEProblem</code>. Creating an <code>ODEProblem</code> also requires our specifying the initial conditions for the model. We do this by creating a mapping from each symbolic variable representing a chemical species to its initial value</p><pre><code class="language-julia hljs"># define the symbolic variables
+@variables t, X(t), Y(t), Z(t), XY(t), Z1(t), Z2(t)
+
+# create the mapping
+u0 = [X =&gt; 1.0, Y =&gt; 1.0, XY =&gt; 1.0, Z1 =&gt; 1.0, Z2 =&gt; 1.0]</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Pair{Num, Float64}}:
+  X(t) =&gt; 1.0
+  Y(t) =&gt; 1.0
+ XY(t) =&gt; 1.0
+ Z1(t) =&gt; 1.0
+ Z2(t) =&gt; 1.0</code></pre><p>Alternatively, we can create a mapping use Julia <code>Symbol</code>s for each variable, and then convert them to a mapping involving symbolic variables like</p><pre><code class="language-julia hljs">u0 = symmap_to_varmap(rn, [:X =&gt; 1.0, :Y =&gt; 1.0, :XY =&gt; 1.0, :Z1 =&gt; 1.0, :Z2 =&gt; 1.0])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">5-element Vector{Pair{Num, Float64}}:
+  X(t) =&gt; 1.0
+  Y(t) =&gt; 1.0
+ XY(t) =&gt; 1.0
+ Z1(t) =&gt; 1.0
+ Z2(t) =&gt; 1.0</code></pre><p>Given the mapping, we can then create an <code>ODEProblem</code> from our symbolic <code>ODESystem</code></p><pre><code class="language-julia hljs">tspan = (0.0, 1.0)  # the time interval to solve on
+oprob = ODEProblem(osys, u0, tspan, [])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Vector{Float64} and tType Float64. In-place: true
+timespan: (0.0, 1.0)
+u0: 5-element Vector{Float64}:
+ 1.0
+ 1.0
+ 1.0
+ 1.0
+ 1.0</code></pre><p>Catalyst provides a shortcut to avoid having to explicitly <code>convert</code> to an <code>ODESystem</code> and/or use <code>symmap_to_varmap</code>, allowing direct construction of the <code>ODEProblem</code> like</p><pre><code class="language-julia hljs">u0 = [:X =&gt; 1.0, :Y =&gt; 1.0, :XY =&gt; 1.0, :Z1 =&gt; 1.0, :Z2 =&gt; 1.0]
+oprob = ODEProblem(rn, u0, tspan, [])</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">ODEProblem with uType Vector{Float64} and tType Float64. In-place: true
+timespan: (0.0, 1.0)
+u0: 5-element Vector{Float64}:
+ 1.0
+ 1.0
+ 1.0
+ 1.0
+ 1.0</code></pre><p>For more detailed examples, see the <a href="../basic_examples/#Basic-Chemical-Reaction-Network-Examples">Basic Chemical Reaction Network Examples</a>.</p><h2 id="Defining-parameters-and-species"><a class="docs-heading-anchor" href="#Defining-parameters-and-species">Defining parameters and species</a><a id="Defining-parameters-and-species-1"></a><a class="docs-heading-anchor-permalink" href="#Defining-parameters-and-species" title="Permalink"></a></h2><p>Parameter values do not need to be set when the model is created. Components can be designated as symbolic parameters by declaring them at the end:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  p, ∅ --&gt; X
+  d, X --&gt; ∅
+end p d</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;&lt;=&gt;[$p$][$d$] X}
+\end{align*}
+ \]</p><p>Parameters can only exist in the reaction rates (where they can be mixed with reactants). All variables not declared after <code>end</code> will be treated as a chemical species.</p><h2 id="Production,-Destruction-and-Stoichiometry"><a class="docs-heading-anchor" href="#Production,-Destruction-and-Stoichiometry">Production, Destruction and Stoichiometry</a><a id="Production,-Destruction-and-Stoichiometry-1"></a><a class="docs-heading-anchor-permalink" href="#Production,-Destruction-and-Stoichiometry" title="Permalink"></a></h2><p>Sometimes reactants are produced/destroyed from/to nothing. This can be designated using either <code>0</code> or <code>∅</code>:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  2.0, 0 --&gt; X
+  1.0, X --&gt; ∅
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;&lt;=&gt;[$2.0$][$1.0$] X}
+\end{align*}
+ \]</p><p>If several molecules of the same reactant are involved in a reaction, the stoichiometry of a reactant in a reaction can be set using a number. Here, two molecules of species <code>X</code> form the dimer <code>X2</code>:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  1.0, 2X --&gt; Y
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ 2 X &amp;-&gt;[$1.0$] Y}
+\end{align*}
+ \]</p><p>this corresponds to the differential equation:</p><pre><code class="language-julia hljs">convert(ODESystem, rn)</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} X\left( t \right)}{\mathrm{d}t} =&amp;  - \left( X\left( t \right) \right)^{2} \\
+\frac{\mathrm{d} Y\left( t \right)}{\mathrm{d}t} =&amp; \frac{1}{2} \left( X\left( t \right) \right)^{2}
+\end{align}
+ \]</p><p>Other numbers than 2 can be used, and parenthesis can be used to reuse the same stoichiometry for several reactants:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  1.0, X + 2(Y + Z) --&gt; W
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + 2 Y + 2 Z &amp;-&gt;[$1.0$] W}
+\end{align*}
+ \]</p><p>Note, one can explicitly multiply by integer coefficients too, i.e.</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  1.0, X + 2*(Y + Z) --&gt; W
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + 2 Y + 2 Z &amp;-&gt;[$1.0$] W}
+\end{align*}
+ \]</p><h2 id="Arrow-variants"><a class="docs-heading-anchor" href="#Arrow-variants">Arrow variants</a><a id="Arrow-variants-1"></a><a class="docs-heading-anchor-permalink" href="#Arrow-variants" title="Permalink"></a></h2><p>A variety of unicode arrows are accepted by the DSL in addition to <code>--&gt;</code>. All of these work:  <code>&gt;</code>, <code>→</code> <code>↣</code>, <code>↦</code>, <code>⇾</code>, <code>⟶</code>, <code>⟼</code>, <code>⥟</code>, <code>⥟</code>, <code>⇀</code>, <code>⇁</code>. Backwards arrows can also be used to write the reaction in the opposite direction. For example, these reactions are equivalent:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  1.0, X + Y --&gt; XY
+  1.0, X + Y → XY
+  1.0, XY ← X + Y
+  1.0, XY &lt;-- X + Y
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;-&gt;[$1.0$] XY}\\
+\ce{ X + Y &amp;-&gt;[$1.0$] XY}\\
+\ce{ X + Y &amp;-&gt;[$1.0$] XY}\\
+\ce{ X + Y &amp;-&gt;[$1.0$] XY}
+\end{align*}
+ \]</p><h2 id="Bi-directional-arrows-for-reversible-reactions"><a class="docs-heading-anchor" href="#Bi-directional-arrows-for-reversible-reactions">Bi-directional arrows for reversible reactions</a><a id="Bi-directional-arrows-for-reversible-reactions-1"></a><a class="docs-heading-anchor-permalink" href="#Bi-directional-arrows-for-reversible-reactions" title="Permalink"></a></h2><p>Bi-directional arrows, including bidirectional unicode arrows like ↔, can be used to designate a reversible reaction. For example, these two models are equivalent:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  2.0, X + Y --&gt; XY
+  2.0, X + Y &lt;-- XY
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;&lt;=&gt;[$2.0$][$2.0$] XY}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  (2.0,2.0), X + Y &lt;--&gt; XY
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;&lt;=&gt;[$2.0$][$2.0$] XY}
+\end{align*}
+ \]</p><p>If the reaction rates in the backward and forward directions are different, they can be designated in the following way:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  (2.0,1.0), X + Y &lt;--&gt; XY
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;&lt;=&gt;[$2.0$][$1.0$] XY}
+\end{align*}
+ \]</p><p>which is identical to</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  2.0, X + Y --&gt; XY
+  1.0, X + Y &lt;-- XY
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;&lt;=&gt;[$2.0$][$1.0$] XY}
+\end{align*}
+ \]</p><h2 id="Combining-several-reactions-in-one-line"><a class="docs-heading-anchor" href="#Combining-several-reactions-in-one-line">Combining several reactions in one line</a><a id="Combining-several-reactions-in-one-line-1"></a><a class="docs-heading-anchor-permalink" href="#Combining-several-reactions-in-one-line" title="Permalink"></a></h2><p>Several similar reactions can be combined in one line by providing a tuple of reaction rates and/or substrates and/or products. If several tuples are provided, they must all be of identical length. These pairs of reaction networks are all identical.</p><p>Pair 1:</p><pre><code class="language-julia hljs">rn1 = @reaction_network begin
+  1.0, S --&gt; (P1,P2)
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S &amp;-&gt;[$1.0$] P1}\\
+\ce{ S &amp;-&gt;[$1.0$] P2}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  1.0, S --&gt; P1
+  1.0, S --&gt; P2
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S &amp;-&gt;[$1.0$] P1}\\
+\ce{ S &amp;-&gt;[$1.0$] P2}
+\end{align*}
+ \]</p><p>Pair 2:</p><pre><code class="language-julia hljs">rn1 = @reaction_network begin
+  (1.0,2.0), (S1,S2) --&gt; P
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S1 &amp;-&gt;[$1.0$] P}\\
+\ce{ S2 &amp;-&gt;[$2.0$] P}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  1.0, S1 --&gt; P
+  2.0, S2 --&gt; P
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S1 &amp;-&gt;[$1.0$] P}\\
+\ce{ S2 &amp;-&gt;[$2.0$] P}
+\end{align*}
+ \]</p><p>Pair 3:</p><pre><code class="language-julia hljs">rn1 = @reaction_network begin
+  (1.0,2.0,3.0), (S1,S2,S3) → (P1,P2,P3)
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S1 &amp;-&gt;[$1.0$] P1}\\
+\ce{ S2 &amp;-&gt;[$2.0$] P2}\\
+\ce{ S3 &amp;-&gt;[$3.0$] P3}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  1.0, S1 --&gt; P1
+  2.0, S2 --&gt; P2
+  3.0, S3 --&gt; P3
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S1 &amp;-&gt;[$1.0$] P1}\\
+\ce{ S2 &amp;-&gt;[$2.0$] P2}\\
+\ce{ S3 &amp;-&gt;[$3.0$] P3}
+\end{align*}
+ \]</p><p>This can also be combined with bi-directional arrows, in which case separate tuples can be provided for the backward and forward reaction rates. These reaction networks are identical</p><pre><code class="language-julia hljs">rn1 = @reaction_network begin
+ (1.0,(1.0,2.0)), S &lt;--&gt; (P1,P2)
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S &amp;-&gt;[$1.0$] P1}\\
+\ce{ S &amp;-&gt;[$1.0$] P2}\\
+\ce{ P1 &amp;-&gt;[$1.0$] S}\\
+\ce{ P2 &amp;-&gt;[$2.0$] S}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  1.0, S --&gt; P1
+  1.0, S --&gt; P2
+  1.0, P1 --&gt; S
+  2.0, P2 --&gt; S
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ S &amp;-&gt;[$1.0$] P1}\\
+\ce{ S &amp;-&gt;[$1.0$] P2}\\
+\ce{ P1 &amp;-&gt;[$1.0$] S}\\
+\ce{ P2 &amp;-&gt;[$2.0$] S}
+\end{align*}
+ \]</p><h2 id="Variable-reaction-rates"><a class="docs-heading-anchor" href="#Variable-reaction-rates">Variable reaction rates</a><a id="Variable-reaction-rates-1"></a><a class="docs-heading-anchor-permalink" href="#Variable-reaction-rates" title="Permalink"></a></h2><p>Reaction rates do not need to be a single parameter or a number, but can also be expressions depending on time or the current concentration of other species (when, for example, one species can activate the production of another). For instance, this is a valid notation:</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  k*X, Y --&gt; ∅
+end k</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ Y &amp;-&gt;[$X k$] \varnothing}
+\end{align*}
+ \]</p><p>corresponding to the ODE model</p><pre><code class="language-julia hljs">convert(ODESystem, rn)</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} Y\left( t \right)}{\mathrm{d}t} =&amp;  - k X\left( t \right) Y\left( t \right) \\
+\frac{\mathrm{d} X\left( t \right)}{\mathrm{d}t} =&amp; 0
+\end{align}
+ \]</p><p>With respect to the corresponding mass action ODE model, this is actually equivalent to the reaction system</p><pre><code class="language-julia hljs">rn = @reaction_network begin
+  k, X + Y --&gt; X
+end k</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ X + Y &amp;-&gt;[$k$] X}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">convert(ODESystem, rn)</code></pre><p class="math-container">\[ \begin{align}
+\frac{\mathrm{d} X\left( t \right)}{\mathrm{d}t} =&amp; 0 \\
+\frac{\mathrm{d} Y\left( t \right)}{\mathrm{d}t} =&amp;  - k X\left( t \right) Y\left( t \right)
+\end{align}
+ \]</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>While the ODE models corresponding to the preceding two reaction systems are identical, in the latter example the <code>Reaction</code> will be classified as <a href="../../api/catalyst_api/#Catalyst.ismassaction"><code>ismassaction</code></a> while in the former it will not, which can impact optimizations used in generating <code>JumpSystem</code>s. For this reason, it is recommended to use the latter representation when possible.</p></div></div><p>Most expressions and functions are valid reaction rates, e.g.:</p><pre><code class="language-julia hljs">using SpecialFunctions
+rn = @reaction_network begin
+  2.0*X^2, 0 --&gt; X + Y
+  t*gamma(Y), X --&gt; ∅
+  pi*X/Y, Y → ∅
+end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;-&gt;[$2.0 X^{2}$] X + Y}\\
+\ce{ X &amp;-&gt;[$t \Gamma\left( Y \right)$] \varnothing}\\
+\ce{ Y &amp;-&gt;[$\frac{3.141592653589793 X}{Y}$] \varnothing}
+\end{align*}
+ \]</p><p>where here <code>t</code> always denotes Catalyst&#39;s time variable. Please note that many user-defined functions can be called directly, but others will require registration with Symbolics.jl (<a href="../../faqs/#user_functions">see the faq</a>).</p><h2 id="Naming-the-generated-ReactionSystem"><a class="docs-heading-anchor" href="#Naming-the-generated-ReactionSystem">Naming the generated <code>ReactionSystem</code></a><a id="Naming-the-generated-ReactionSystem-1"></a><a class="docs-heading-anchor-permalink" href="#Naming-the-generated-ReactionSystem" title="Permalink"></a></h2><p>ModelingToolkit uses system names to allow for compositional and hierarchical models. To specify a name for the generated <code>ReactionSystem</code> via the <code>reaction_network</code> macro, just place the name before <code>begin</code>:</p><pre><code class="language-julia hljs">rn = @reaction_network production_degradation begin
+  p, ∅ --&gt; X
+  d, X --&gt; ∅
+end p d
+ModelingToolkit.nameof(rn) == :production_degradation</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">true</code></pre><h2 id="Pre-defined-functions"><a class="docs-heading-anchor" href="#Pre-defined-functions">Pre-defined functions</a><a id="Pre-defined-functions-1"></a><a class="docs-heading-anchor-permalink" href="#Pre-defined-functions" title="Permalink"></a></h2><p>Hill functions and a Michaelis-Menten function are pre-defined and can be used as rate laws. Below, the pair of reactions within <code>rn1</code> are equivalent, as are the pair of reactions within <code>rn2</code>:</p><pre><code class="language-julia hljs">rn1 = @reaction_network begin
+  hill(X,v,K,n), ∅ --&gt; X
+  v*X^n/(X^n+K^n), ∅ --&gt; X
+end v K n</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;-&gt;[$\frac{v X^{n}}{K^{n} + X^{n}}$] X}\\
+\ce{ \varnothing &amp;-&gt;[$\frac{v X^{n}}{K^{n} + X^{n}}$] X}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  mm(X,v,K), ∅ --&gt; X
+  v*X/(X+K), ∅ --&gt; X
+end v K</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;-&gt;[$\frac{v X}{K + X}$] X}\\
+\ce{ \varnothing &amp;-&gt;[$\frac{X v}{K + X}$] X}
+\end{align*}
+ \]</p><p>Repressor Hill (<code>hillr</code>) and Michaelis-Menten (<code>mmr</code>) functions are also provided:</p><pre><code class="language-julia hljs">rn1 = @reaction_network begin
+  hillr(X,v,K,n), ∅ --&gt; X
+  v*K^n/(X^n+K^n), ∅ --&gt; X
+end v K n</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;-&gt;[$\frac{v K^{n}}{K^{n} + X^{n}}$] X}\\
+\ce{ \varnothing &amp;-&gt;[$\frac{v K^{n}}{K^{n} + X^{n}}$] X}
+\end{align*}
+ \]</p><pre><code class="language-julia hljs">rn2 = @reaction_network begin
+  mmr(X,v,K), ∅ --&gt; X
+  v*K/(X+K), ∅ --&gt; X
+end v K</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;-&gt;[$\frac{v K}{K + X}$] X}\\
+\ce{ \varnothing &amp;-&gt;[$\frac{K v}{K + X}$] X}
+\end{align*}
+ \]</p><p>Please see the API <a href="../../api/catalyst_api/#Rate-Laws">Rate Laws</a> section for more details.</p><h2 id="Interpolation-of-Julia-Variables"><a class="docs-heading-anchor" href="#Interpolation-of-Julia-Variables">Interpolation of Julia Variables</a><a id="Interpolation-of-Julia-Variables-1"></a><a class="docs-heading-anchor-permalink" href="#Interpolation-of-Julia-Variables" title="Permalink"></a></h2><p>The DSL allows Julia variables to be interpolated for the network name, within rate constant expressions, or for species/stoichiometry within reactions. Using the lower-level symbolic interface we can then define symbolic variables and parameters outside of the macro, which can then be used within expressions in the DSL (see the <a href="../reaction_systems/#Programmatic-Construction-of-Symbolic-Reaction-Systems">Programmatic Construction of Symbolic Reaction Systems</a> tutorial for details on the lower-level symbolic interface). For example,</p><pre><code class="language-julia hljs">@parameters k α
+@variables t, A(t)
+spec = A
+par = α
+rate = k*A
+name = :network
+rn = @reaction_network $name begin
+    $rate*B, 2*$spec + $par*B --&gt; $spec + C
+  end</code></pre><p class="math-container">\[ \begin{align*}
+\require{mhchem}
+\ce{ 2 A + \alpha B &amp;-&gt;[$k A B$] A + C}
+\end{align*}
+ \]</p><p>As the parameters <code>k</code> and <code>α</code> were pre-defined and appeared via interpolation, we did not need to declare them at the end of the <code>@reaction_network</code> macro, i.e. they are automatically detected as parameters:</p><pre><code class="language-julia hljs">parameters(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Sym{Real, Base.ImmutableDict{DataType, Any}}}:
+ k
+ α</code></pre><p>as are the species coming from interpolated variables</p><pre><code class="language-julia hljs">species(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{Term{Real, Base.ImmutableDict{DataType, Any}}}:
+ A(t)
+ B(t)
+ C(t)</code></pre><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>When using interpolation, expressions like <code>2$spec</code> won&#39;t work; the multiplication symbol must be explicitly included like <code>2*$spec</code>.</p></div></div></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../using_catalyst/">« Using Catalyst</a><a class="docs-footer-nextpage" href="../reaction_systems/">Programmatic Construction of Symbolic Reaction Systems »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Tuesday 25 October 2022 01:29">Tuesday 25 October 2022</span>. Using Julia version 1.8.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

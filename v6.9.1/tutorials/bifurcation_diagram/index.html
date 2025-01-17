@@ -1,0 +1,75 @@
+<!DOCTYPE html><HTML lang="en"><head><meta charset="UTF-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><title>Bifurcation Diagrams · Catalyst.jl</title><link href="https://fonts.googleapis.com/css?family=Lato|Roboto+Mono" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.0/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.11.1/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script data-main="../../assets/documenter.js" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" data-theme-name="documenter-dark" href="../../assets/themes/documenter-dark.css" rel="stylesheet" type="text/css"/><link class="docs-theme-link" data-theme-name="documenter-light" data-theme-primary="" href="../../assets/themes/documenter-light.css" rel="stylesheet" type="text/css"/><script src="../../assets/themeswap.js"></script><script data-outdated-warner="">function maybeAddWarning () {
+    const head = document.getElementsByTagName('head')[0];
+
+    // Add a noindex meta tag (unless one exists) so that search engines don't index this version of the docs.
+    if (document.body.querySelector('meta[name="robots"]') === null) {
+        const meta = document.createElement('meta');
+        meta.name = 'robots';
+        meta.content = 'noindex';
+
+        head.appendChild(meta);
+    };
+
+    // Add a stylesheet to avoid inline styling
+    const style = document.createElement('style');
+    style.type = 'text/css';
+    style.appendChild(document.createTextNode('.outdated-warning-overlay {  position: fixed;  top: 0;  left: 0;  right: 0;  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);  z-index: 999;  background-color: #ffaba7;  color: rgba(0, 0, 0, 0.7);  border-bottom: 3px solid #da0b00;  padding: 10px 35px;  text-align: center;  font-size: 15px; }  .outdated-warning-overlay .outdated-warning-closer {    position: absolute;    top: calc(50% - 10px);    right: 18px;    cursor: pointer;    width: 12px; }  .outdated-warning-overlay a {    color: #2e63b8; }    .outdated-warning-overlay a:hover {      color: #363636; }'));
+    head.appendChild(style);
+
+    const div = document.createElement('div');
+    div.classList.add('outdated-warning-overlay');
+    const closer = document.createElement('div');
+    closer.classList.add('outdated-warning-closer');
+
+    // Icon by font-awesome (license: https://fontawesome.com/license, link: https://fontawesome.com/icons/times?style=solid)
+    closer.innerHTML = '<svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="times" class="svg-inline--fa fa-times fa-w-11" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 352 512"><path fill="currentColor" d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"></path></svg>';
+    closer.addEventListener('click', function () {
+        document.body.removeChild(div);
+    });
+    let href = '/stable';
+    if (window.documenterBaseURL) {
+        href = window.documenterBaseURL + '/../stable';
+    }
+    div.innerHTML = 'This is an old version of the documentation. <br> <a href="' + href + '">Go to the newest version</a>.';
+    div.appendChild(closer);
+    document.body.appendChild(div);
+};
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', maybeAddWarning);
+} else {
+    maybeAddWarning();
+};
+</script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit">Catalyst.jl</span></div><form action="../../search/" class="docs-search"><input class="docs-search-query" id="documenter-search-query" name="q" placeholder="Search docs" type="text"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="../using_catalyst/">Using Catalyst</a></li><li><a class="tocitem" href="../basics/">The Reaction DSL</a></li><li><a class="tocitem" href="../models/">Model Simulation</a></li><li><a class="tocitem" href="../basic_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="../advanced/">The Reaction DSL - Advanced</a></li><li><a class="tocitem" href="../generated_systems/">The generated <code>ReactionSystem</code> and <code>Reaction</code>s</a></li><li><a class="tocitem" href="../advanced_examples/">Advanced Chemical Reaction Network Examples</a></li><li class="is-active"><a class="tocitem" href="">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../parameter_estimation/">Parameter Estimation</a></li><li><a class="tocitem" href="../generating_reactions_programmatically/">Generating ReactionSystems Programmatically</a></li></ul></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../../api/catalyst_api/">Catalyst.jl API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href="">Bifurcation Diagrams</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href="">Bifurcation Diagrams</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/tutorials/bifurcation_diagram.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" href="#" id="documenter-settings-button" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" href="#" id="documenter-sidebar-button"></a></div></header><article class="content" id="documenter-page"><h1 id="Bifurcation-Diagrams"><a class="docs-heading-anchor" href="#Bifurcation-Diagrams">Bifurcation Diagrams</a><a id="Bifurcation-Diagrams-1"></a><a class="docs-heading-anchor-permalink" href="#Bifurcation-Diagrams" title="Permalink"></a></h1><p>Bifurcation diagrams can be produced from Catalyst generated models through the use of the <a href="https://github.com/rveltz/BifurcationKit.jl/">BifurcationKit.jl</a> package. This tutorial gives a simple example of how to create such a bifurcation diagram.</p><p>First, we declare our model. For our example we will use a bistable switch, but which also contains a Hopf bifurcation.</p><pre><code class="language-julia">using Catalyst
+rn = @reaction_network begin
+    (v0+v*(S*X)^n/((S*X)^n+(D*A)^n+K^n),d), ∅ ↔ X
+    (τ*X,τ), ∅ ↔ A
+end S D τ v0 v K n d</code></pre><p>Next, BifurcationKit requires another form for the system function and Jacobian than what is used by the SciML ecosystem, so we need to declare these:</p><pre><code class="language-julia">odefun = ODEFunction(convert(ODESystem,rn),jac=true)
+F = (u,p) -&gt; odefun(u,p,0)      
+J = (u,p) -&gt; odefun.jac(u,p,0)</code></pre><p>We also need to specify the system parameters for which we wish to plot the bifurcation diagram:</p><pre><code class="language-julia">params = [1.,9.,0.001,0.01,2.,20.,3,0.05]</code></pre><p>Finally, we also need to set the input required to make the diagram. This is the index (in the parameter array) of the bifurcation parameter, the range over which we wish to plot the bifurcation diagram, as well as for which variable we wish to plot the steady state values in the diagram.</p><pre><code class="language-julia">p_idx = 1            # The index of the bifurcation parameter.
+p_span = (0.1,20.)   # The parameter range for the bifurcation diagram.
+plot_var_idx = 1     # The index of the variable we plot in the bifurcation diagram.</code></pre><p>Now we need to fetch the required packages to create the bifurcation diagram.</p><pre><code class="language-julia">using BifurcationKit, Plots, LinearAlgebra, Setfield</code></pre><p>Next, we need to specify the input options for the pseudo-arclength continuation method which produces the diagram. We will use a <a href="https://rveltz.github.io/BifurcationKit.jl/dev/DeflatedContinuation/">deflated continuation</a>.</p><pre><code class="language-julia">opts = ContinuationPar( dsmax = 0.05,        # Maximum arclength value of the pseudo-arc length continuation method.
+                        dsmin = 1e-4,        # Minimum arclength value of the pseudo-arc length continuation method.
+                        ds=0.001,            # Initial arclength value of the pseudo-arc length continuation method (should be positive).
+                        maxSteps = 100000,   # The maximum number of steps.
+                        pMin = p_span[1],    # Minimum p-vale (if hit, the method stops).
+                        pMax = p_span[2],    # Maximum p-vale (if hit, the method stops).
+                        detectBifurcation=3, # Value in {0,1,2,3} determening to what extent bofurcation points are detected (0 means nothing is done, 3 both them and there localisation are detected).
+                        newtonOptions = NewtonPar(tol = 1e-9, verbose = false, maxIter = 15)) #Parameters to the newton solver (when finding fixed points) see BifurcationKit documentation.
+                        
+DO = DeflationOperator( 2.0,    # Algorithm parameter required when using deflated continuation, see BifurcationKit documentation.
+                        dot,    # Algorithm parameter required when using deflated continuation, see BifurcationKit documentation.
+                        1.,     # Algorithm parameter required when using deflated continuation, see BifurcationKit documentation.
+                        [fill(0.,length(rn.states))]); # Guess(es) of the fixed point for the initial parameter set. Do not need to be exact.
+</code></pre><p>With all this done, we can compute the bifurcations:</p><pre><code class="language-julia">params_input = setindex!(copy(params),p_span[1],p_idx)                                # The input parameter values have to start at the first index of our parameter span.
+branches, = continuation(F, J, params_input, (@lens _[p_idx]) ,opts , DO,             # Gives our input.
+    verbosity = 0, showplot=false,                                                    # We do not want to display, or plot, intermediary results.
+    printSolution=(x, p) -&gt; x[plot_var_idx],                                          # How we wish to print the output in the diagram. Here we simply want the value of the target varriable.
+    perturbSolution = (x,p,id) -&gt; (x  .+ 0.8 .* rand(length(x))),                     # Parameter for the continuation method, see BifurcationKit documentation.
+    callbackN = (x, f, J, res, iteration, itlinear, options; kwargs...) -&gt; res &lt;1e7)  # Parameter for the continuation method, see BifurcationKit documentation.</code></pre><p>which can then be plotted using</p><pre><code class="language-julia">plot(branches...,xlabel=rn.ps[1],ylabel=Symbol(rn.states[1].f),markersize=4,
+     ylim=(0.,Inf),                                  # This ensures we do not display negative solutions.
+     color=:blue,                                    # Otherwise each individual branch will have their separate colors.
+     plotbifpoints = false, putbifptlegend = false,  # Plots the bifurcation point(s).
+     linewidthstable=4, linewidthunstable=1)         # Stable/unstable values are distinguised by line thickness.</code></pre><p><img alt="bifurcation_diagram1" src="../../assets/bifurcation_diagram1.svg"/></p><p>Here the Hopf bifurcation is amrked with a blue square. The region with a thiner linewidth corresponds to unstable steady states. If one wishes to mark these differently it is possible to plot the individual brances separatly:</p><pre><code class="language-julia">plot(branches[1],lw=4,color=map(i-&gt;(i==0) ? :blue : :red, getproperty.(branches[1].branch,:n_unstable)))
+plot!(branches[3],lw=4,color=map(i-&gt;(i==0) ? :blue : :red, getproperty.(branches[3].branch,:n_unstable)))
+plot!(branches[4],lw=4,color=map(i-&gt;(i==0) ? :blue : :red, getproperty.(branches[4].branch,:n_unstable)),plotbifpoints = false,xlabel=rn.ps[1],ylabel=Symbol(rn.states[1].f))</code></pre><p><img alt="bifurcation_diagram2" src="../../assets/bifurcation_diagram2.svg"/></p><p>(Note that the second branch corresponds to a negative steady state, which is biological irrelevant, and we hence do not plot)</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../advanced_examples/">« Advanced Chemical Reaction Network Examples</a><a class="docs-footer-nextpage" href="../parameter_estimation/">Parameter Estimation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label></p><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div><p></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> on <span class="colophon-date" title="Wednesday 24 March 2021 12:51">Wednesday 24 March 2021</span>. Using Julia version 1.4.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></HTML>

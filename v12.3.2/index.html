@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Home · Catalyst.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="assets/warner.js"></script><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="assets/documenter.js"></script><script src="siteinfo.js"></script><script src="../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="assets/themeswap.js"></script><link href="assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href><img src="assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href>Catalyst.jl</a></span></div><form class="docs-search" action="search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li class="is-active"><a class="tocitem" href>Home</a><ul class="internal"><li><a class="tocitem" href="#Features"><span>Features</span></a></li><li><a class="tocitem" href="#Packages-Supporting-Catalyst"><span>Packages Supporting Catalyst</span></a></li><li><a class="tocitem" href="#Installation"><span>Installation</span></a></li><li><a class="tocitem" href="#Illustrative-Example"><span>Illustrative Example</span></a></li><li><a class="tocitem" href="#Getting-Help"><span>Getting Help</span></a></li><li><a class="tocitem" href="#Supporting-and-Citing-Catalyst.jl"><span>Supporting and Citing Catalyst.jl</span></a></li><li><a class="tocitem" href="#Reproducibility"><span>Reproducibility</span></a></li></ul></li><li><span class="tocitem">Catalyst for new Julia users</span><ul><li><a class="tocitem" href="catalyst_for_new_julia_users/intro_to_catalyst/">Introduction to Catalyst and Julia for new Julia users</a></li></ul></li><li><span class="tocitem">Tutorials</span><ul><li><a class="tocitem" href="tutorials/using_catalyst/">Using Catalyst</a></li><li><a class="tocitem" href="tutorials/dsl/">The Reaction DSL</a></li><li><a class="tocitem" href="tutorials/reaction_systems/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="tutorials/basic_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="tutorials/compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="tutorials/symbolic_stoich/">Parametric Stoichiometry</a></li><li><a class="tocitem" href="tutorials/reaction_network_representation/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="tutorials/homotopy_continuation_tutorial/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="tutorials/bifurcation_diagram/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="tutorials/parameter_estimation/">Parameter Estimation</a></li><li><a class="tocitem" href="tutorials/generating_reactions_programmatically/">Smoluchowski Coagulation Equation</a></li></ul></li><li><a class="tocitem" href="faqs/">FAQs</a></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="api/catalyst_api/">Catalyst.jl API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Home</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Home</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/index.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Catalyst.jl-for-Reaction-Network-Modeling"><a class="docs-heading-anchor" href="#Catalyst.jl-for-Reaction-Network-Modeling">Catalyst.jl for Reaction Network Modeling</a><a id="Catalyst.jl-for-Reaction-Network-Modeling-1"></a><a class="docs-heading-anchor-permalink" href="#Catalyst.jl-for-Reaction-Network-Modeling" title="Permalink"></a></h1><p>Catalyst.jl is a symbolic modeling package for analysis and high performance simulation of chemical reaction networks. Catalyst defines symbolic <a href="api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>s, which can be created programmatically or easily specified using Catalyst&#39;s domain specific language (DSL). Leveraging <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit</a> and <a href="https://docs.sciml.ai/Symbolics/stable/">Symbolics.jl</a>, Catalyst enables large-scale simulations through auto-vectorization and parallelism. Symbolic <code>ReactionSystem</code>s can be used to generate ModelingToolkit-based models, allowing the easy simulation and parameter estimation of mass action ODE models, Chemical Langevin SDE models, stochastic chemical kinetics jump process models, and more. Generated models can be used with solvers throughout the broader <a href="https://sciml.ai">SciML</a> ecosystem, including higher level SciML packages (e.g. for sensitivity analysis, parameter estimation, machine learning applications, etc).</p><h2 id="Features"><a class="docs-heading-anchor" href="#Features">Features</a><a id="Features-1"></a><a class="docs-heading-anchor-permalink" href="#Features" title="Permalink"></a></h2><ul><li>DSL provides a simple and readable format for manually specifying chemical reactions.</li><li>Catalyst <code>ReactionSystem</code>s provide a symbolic representation of reaction networks, built on <a href="https://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit.jl</a> and <a href="https://docs.sciml.ai/Symbolics/stable/">Symbolics.jl</a>.</li><li>Non-integer (e.g. <code>Float64</code>) stoichiometric coefficients are supported for generating ODE models, and symbolic expressions for stoichiometric coefficients are supported for all system types.</li><li>The <a href="api/catalyst_api/#Catalyst.jl-API">Catalyst.jl API</a> provides functionality for extending networks, building networks programmatically, network analysis, and for composing multiple networks together.</li><li><code>ReactionSystem</code>s generated by the DSL can be converted to a variety of <code>ModelingToolkit.AbstractSystem</code>s, including symbolic ODE, SDE and jump process representations.</li><li>Conservation laws can be detected and applied to reduce system sizes, and generate non-singular Jacobians, during conversion to ODEs, SDEs, and steady-state equations.</li><li>By leveraging ModelingToolkit, users have a variety of options for generating optimized system representations to use in solvers. These include construction of dense or sparse Jacobians, multithreading or parallelization of generated derivative functions, automatic classification of reactions into optimized jump types for Gillespie type simulations, automatic construction of dependency graphs for jump systems, and more.</li><li>Generated systems can be solved using any <a href="https://docs.sciml.ai/DiffEqDocs/stable/">DifferentialEquations.jl</a> ODE/SDE/jump solver, and can be used within <code>EnsembleProblem</code>s for carrying out parallelized parameter sweeps and statistical sampling. Plot recipes are available for visualizing the solutions.</li><li>Julia <code>Expr</code>s can be obtained for all rate laws and functions determining the deterministic and stochastic terms within resulting ODE, SDE or jump models.</li><li><a href="https://korsbo.github.io/Latexify.jl/stable/">Latexify</a> can be used to generate LaTeX expressions corresponding to generated mathematical models or the underlying set of reactions.</li><li><a href="https://graphviz.org/">Graphviz</a> can be used to generate and visualize reaction network graphs. (Reusing the Graphviz interface created in <a href="https://algebraicjulia.github.io/Catlab.jl/stable/">Catlab.jl</a>.)</li></ul><h2 id="Packages-Supporting-Catalyst"><a class="docs-heading-anchor" href="#Packages-Supporting-Catalyst">Packages Supporting Catalyst</a><a id="Packages-Supporting-Catalyst-1"></a><a class="docs-heading-anchor-permalink" href="#Packages-Supporting-Catalyst" title="Permalink"></a></h2><ul><li>Catalyst <a href="api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>s can be imported from SBML files via <a href="https://docs.sciml.ai/SBMLToolkit/stable/">SBMLToolkit.jl</a>, and from BioNetGen .net files and various stoichiometric matrix network representations using <a href="https://docs.sciml.ai/ReactionNetworkImporters/stable/">ReactionNetworkImporters.jl</a>.</li><li><a href="https://augustinas1.github.io/MomentClosure.jl/dev">MomentClosure.jl</a> allows generation of symbolic ModelingToolkit <code>ODESystem</code>s, representing moment closure approximations to moments of the Chemical Master Equation, from reaction networks defined in Catalyst.</li><li><a href="https://kaandocal.github.io/FiniteStateProjection.jl/dev/">FiniteStateProjection.jl</a> allows the construction and numerical solution of Chemical Master Equation models from reaction networks defined in Catalyst.</li><li><a href="https://palmtree2013.github.io/DelaySSAToolkit.jl/dev/">DelaySSAToolkit.jl</a> can augment Catalyst reaction network models with delays, and can simulate the resulting stochastic chemical kinetics with delays models.</li></ul><h2 id="Installation"><a class="docs-heading-anchor" href="#Installation">Installation</a><a id="Installation-1"></a><a class="docs-heading-anchor-permalink" href="#Installation" title="Permalink"></a></h2><p>Catalyst can be installed through the Julia package manager:</p><pre><code class="language-julia hljs">]add Catalyst
+using Catalyst</code></pre><h2 id="Illustrative-Example"><a class="docs-heading-anchor" href="#Illustrative-Example">Illustrative Example</a><a id="Illustrative-Example-1"></a><a class="docs-heading-anchor-permalink" href="#Illustrative-Example" title="Permalink"></a></h2><p>Here is a simple example of generating, visualizing and solving an SIR ODE model. We first define the SIR reaction model using Catalyst</p><pre><code class="language-julia hljs">using Catalyst
+rn = @reaction_network begin
+    α, S + I --&gt; 2I
+    β, I --&gt; R
+end α β</code></pre><p>Assuming <a href="https://graphviz.org/">Graphviz</a> and is installed and <em>command line accessible</em>, the network can be visualized using the <a href="api/catalyst_api/#Catalyst.Graph"><code>Graph</code></a> command</p><pre><code class="language-julia hljs">Graph(rn)</code></pre><p>which in Jupyter notebooks will give the figure</p><p><img src="assets/SIR_rn.svg" alt="SIR Network Graph"/></p><p>To generate and solve a mass action ODE version of the model we use</p><pre><code class="language-julia hljs">using OrdinaryDiffEq
+p     = [:α =&gt; .1/1000, :β =&gt; .01]
+tspan = (0.0,250.0)
+u0    = [:S =&gt; 999.0, :I =&gt; 1.0, :R =&gt; 0.0]
+op    = ODEProblem(rn, u0, tspan, p)
+sol   = solve(op, Tsit5())       # use Tsit5 ODE solver</code></pre><p>which we can plot as</p><pre><code class="language-julia hljs">using Plots
+plot(sol, lw=2)</code></pre><p><img src="assets/SIR.svg" alt="SIR Solution"/></p><h2 id="Getting-Help"><a class="docs-heading-anchor" href="#Getting-Help">Getting Help</a><a id="Getting-Help-1"></a><a class="docs-heading-anchor-permalink" href="#Getting-Help" title="Permalink"></a></h2><p>Catalyst developers are active on the <a href="https://discourse.julialang.org/">Julia Discourse</a>, and the <a href="https://julialang.slack.com">Julia Slack</a> channels #sciml-bridged and #sciml-sysbio. For bugs or feature requests <a href="https://github.com/SciML/Catalyst.jl/issues">open an issue</a>.</p><h2 id="Supporting-and-Citing-Catalyst.jl"><a class="docs-heading-anchor" href="#Supporting-and-Citing-Catalyst.jl">Supporting and Citing Catalyst.jl</a><a id="Supporting-and-Citing-Catalyst.jl-1"></a><a class="docs-heading-anchor-permalink" href="#Supporting-and-Citing-Catalyst.jl" title="Permalink"></a></h2><p>The software in this ecosystem was developed as part of academic research. If you would like to help support it, please star the repository as such metrics may help us secure funding in the future. If you use Catalyst as part of your research, teaching, or other activities, we would be grateful if you could cite our work:</p><pre><code class="nohighlight hljs">@article {2022Catalyst,
+	author = {Loman, T. and Ma, Y. and Ilin, V. and Gowda, S. and Korsbo, N. and Yewale, N. and Rackauckas, C. V. and Isaacson, S. A.},
+	title = {Catalyst: Fast Biochemical Modeling with Julia},
+	elocation-id = {2022.07.30.502135},
+	year = {2022},
+	doi = {10.1101/2022.07.30.502135},
+	publisher = {Cold Spring Harbor Laboratory},
+	URL = {https://www.biorxiv.org/content/early/2022/08/02/2022.07.30.502135},
+	eprint = {https://www.biorxiv.org/content/early/2022/08/02/2022.07.30.502135.full.pdf},
+	journal = {bioRxiv}
+}</code></pre><h2 id="Reproducibility"><a class="docs-heading-anchor" href="#Reproducibility">Reproducibility</a><a id="Reproducibility-1"></a><a class="docs-heading-anchor-permalink" href="#Reproducibility" title="Permalink"></a></h2><details><summary>The documentation of this SciML package was built using these direct dependencies,</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `~/work/Catalyst.jl/Catalyst.jl/docs/Project.toml`
+  [0f109fa4] BifurcationKit v0.2.2
+  [479239e8] Catalyst v12.3.2 `~/work/Catalyst.jl/Catalyst.jl`
+  [0c46a032] DifferentialEquations v7.6.0
+  [31c24e10] Distributions v0.25.80
+  [e30172f5] Documenter v0.27.24
+  [f213a82b] HomotopyContinuation v2.6.4
+  [23fbe1c1] Latexify v0.15.18
+⌃ [961ee093] ModelingToolkit v8.36.0
+  [91a5bcdd] Plots v1.38.2
+  [efcf1570] Setfield v1.1.1
+  [276daf66] SpecialFunctions v2.1.7
+Info Packages marked with ⌃ have new versions available and may be upgradable.</code></pre></details><details><summary>and using this machine and Julia version.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Julia Version 1.8.5
+Commit 17cfb8e65ea (2023-01-08 06:45 UTC)
+Platform Info:
+  OS: Linux (x86_64-linux-gnu)
+  CPU: 2 × Intel(R) Xeon(R) Platinum 8272CL CPU @ 2.60GHz
+  WORD_SIZE: 64
+  LIBM: libopenlibm
+  LLVM: libLLVM-13.0.1 (ORCJIT, skylake-avx512)
+  Threads: 1 on 2 virtual cores</code></pre></details><details><summary>A more complete overview of all dependencies and their versions is also provided.</summary><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Status `~/work/Catalyst.jl/Catalyst.jl/docs/Manifest.toml`
+  [a4c015fc] ANSIColoredPrinters v0.0.1
+  [c3fe647b] AbstractAlgebra v0.27.8
+  [1520ce14] AbstractTrees v0.4.4
+  [79e6a3ab] Adapt v3.5.0
+⌅ [fb37089c] Arblib v0.6.4
+  [dce04be8] ArgCheck v2.3.0
+  [ec485272] ArnoldiMethod v0.2.0
+  [7d9fca2a] Arpack v0.5.4
+  [4fba245c] ArrayInterface v6.0.24
+  [30b0a656] ArrayInterfaceCore v0.1.28
+  [6ba088a2] ArrayInterfaceGPUArrays v0.2.2
+  [015c0d05] ArrayInterfaceOffsetArrays v0.1.7
+  [b0d46f97] ArrayInterfaceStaticArrays v0.1.5
+  [dd5226c6] ArrayInterfaceStaticArraysCore v0.1.3
+  [4c555306] ArrayLayouts v0.8.18
+  [15f4f7f2] AutoHashEquals v0.2.0
+  [aae01518] BandedMatrices v0.17.9
+  [198e06fe] BangBang v0.3.37
+  [9718e550] Baselet v0.1.1
+  [0f109fa4] BifurcationKit v0.2.2
+  [e2ed5e7c] Bijections v0.1.4
+  [d1d4a3ce] BitFlags v0.1.7
+  [62783981] BitTwiddlingConvenienceFunctions v0.1.5
+  [8e7c35d0] BlockArrays v0.16.23
+  [764a87c0] BoundaryValueDiffEq v2.11.0
+  [fa961155] CEnum v0.4.2
+⌅ [2a0fbf3d] CPUSummary v0.1.30
+  [00ebfdb7] CSTParser v3.3.6
+  [49dc2e85] Calculus v0.5.1
+  [479239e8] Catalyst v12.3.2 `~/work/Catalyst.jl/Catalyst.jl`
+  [d360d2e6] ChainRulesCore v1.15.7
+  [9e997f8a] ChangesOfVariables v0.1.4
+  [fb6a15b2] CloseOpenIntervals v0.1.11
+  [944b1d66] CodecZlib v0.7.1
+  [35d6a980] ColorSchemes v3.20.0
+  [3da002f7] ColorTypes v0.11.4
+  [c3611d14] ColorVectorSpace v0.9.10
+  [5ae59095] Colors v0.12.10
+  [861a8166] Combinatorics v1.0.2
+  [a80b9123] CommonMark v0.8.10
+  [38540f10] CommonSolve v0.2.3
+  [bbf7d656] CommonSubexpressions v0.3.0
+  [34da2185] Compat v4.5.0
+  [b152e2b5] CompositeTypes v0.1.3
+  [a33af91c] CompositionsBase v0.1.1
+  [187b0558] ConstructionBase v1.4.1
+  [d38c429a] Contour v0.6.2
+  [adafc99b] CpuId v0.3.1
+  [a8cc5b0e] Crayons v4.1.1
+  [9a962f9c] DataAPI v1.14.0
+  [864edb3b] DataStructures v0.18.13
+  [e2d170a0] DataValueInterfaces v1.0.0
+  [244e2a9f] DefineSingletons v0.1.2
+  [bcd4f6db] DelayDiffEq v5.40.5
+  [b429d917] DensityInterface v0.4.0
+⌅ [2b5f629d] DiffEqBase v6.108.0
+  [459566f4] DiffEqCallbacks v2.24.3
+  [77a26b50] DiffEqNoiseProcess v5.15.2
+  [163ba53b] DiffResults v1.1.0
+  [b552c78f] DiffRules v1.12.2
+  [0c46a032] DifferentialEquations v7.6.0
+  [b4f34e82] Distances v0.10.7
+  [31c24e10] Distributions v0.25.80
+⌅ [ffbed154] DocStringExtensions v0.8.6
+  [e30172f5] Documenter v0.27.24
+⌅ [5b8099bc] DomainSets v0.5.15
+  [fa6b7ba4] DualNumbers v0.6.8
+  [7c1d4256] DynamicPolynomials v0.4.5
+  [fdbdab4c] ElasticArrays v1.2.11
+  [4e289a0a] EnumX v1.0.4
+  [d4d017d3] ExponentialUtilities v1.22.0
+  [e2ba6199] ExprTools v0.1.8
+  [c87230d0] FFMPEG v0.4.1
+  [7034ab61] FastBroadcast v0.2.4
+  [9aa1b823] FastClosures v0.3.2
+⌅ [442a2c76] FastGaussQuadrature v0.4.9
+  [29a986be] FastLapackInterface v1.2.8
+  [1a297f60] FillArrays v0.13.6
+  [6a86dc24] FiniteDiff v2.17.0
+  [53c48c17] FixedPointNumbers v0.8.4
+  [59287772] Formatting v0.4.2
+  [f6369f11] ForwardDiff v0.10.34
+  [069b7b12] FunctionWrappers v1.1.3
+  [77dc65aa] FunctionWrappersWrappers v0.1.1
+  [46192b85] GPUArraysCore v0.1.3
+  [28b8d3ca] GR v0.71.5
+  [c145ed77] GenericSchur v0.5.3
+  [c27321d9] Glob v1.3.0
+  [86223c79] Graphs v1.7.4
+  [42e2da0e] Grisu v1.0.2
+  [0b43b601] Groebner v0.2.11
+  [d5909c97] GroupsCore v0.4.0
+  [cd3eb016] HTTP v1.7.3
+  [f213a82b] HomotopyContinuation v2.6.4
+  [3e5b6fbb] HostCPUFeatures v0.1.13
+  [34004b35] HypergeometricFunctions v0.3.11
+  [b5f81e59] IOCapture v0.2.2
+  [615f187c] IfElse v0.1.1
+  [d25df0c9] Inflate v0.1.3
+  [83e8ac13] IniFile v0.5.1
+  [22cec73e] InitialValues v0.3.1
+  [18e54dd8] IntegerMathUtils v0.1.0
+⌅ [8197267c] IntervalSets v0.7.3
+  [3587e190] InverseFunctions v0.1.8
+  [92d709cd] IrrationalConstants v0.1.1
+  [42fd0dbc] IterativeSolvers v0.9.2
+  [82899510] IteratorInterfaceExtensions v1.0.0
+  [1019f520] JLFzf v0.1.5
+  [692b3bcd] JLLWrappers v1.4.1
+  [682c06a0] JSON v0.21.3
+  [98e50ef6] JuliaFormatter v1.0.20
+  [ccbc3e58] JumpProcesses v9.3.1
+  [ef3ab10e] KLU v0.4.0
+  [ba0b0d4f] Krylov v0.9.0
+⌅ [0b1a1467] KrylovKit v0.5.4
+  [8ac3fa9e] LRUCache v1.4.0
+  [b964fa9f] LaTeXStrings v1.3.0
+  [2ee39098] LabelledArrays v1.12.5
+  [984bce1d] LambertW v0.4.6
+  [23fbe1c1] Latexify v0.15.18
+  [10f19ff3] LayoutPointers v0.1.12
+  [2d8b4e74] LevyArea v1.0.0
+  [d3d80556] LineSearches v7.2.0
+  [7a12625a] LinearMaps v3.8.0
+  [7ed4a6bd] LinearSolve v1.33.1
+  [2ab3a3ac] LogExpFunctions v0.3.19
+  [e6f89c97] LoggingExtras v1.0.0
+  [bdcacae8] LoopVectorization v0.12.147
+  [1914dd2f] MacroTools v0.5.10
+  [d125e4d3] ManualMemory v0.1.8
+  [739be429] MbedTLS v1.1.7
+  [442fdcdd] Measures v0.3.2
+  [e9d8d322] Metatheory v1.3.5
+  [128add7d] MicroCollections v0.1.3
+  [e1d29d7a] Missings v1.1.0
+  [291d046c] MixedSubdivisions v1.1.2
+⌃ [961ee093] ModelingToolkit v8.36.0
+  [46d2c3a1] MuladdMacro v0.2.4
+  [102ac46a] MultivariatePolynomials v0.4.6
+  [d8a4904e] MutableArithmetics v1.1.0
+  [d41bc354] NLSolversBase v7.8.3
+  [2774e3e8] NLsolve v4.5.1
+  [77ba4419] NaNMath v1.0.1
+  [6fe1bfb0] OffsetArrays v1.12.8
+  [4d8831e6] OpenSSL v1.3.3
+  [429524aa] Optim v1.7.4
+  [bac558e1] OrderedCollections v1.4.1
+⌃ [1dea7af3] OrdinaryDiffEq v6.33.3
+  [90014a1f] PDMats v0.11.16
+  [d96e819e] Parameters v0.12.3
+  [69de0a69] Parsers v2.5.3
+  [b98c9c47] Pipe v1.3.0
+  [ccf2f8ad] PlotThemes v3.1.0
+  [995b91a9] PlotUtils v1.3.2
+  [91a5bcdd] Plots v1.38.2
+  [e409e4f3] PoissonRandom v0.4.3
+⌅ [f517fe37] Polyester v0.6.20
+⌅ [1d0040c9] PolyesterWeave v0.1.13
+  [85a6dd25] PositiveFactorizations v0.2.4
+  [d236fae5] PreallocationTools v0.4.8
+  [21216c6a] Preferences v1.3.0
+⌅ [08abe8d2] PrettyTables v1.3.1
+  [27ebfcd6] Primes v0.5.3
+  [92933f4c] ProgressMeter v1.7.2
+  [01f381cc] ProjectiveVectors v1.1.3
+  [1fd47b50] QuadGK v2.7.0
+  [74087812] Random123 v1.6.0
+  [fb686558] RandomExtensions v0.4.3
+  [e6cf234a] RandomNumbers v1.5.3
+  [3cdcf5f2] RecipesBase v1.3.3
+  [01d81517] RecipesPipeline v0.6.11
+⌃ [731186ca] RecursiveArrayTools v2.32.3
+  [f2c3362d] RecursiveFactorization v0.2.17
+  [189a3867] Reexport v1.2.2
+  [42d2dcc6] Referenceables v0.1.2
+  [05181044] RelocatableFolders v1.0.0
+  [ae029012] Requires v1.3.0
+  [ae5879a3] ResettableStacks v1.1.1
+  [79098fc4] Rmath v0.7.0
+  [7e49a35a] RuntimeGeneratedFunctions v0.5.5
+  [3cdde19b] SIMDDualNumbers v0.1.1
+  [94e857df] SIMDTypes v0.1.0
+  [476501e8] SLEEFPirates v0.6.37
+  [0bca4576] SciMLBase v1.81.0
+  [6c6a2e73] Scratch v1.1.1
+  [8e049039] SemialgebraicSets v0.2.5
+  [efcf1570] Setfield v1.1.1
+  [992d4aef] Showoff v1.0.3
+  [777ac1f9] SimpleBufferStream v1.1.0
+⌃ [727e6d20] SimpleNonlinearSolve v0.1.5
+  [699a6c99] SimpleTraits v0.9.4
+  [66db9d55] SnoopPrecompile v1.0.3
+  [a2af1166] SortingAlgorithms v1.1.0
+  [47a9eef4] SparseDiffTools v1.30.0
+  [e56a9233] Sparspak v0.3.7
+  [276daf66] SpecialFunctions v2.1.7
+  [171d559e] SplittablesBase v0.1.15
+  [aedffcd0] Static v0.8.3
+  [90137ffa] StaticArrays v1.5.12
+  [1e83bf80] StaticArraysCore v1.4.0
+  [82ae8749] StatsAPI v1.5.0
+  [2913bbd2] StatsBase v0.33.21
+  [4c63d2b9] StatsFuns v1.1.1
+  [9672c7b4] SteadyStateDiffEq v1.11.0
+  [789caeaf] StochasticDiffEq v6.57.4
+  [7792a7ef] StrideArraysCore v0.4.5
+⌅ [09ab397b] StructArrays v0.4.2
+  [c3572dad] Sundials v4.12.0
+⌅ [d1185830] SymbolicUtils v0.19.11
+⌅ [0c5d862f] Symbolics v4.14.0
+  [3783bdb8] TableTraits v1.0.1
+  [bd369af6] Tables v1.10.0
+  [62fd8b95] TensorCore v0.1.1
+⌅ [8ea1fca8] TermInterface v0.2.3
+  [8290d209] ThreadingUtilities v0.5.0
+  [ac1d9e8a] ThreadsX v0.1.11
+  [a759f4b9] TimerOutputs v0.5.22
+  [0796e94c] Tokenize v0.5.25
+  [3bb67fe8] TranscodingStreams v0.9.11
+  [28d57a85] Transducers v0.4.75
+  [a2a6695c] TreeViews v0.3.0
+  [d5829a12] TriangularSolve v0.1.17
+  [410a4b4d] Tricks v0.1.6
+  [5c2747f8] URIs v1.4.1
+  [3a884ed6] UnPack v1.0.2
+  [1cfade01] UnicodeFun v0.4.1
+  [1986cc42] Unitful v1.12.2
+  [41fe7b60] Unzip v0.2.0
+  [3d5dd08c] VectorizationBase v0.21.57
+  [19fa3120] VertexSafeGraphs v0.2.0
+  [700de1a5] ZygoteRules v0.2.2
+⌅ [d9960996] Arb_jll v200.2200.0+0
+⌅ [68821587] Arpack_jll v3.5.1+1
+  [6e34b625] Bzip2_jll v1.0.8+0
+  [83423d85] Cairo_jll v1.16.1+1
+  [2e619515] Expat_jll v2.4.8+0
+  [b22a6f82] FFMPEG_jll v4.4.2+2
+⌅ [e134572f] FLINT_jll v200.800.500+0
+  [a3f928ae] Fontconfig_jll v2.13.93+0
+  [d7e528f0] FreeType2_jll v2.10.4+0
+  [559328eb] FriBidi_jll v1.0.10+0
+  [0656b61e] GLFW_jll v3.3.8+0
+  [d2c73de3] GR_jll v0.71.5+0
+  [78b55507] Gettext_jll v0.21.0+0
+  [7746bdde] Glib_jll v2.74.0+2
+  [3b182d85] Graphite2_jll v1.3.14+0
+  [2e76f6c2] HarfBuzz_jll v2.8.1+1
+  [aacddb02] JpegTurbo_jll v2.1.2+0
+  [c1c5ebd0] LAME_jll v3.100.1+0
+  [88015f11] LERC_jll v3.0.0+1
+  [dd4b983a] LZO_jll v2.10.1+0
+⌅ [e9f186c6] Libffi_jll v3.2.2+1
+  [d4300ac3] Libgcrypt_jll v1.8.7+0
+  [7e76a0d4] Libglvnd_jll v1.6.0+0
+  [7add5ba3] Libgpg_error_jll v1.42.0+0
+  [94ce4f54] Libiconv_jll v1.16.1+2
+  [4b2f31a3] Libmount_jll v2.35.0+0
+  [89763e89] Libtiff_jll v4.4.0+0
+  [38a345b3] Libuuid_jll v2.36.0+0
+  [2ce0c516] MPC_jll v1.2.1+0
+  [e7412a2a] Ogg_jll v1.3.5+1
+⌅ [656ef2d0] OpenBLAS32_jll v0.3.17+0
+  [458c3c95] OpenSSL_jll v1.1.19+0
+  [efe28fd5] OpenSpecFun_jll v0.5.5+0
+  [91d4177d] Opus_jll v1.3.2+0
+  [30392449] Pixman_jll v0.40.1+0
+  [ea2cea3b] Qt5Base_jll v5.15.3+2
+  [f50d1b31] Rmath_jll v0.3.0+0
+  [fb77eaff] Sundials_jll v5.2.1+0
+⌅ [3428059b] SymEngine_jll v0.8.1+0
+  [a2964d1f] Wayland_jll v1.21.0+0
+  [2381bf8a] Wayland_protocols_jll v1.25.0+0
+  [02c8fc9c] XML2_jll v2.10.3+0
+  [aed1982a] XSLT_jll v1.1.34+0
+  [4f6342f7] Xorg_libX11_jll v1.6.9+4
+  [0c0b7dd1] Xorg_libXau_jll v1.0.9+4
+  [935fb764] Xorg_libXcursor_jll v1.2.0+4
+  [a3789734] Xorg_libXdmcp_jll v1.1.3+4
+  [1082639a] Xorg_libXext_jll v1.3.4+4
+  [d091e8ba] Xorg_libXfixes_jll v5.0.3+4
+  [a51aa0fd] Xorg_libXi_jll v1.7.10+4
+  [d1454406] Xorg_libXinerama_jll v1.1.4+4
+  [ec84b674] Xorg_libXrandr_jll v1.5.2+4
+  [ea2f1a96] Xorg_libXrender_jll v0.9.10+4
+  [14d82f49] Xorg_libpthread_stubs_jll v0.1.0+3
+  [c7cfdc94] Xorg_libxcb_jll v1.13.0+3
+  [cc61e674] Xorg_libxkbfile_jll v1.1.0+4
+  [12413925] Xorg_xcb_util_image_jll v0.4.0+1
+  [2def613f] Xorg_xcb_util_jll v0.4.0+1
+  [975044d2] Xorg_xcb_util_keysyms_jll v0.4.0+1
+  [0d47668e] Xorg_xcb_util_renderutil_jll v0.3.9+1
+  [c22f9ab0] Xorg_xcb_util_wm_jll v0.4.1+1
+  [35661453] Xorg_xkbcomp_jll v1.4.2+4
+  [33bec58e] Xorg_xkeyboard_config_jll v2.27.0+4
+  [c5fb5394] Xorg_xtrans_jll v1.4.0+3
+  [3161d3a3] Zstd_jll v1.5.2+0
+⌅ [214eeab7] fzf_jll v0.29.0+0
+  [a4ae2306] libaom_jll v3.4.0+0
+  [0ac62f75] libass_jll v0.15.1+0
+  [f638f0a6] libfdk_aac_jll v2.0.2+0
+  [b53b4c65] libpng_jll v1.6.38+0
+  [f27f6e37] libvorbis_jll v1.3.7+1
+  [1270edf5] x264_jll v2021.5.5+0
+  [dfaa095f] x265_jll v3.5.0+0
+  [d8fb68d0] xkbcommon_jll v1.4.1+0
+  [0dad84c5] ArgTools v1.1.1
+  [56f22d72] Artifacts
+  [2a0f44e3] Base64
+  [ade2ca70] Dates
+  [8bb1440f] DelimitedFiles
+  [8ba89e20] Distributed
+  [f43a241f] Downloads v1.6.0
+  [7b1f6079] FileWatching
+  [9fa8497b] Future
+  [b77e0a4c] InteractiveUtils
+  [b27032c2] LibCURL v0.6.3
+  [76f85450] LibGit2
+  [8f399da3] Libdl
+  [37e2e46d] LinearAlgebra
+  [56ddb016] Logging
+  [d6f4376e] Markdown
+  [a63ad114] Mmap
+  [ca575930] NetworkOptions v1.2.0
+  [44cfe95a] Pkg v1.8.0
+  [de0858da] Printf
+  [3fa0cd96] REPL
+  [9a3f8284] Random
+  [ea8e919c] SHA v0.7.0
+  [9e88b42a] Serialization
+  [1a1011a3] SharedArrays
+  [6462fe0b] Sockets
+  [2f01184e] SparseArrays
+  [10745b16] Statistics
+  [4607b0f0] SuiteSparse
+  [fa267f1f] TOML v1.0.0
+  [a4e569a6] Tar v1.10.1
+  [8dfed614] Test
+  [cf7118a7] UUIDs
+  [4ec0a83e] Unicode
+  [e66e0078] CompilerSupportLibraries_jll v1.0.1+0
+  [781609d7] GMP_jll v6.2.1+2
+  [deac9b47] LibCURL_jll v7.84.0+0
+  [29816b5a] LibSSH2_jll v1.10.2+0
+  [3a97d323] MPFR_jll v4.1.1+1
+  [c8ffd9c3] MbedTLS_jll v2.28.0+0
+  [14a3606d] MozillaCACerts_jll v2022.2.1
+  [4536629a] OpenBLAS_jll v0.3.20+0
+  [05823500] OpenLibm_jll v0.8.1+0
+  [efcefdf7] PCRE2_jll v10.40.0+0
+  [bea87d4a] SuiteSparse_jll v5.10.1+0
+  [83775a58] Zlib_jll v1.2.12+3
+  [8e850b90] libblastrampoline_jll v5.1.1+0
+  [8e850ede] nghttp2_jll v1.48.0+0
+  [3f19e933] p7zip_jll v17.4.0+0
+Info Packages marked with ⌃ and ⌅ have new versions available, but those with ⌅ are restricted by compatibility constraints from upgrading. To see why use `status --outdated -m`</code></pre></details>You can also download the
+<a href="https://github.com/SciML/Catalyst.jl/tree/gh-pages/v12.3.2/assets/Manifest.toml">manifest</a> file and the
+<a href="https://github.com/SciML/Catalyst.jl/tree/gh-pages/v12.3.2/assets/Project.toml">project</a> file.</article><nav class="docs-footer"><a class="docs-footer-nextpage" href="catalyst_for_new_julia_users/intro_to_catalyst/">Introduction to Catalyst and Julia for new Julia users »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Tuesday 24 January 2023 21:39">Tuesday 24 January 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

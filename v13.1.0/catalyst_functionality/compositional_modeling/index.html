@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Compositional Modeling of Reaction Systems · Catalyst.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/catalyst_functionality/compositional_modeling/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script><link href="../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../"><img src="../../assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Catalyst.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Introduction to Catalyst</span><ul><li><a class="tocitem" href="../../introduction_to_catalyst/catalyst_for_new_julia_users/">Introduction to Catalyst and Julia for New Julia users</a></li><li><a class="tocitem" href="../../introduction_to_catalyst/introduction_to_catalyst/">Introduction to Catalyst</a></li></ul></li><li><span class="tocitem">Catalyst Functionality</span><ul><li><a class="tocitem" href="../dsl_description/">The Reaction DSL</a></li><li><a class="tocitem" href="../programmatic_CRN_construction/">Programmatic Construction of Symbolic Reaction Systems</a></li><li class="is-active"><a class="tocitem" href>Compositional Modeling of Reaction Systems</a><ul class="internal"><li><a class="tocitem" href="#Compositional-modeling-tooling"><span>Compositional modeling tooling</span></a></li><li><a class="tocitem" href="#Compositional-model-of-the-repressilator"><span>Compositional model of the repressilator</span></a></li><li><a class="tocitem" href="#Compartment-based-models"><span>Compartment-based models</span></a></li></ul></li><li><a class="tocitem" href="../constraint_equations/">Constraint Equations and Events</a></li><li><a class="tocitem" href="../parametric_stoichiometry/">Symbolic Stochiometries</a></li><li><a class="tocitem" href="../network_analysis/">Network Analysis in Catalyst</a></li></ul></li><li><span class="tocitem">Catalyst Applications</span><ul><li><a class="tocitem" href="../../catalyst_applications/advanced_simulations/">Advanced Simulation Options</a></li><li><a class="tocitem" href="../../catalyst_applications/homotopy_continuation/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="../../catalyst_applications/bifurcation_diagrams/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../../catalyst_applications/parameter_estimation/">Parameter Estimation</a></li></ul></li><li><span class="tocitem">Example Networks</span><ul><li><a class="tocitem" href="../../example_networks/basic_CRN_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="../../example_networks/smoluchowski_coagulation_equation/">Smoluchowski Coagulation Equation</a></li></ul></li><li><a class="tocitem" href="../../faqs/">FAQs</a></li><li><a class="tocitem" href="../../api/catalyst_api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Catalyst Functionality</a></li><li class="is-active"><a href>Compositional Modeling of Reaction Systems</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Compositional Modeling of Reaction Systems</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/catalyst_functionality/compositional_modeling.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="compositional_modeling"><a class="docs-heading-anchor" href="#compositional_modeling">Compositional Modeling of Reaction Systems</a><a id="compositional_modeling-1"></a><a class="docs-heading-anchor-permalink" href="#compositional_modeling" title="Permalink"></a></h1><p>Catalyst supports the construction of models in a compositional fashion, based on ModelingToolkit&#39;s subsystem functionality. In this tutorial we&#39;ll see how we can construct the earlier repressilator model by composing together three identically repressed genes, and how to use compositional modeling to create compartments.</p><h2 id="Compositional-modeling-tooling"><a class="docs-heading-anchor" href="#Compositional-modeling-tooling">Compositional modeling tooling</a><a id="Compositional-modeling-tooling-1"></a><a class="docs-heading-anchor-permalink" href="#Compositional-modeling-tooling" title="Permalink"></a></h2><p>Catalyst supports two ModelingToolkit interfaces for composing multiple <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>s together into a full model. The first mechanism for extending a system is the <code>extend</code> command</p><pre><code class="language-julia hljs">using Catalyst
+basern = @reaction_network rn1 begin
+  k, A + B --&gt; C
+end
+newrn = @reaction_network rn2 begin
+  r, C --&gt; A + B
+end
+@named rn = extend(newrn, basern)</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{A} + \mathrm{B} &amp;\xrightleftharpoons[r]{k} \mathrm{C}  
+ \end{align*}
+ \]</p><p>Here we extended <code>basern</code> with <code>newrn</code> giving a system with all the reactions. Note, if a name is not specified via <code>@named</code> or the <code>name</code> keyword then <code>rn</code> will have the same name as <code>newrn</code>.</p><p>The second main compositional modeling tool is the use of subsystems. Suppose we now add to <code>basern</code> two subsystems, <code>newrn</code> and <code>newestrn</code>, we get a different result:</p><pre><code class="language-julia hljs">newestrn = @reaction_network rn3 begin
+            v, A + D --&gt; 2D
+           end
+@named rn = compose(basern, [newrn, newestrn])</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{A} + \mathrm{B} &amp;\xrightarrow{k} \mathrm{C} \\
+\mathrm{rn2_{+}C} &amp;\xrightarrow{rn2_{+}r} \mathrm{rn2_{+}A} + \mathrm{rn2_{+}B} \\
+\mathrm{rn3_{+}A} + \mathrm{rn3_{+}D} &amp;\xrightarrow{rn3_{+}v} 2 \mathrm{rn3_{+}D}  
+ \end{align*}
+ \]</p><p>Here we have created a new <code>ReactionSystem</code> that adds <code>newrn</code> and <code>newestrn</code> as subsystems of <code>basern</code>. The variables and parameters in the sub-systems are considered distinct from those in other systems, and so are namespaced (i.e. prefaced) by the name of the system they come from.</p><p>We can see the subsystems of a given system by</p><pre><code class="language-julia hljs">ModelingToolkit.get_systems(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">2-element Vector{Any}:
+ ReactionSystem{Catalyst.NetworkProperties{Int64, SymbolicUtils.BasicSymbolic{Real}}}(Union{Equation, Reaction}[r, C --&gt; A + B], Reaction[r, C --&gt; A + B], t, SymbolicUtils.BasicSymbolic{Real}[], SymbolicUtils.BasicSymbolic{Real}[C(t), A(t), B(t)], SymbolicUtils.BasicSymbolic{Real}[C(t), A(t), B(t)], SymbolicUtils.BasicSymbolic{Real}[r], Dict{Symbol, Any}(:A =&gt; A(t), :B =&gt; B(t), :r =&gt; r, :C =&gt; C(t)), Equation[], :rn2, Any[], Dict{Any, Any}(), nothing, Conserved Equations: 
+, true, ModelingToolkit.SymbolicContinuousCallback[ModelingToolkit.SymbolicContinuousCallback(Equation[], Equation[])], ModelingToolkit.SymbolicDiscreteCallback[], false)
+ ReactionSystem{Catalyst.NetworkProperties{Int64, SymbolicUtils.BasicSymbolic{Real}}}(Union{Equation, Reaction}[v, A + D --&gt; 2*D], Reaction[v, A + D --&gt; 2*D], t, SymbolicUtils.BasicSymbolic{Real}[], SymbolicUtils.BasicSymbolic{Real}[A(t), D(t)], SymbolicUtils.BasicSymbolic{Real}[A(t), D(t)], SymbolicUtils.BasicSymbolic{Real}[v], Dict{Symbol, Any}(:A =&gt; A(t), :D =&gt; D(t), :v =&gt; v), Equation[], :rn3, Any[], Dict{Any, Any}(), nothing, Conserved Equations: 
+, true, ModelingToolkit.SymbolicContinuousCallback[ModelingToolkit.SymbolicContinuousCallback(Equation[], Equation[])], ModelingToolkit.SymbolicDiscreteCallback[], false)</code></pre><p>They naturally form a tree-like structure</p><pre><code class="language-julia hljs">using Plots, GraphRecipes
+plot(TreePlot(rn), method=:tree, fontsize=12, nodeshape=:ellipse)</code></pre><p><img src="../../assets/rn_treeplot.svg" alt="rn network with subsystems"/></p><p>We could also have directly constructed <code>rn</code> using the same reaction as in <code>basern</code> as</p><pre><code class="language-julia hljs">@parameters k
+@variables t
+@species A(t), B(t), C(t)
+rxs = [Reaction(k, [A,B], [C])]
+@named rn = ReactionSystem(rxs, t; systems = [newrn, newestrn])</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{A} + \mathrm{B} &amp;\xrightarrow{k} \mathrm{C} \\
+\mathrm{rn2_{+}C} &amp;\xrightarrow{rn2_{+}r} \mathrm{rn2_{+}A} + \mathrm{rn2_{+}B} \\
+\mathrm{rn3_{+}A} + \mathrm{rn3_{+}D} &amp;\xrightarrow{rn3_{+}v} 2 \mathrm{rn3_{+}D}  
+ \end{align*}
+ \]</p><p>Catalyst provides several different accessors for getting information from a single system, or all systems in the tree. To get the species, parameters, and reactions <em>only</em> within a given system (i.e. ignoring subsystems), we can use</p><pre><code class="language-julia hljs">Catalyst.get_species(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{SymbolicUtils.BasicSymbolic{Real}}:
+ A(t)
+ B(t)
+ C(t)</code></pre><pre><code class="language-julia hljs">ModelingToolkit.get_ps(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1-element Vector{SymbolicUtils.BasicSymbolic{Real}}:
+ k</code></pre><pre><code class="language-julia hljs">Catalyst.get_rxs(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">1-element Vector{Reaction}:
+ k, A + B --&gt; C</code></pre><p>To see all the species, parameters and reactions in the tree we can use</p><pre><code class="language-julia hljs">species(rn)   # or states(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">8-element Vector{SymbolicUtils.BasicSymbolic{Real}}:
+ A(t)
+ B(t)
+ C(t)
+ rn2₊C(t)
+ rn2₊A(t)
+ rn2₊B(t)
+ rn3₊A(t)
+ rn3₊D(t)</code></pre><pre><code class="language-julia hljs">parameters(rn)  # or reactionparameters(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{SymbolicUtils.BasicSymbolic{Real}}:
+ k
+ rn2₊r
+ rn3₊v</code></pre><pre><code class="language-julia hljs">reactions(rn)   # or equations(rn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">3-element Vector{Reaction}:
+ k, A + B --&gt; C
+ rn2₊r, rn2₊C --&gt; rn2₊A + rn2₊B
+ rn3₊v, rn3₊A + rn3₊D --&gt; 2*rn3₊D</code></pre><p>If we want to collapse <code>rn</code> down to a single system with no subsystems we can use</p><pre><code class="language-julia hljs">flatrn = Catalyst.flatten(rn)</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{A} + \mathrm{B} &amp;\xrightarrow{k} \mathrm{C} \\
+\mathrm{rn2_{+}C} &amp;\xrightarrow{rn2_{+}r} \mathrm{rn2_{+}A} + \mathrm{rn2_{+}B} \\
+\mathrm{rn3_{+}A} + \mathrm{rn3_{+}D} &amp;\xrightarrow{rn3_{+}v} 2 \mathrm{rn3_{+}D}  
+ \end{align*}
+ \]</p><p>where</p><pre><code class="language-julia hljs">ModelingToolkit.get_systems(flatrn)</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">Any[]</code></pre><p>More about ModelingToolkit&#39;s interface for compositional modeling can be found in the <a href="http://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit docs</a>.</p><h2 id="Compositional-model-of-the-repressilator"><a class="docs-heading-anchor" href="#Compositional-model-of-the-repressilator">Compositional model of the repressilator</a><a id="Compositional-model-of-the-repressilator-1"></a><a class="docs-heading-anchor-permalink" href="#Compositional-model-of-the-repressilator" title="Permalink"></a></h2><p>Let&#39;s apply the tooling we&#39;ve just seen to create the repressilator in a more modular fashion. We start by defining a function that creates a negatively repressed gene, taking the repressor as input</p><pre><code class="language-julia hljs">function repressed_gene(; R, name)
+  @reaction_network $name begin
+    hillr($R,α,K,n), ∅ --&gt; m
+    (δ,γ), m &lt;--&gt; ∅
+    β, m --&gt; m + P
+    μ, P --&gt; ∅
+  end
+end</code></pre><p>Here we assume the user will pass in the repressor species as a ModelingToolkit variable, and specify a name for the network. We use Catalyst&#39;s interpolation ability to substitute the value of these variables into the DSL (see <a href="../dsl_description/#dsl_description_interpolation_of_variables">Interpolation of Julia Variables</a>). To make the repressilator we now make three genes, and then compose them together</p><pre><code class="language-julia hljs">@variables t
+@species G3₊P(t)
+@named G1 = repressed_gene(; R=ParentScope(G3₊P))
+@named G2 = repressed_gene(; R=ParentScope(G1.P))
+@named G3 = repressed_gene(; R=ParentScope(G2.P))
+@named repressilator = ReactionSystem(t; systems=[G1,G2,G3])</code></pre><p class="math-container">\[ \begin{align*}
+\varnothing &amp;\xrightleftharpoons[G1_+\delta]{\frac{G1_+\alpha G1_{+}K^{G1_{+}n}}{G1_{+}K^{G1_{+}n} + G3_{+}P^{G1_{+}n}}} \mathrm{G1_{+}m} \\
+\varnothing &amp;\xrightarrow{G1_+\gamma} \mathrm{G1_{+}m} \\
+\mathrm{G1_{+}m} &amp;\xrightarrow{G1_+\beta} \mathrm{G1_{+}m} + \mathrm{G1_{+}P} \\
+\mathrm{G1_{+}P} &amp;\xrightarrow{G1_+\mu} \varnothing \\
+\varnothing &amp;\xrightleftharpoons[G2_+\delta]{\frac{G2_+\alpha G2_{+}K^{G2_{+}n}}{G2_{+}K^{G2_{+}n} + G1_{+}P^{G2_{+}n}}} \mathrm{G2_{+}m} \\
+\varnothing &amp;\xrightarrow{G2_+\gamma} \mathrm{G2_{+}m} \\
+\mathrm{G2_{+}m} &amp;\xrightarrow{G2_+\beta} \mathrm{G2_{+}m} + \mathrm{G2_{+}P} \\
+\mathrm{G2_{+}P} &amp;\xrightarrow{G2_+\mu} \varnothing \\
+\varnothing &amp;\xrightleftharpoons[G3_+\delta]{\frac{G3_+\alpha G3_{+}K^{G3_{+}n}}{G3_{+}K^{G3_{+}n} + G2_{+}P^{G3_{+}n}}} \mathrm{G3_{+}m} \\
+\varnothing &amp;\xrightarrow{G3_+\gamma} \mathrm{G3_{+}m} \\
+\mathrm{G3_{+}m} &amp;\xrightarrow{G3_+\beta} \mathrm{G3_{+}m} + \mathrm{G3_{+}P} \\
+\mathrm{G3_{+}P} &amp;\xrightarrow{G3_+\mu} \varnothing  
+ \end{align*}
+ \]</p><p>Notice, in this system each gene is a child node in the system graph of the repressilator</p><pre><code class="language-julia hljs">plot(TreePlot(repressilator), method=:tree, fontsize=12, nodeshape=:ellipse)</code></pre><p><img src="../../assets/repressilator_treeplot.svg" alt="repressilator tree plot"/></p><p>In building the repressilator we needed to use two new features. First, we needed to create a symbolic variable that corresponds to the protein produced by the third gene before we created the corresponding system. We did this via <code>@variables t, G3₊P(t)</code>. We also needed to set the scope where each repressor lived. Here <code>ParentScope(G3₊P)</code>, <code>ParentScope(G1.P)</code>, and <code>ParentScope(G2.P)</code> signal Catalyst that these variables will come from parallel systems in the tree that have the same parent as the system being constructed (in this case the top-level <code>repressilator</code> system).</p><h2 id="Compartment-based-models"><a class="docs-heading-anchor" href="#Compartment-based-models">Compartment-based models</a><a id="Compartment-based-models-1"></a><a class="docs-heading-anchor-permalink" href="#Compartment-based-models" title="Permalink"></a></h2><p>Finally, let&#39;s see how we can make a compartment-based model. Let&#39;s create a simple eukaryotic gene expression model with negative feedback by protein dimers. Transcription and gene inhibition by the protein dimer occurs in the nucleus, translation and dimerization occur in the cytosol, and nuclear import and export reactions couple the two compartments. We&#39;ll include volume parameters for the nucleus and cytosol, and assume we are working with species having units of number of molecules. Rate constants will have their common concentration units, i.e. if <span>$V$</span> denotes the volume of a compartment then</p><table><tr><th style="text-align: center">Reaction Type</th><th style="text-align: center">Example</th><th style="text-align: center">Rate Constant Units</th><th style="text-align: center">Effective rate constant (units of per time)</th></tr><tr><td style="text-align: center">Zero order</td><td style="text-align: center"><span>$\varnothing \overset{\alpha}{\to} A$</span></td><td style="text-align: center">concentration / time</td><td style="text-align: center"><span>$\alpha V$</span></td></tr><tr><td style="text-align: center">First order</td><td style="text-align: center"><span>$A \overset{\beta}{\to} B$</span></td><td style="text-align: center">(time)⁻¹</td><td style="text-align: center"><span>$\beta$</span></td></tr><tr><td style="text-align: center">Second order</td><td style="text-align: center"><span>$A + B \overset{\gamma}{\to} C$</span></td><td style="text-align: center">(concentration × time)⁻¹</td><td style="text-align: center"><span>$\gamma/V$</span></td></tr></table><p>In our model we&#39;ll therefore add the conversions of the last column to properly account for compartment volumes:</p><pre><code class="language-julia hljs"># transcription and regulation
+nuc = @reaction_network nuc begin
+  α, G --&gt; G + M
+  (κ₊/V,κ₋), D + G &lt;--&gt; DG
+end
+
+# translation and dimerization
+cyto = @reaction_network cyto begin
+  β, M --&gt; M + P
+  (k₊/V,k₋), 2P &lt;--&gt; D
+  σ, P --&gt; 0
+  μ, M --&gt; 0
+end
+
+# export reactions,
+# γ,δ=probability per time to be exported/imported
+model = @reaction_network model begin
+  γ, $(nuc.M) --&gt; $(cyto.M)
+  δ, $(cyto.D) --&gt; $(nuc.D)
+end
+@named model = compose(model, [nuc, cyto])</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{nuc_{+}M} &amp;\xrightarrow{\gamma} \mathrm{cyto_{+}M} \\
+\mathrm{cyto_{+}D} &amp;\xrightarrow{\delta} \mathrm{nuc_{+}D} \\
+\mathrm{nuc_{+}G} &amp;\xrightarrow{nuc_+\alpha} \mathrm{nuc_{+}G} + \mathrm{nuc_{+}M} \\
+\mathrm{nuc_{+}D} + \mathrm{nuc_{+}G} &amp;\xrightleftharpoons[nuc_+\kappa_-]{\frac{nuc_+\kappa_+}{nuc_{+}V}} \mathrm{nuc_{+}DG} \\
+\mathrm{cyto_{+}M} &amp;\xrightarrow{cyto_+\beta} \mathrm{cyto_{+}M} + \mathrm{cyto_{+}P} \\
+2 \mathrm{cyto_{+}P} &amp;\xrightleftharpoons[cyto_{+}k_-]{\frac{cyto_{+}k_+}{cyto_{+}V}} \mathrm{cyto_{+}D} \\
+\mathrm{cyto_{+}P} &amp;\xrightarrow{cyto_+\sigma} \varnothing \\
+\mathrm{cyto_{+}M} &amp;\xrightarrow{cyto_+\mu} \varnothing  
+ \end{align*}
+ \]</p><p>A graph of the resulting network is</p><pre><code class="language-julia hljs">Graph(model)</code></pre><p><img src="../../assets/compartment_gene_regulation.svg" alt="graph of gene regulation model"/></p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../programmatic_CRN_construction/">« Programmatic Construction of Symbolic Reaction Systems</a><a class="docs-footer-nextpage" href="../constraint_equations/">Constraint Equations and Events »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.24 on <span class="colophon-date" title="Friday 3 March 2023 07:17">Friday 3 March 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

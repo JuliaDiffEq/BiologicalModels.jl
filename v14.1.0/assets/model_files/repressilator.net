@@ -1,0 +1,93 @@
+# Created by BioNetGen 2.3.1
+begin parameters
+    1 Na          6.022e23  # Constant
+    2 V           1.4e-15  # Constant
+    3 c0          1e9  # Constant
+    4 c1          224  # Constant
+    5 c2          9  # Constant
+    6 c3          0.5  # Constant
+    7 c4          5e-4  # Constant
+    8 c5          0.167  # Constant
+    9 c6          ln(2)/120  # Constant
+   10 c7          ln(2)/600  # Constant
+   11 tF          1e-4  # Constant
+   12 rF          1000  # Constant
+   13 pF          1000  # Constant
+   14 _rateLaw1   (((c0/Na)/V)*tF)/pF  # ConstantExpression
+   15 _rateLaw2   c1*tF  # ConstantExpression
+   16 _rateLaw3   (((c0/Na)/V)*tF)/pF  # ConstantExpression
+   17 _rateLaw4   c2*tF  # ConstantExpression
+   18 _rateLaw5   c3*rF  # ConstantExpression
+   19 _rateLaw6   c4*rF  # ConstantExpression
+   20 _rateLaw7   (c5/rF)*pF  # ConstantExpression
+   21 _rateLaw8   (((c0/Na)/V)*tF)/pF  # ConstantExpression
+   22 _rateLaw9   c1*tF  # ConstantExpression
+   23 _rateLaw10  (((c0/Na)/V)*tF)/pF  # ConstantExpression
+   24 _rateLaw11  c2*tF  # ConstantExpression
+   25 _rateLaw12  c3*rF  # ConstantExpression
+   26 _rateLaw13  c4*rF  # ConstantExpression
+   27 _rateLaw14  (c5/rF)*pF  # ConstantExpression
+   28 _rateLaw15  (((c0/Na)/V)*tF)/pF  # ConstantExpression
+   29 _rateLaw16  c1*tF  # ConstantExpression
+   30 _rateLaw17  (((c0/Na)/V)*tF)/pF  # ConstantExpression
+   31 _rateLaw18  c2*tF  # ConstantExpression
+   32 _rateLaw19  c3*rF  # ConstantExpression
+   33 _rateLaw20  c4*rF  # ConstantExpression
+   34 _rateLaw21  (c5/rF)*pF  # ConstantExpression
+end parameters
+begin species
+    1 Null() 1
+    2 gTetR(lac!1,lac!2).pLacI(tet!1).pLacI(tet!2) 1
+    3 gCI(tet!1,tet!2).pTetR(cI!1).pTetR(cI!2) 1
+    4 gLacI(cI!1,cI!2).pCI(lac!1).pCI(lac!2) 1
+    5 mTetR() 3163
+    6 mCI() 6819
+    7 mLacI() 129
+    8 pTetR(cI) 183453
+    9 pCI(lac) 2006198
+   10 pLacI(tet) 165670
+   11 gTetR(lac!1,lac).pLacI(tet!1) 0
+   12 gCI(tet!1,tet).pTetR(cI!1) 0
+   13 gLacI(cI!1,cI).pCI(lac!1) 0
+   14 gTetR(lac,lac) 0
+   15 gCI(tet,tet) 0
+   16 gLacI(cI,cI) 0
+end species
+begin reactions
+    1 2 10,11 2*_rateLaw4 #_reverse__R2
+    2 2 2,5 _rateLaw6 #_R4
+    3 5 5,8 _rateLaw7 #_R5
+    4 1,5 1 c6 #_R6
+    5 1,8 1 c7 #_R7
+    6 3 8,12 2*_rateLaw11 #_reverse__R9
+    7 3 3,6 _rateLaw13 #_R11
+    8 6 6,9 _rateLaw14 #_R12
+    9 1,6 1 c6 #_R13
+   10 1,9 1 c7 #_R14
+   11 4 9,13 2*_rateLaw18 #_reverse__R16
+   12 4 4,7 _rateLaw20 #_R18
+   13 7 7,10 _rateLaw21 #_R19
+   14 1,7 1 c6 #_R20
+   15 1,10 1 c7 #_R21
+   16 11 10,14 _rateLaw2 #_reverse__R1
+   17 10,11 2 _rateLaw3 #_R2
+   18 11 5,11 _rateLaw6 #_R4
+   19 12 8,15 _rateLaw9 #_reverse__R8
+   20 8,12 3 _rateLaw10 #_R9
+   21 12 6,12 _rateLaw13 #_R11
+   22 13 9,16 _rateLaw16 #_reverse__R15
+   23 9,13 4 _rateLaw17 #_R16
+   24 13 7,13 _rateLaw20 #_R18
+   25 10,14 11 2*_rateLaw1 #_R1
+   26 14 5,14 _rateLaw5 #_R3
+   27 8,15 12 2*_rateLaw8 #_R8
+   28 15 6,15 _rateLaw12 #_R10
+   29 9,16 13 2*_rateLaw15 #_R15
+   30 16 7,16 _rateLaw19 #_R17
+end reactions
+begin groups
+    1 pTetR                8
+    2 pCI                  9
+    3 pLacI                10
+    4 NULL                 1
+end groups

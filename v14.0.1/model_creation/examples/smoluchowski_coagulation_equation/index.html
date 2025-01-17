@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Smoluchowski Coagulation Equation · Catalyst.jl</title><meta name="title" content="Smoluchowski Coagulation Equation · Catalyst.jl"/><meta property="og:title" content="Smoluchowski Coagulation Equation · Catalyst.jl"/><meta property="twitter:title" content="Smoluchowski Coagulation Equation · Catalyst.jl"/><meta name="description" content="Documentation for Catalyst.jl."/><meta property="og:description" content="Documentation for Catalyst.jl."/><meta property="twitter:description" content="Documentation for Catalyst.jl."/><meta property="og:url" content="https://docs.sciml.ai/Catalyst/stable/model_creation/examples/smoluchowski_coagulation_equation/"/><meta property="twitter:url" content="https://docs.sciml.ai/Catalyst/stable/model_creation/examples/smoluchowski_coagulation_equation/"/><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/model_creation/examples/smoluchowski_coagulation_equation/"/><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">Catalyst.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><span class="tocitem">Introduction to Catalyst</span><ul><li><a class="tocitem" href="../../../introduction_to_catalyst/catalyst_for_new_julia_users/">Introduction to Catalyst and Julia for New Julia users</a></li><li><a class="tocitem" href="../../../introduction_to_catalyst/introduction_to_catalyst/">Introduction to Catalyst</a></li><li><a class="tocitem" href="../../../introduction_to_catalyst/math_models_intro/">Mathematical Models Catalyst can Generate</a></li></ul></li><li><span class="tocitem">Model Creation and Properties</span><ul><li><a class="tocitem" href="../../dsl_basics/">The Catalyst DSL - Introduction</a></li><li><a class="tocitem" href="../../dsl_advanced/">The Catalyst DSL - Advanced Features and Options</a></li><li><a class="tocitem" href="../../programmatic_CRN_construction/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="../../compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../../constraint_equations/">Constraint Equations and Events</a></li><li><a class="tocitem" href="../../parametric_stoichiometry/">Symbolic Stochiometries</a></li><li><a class="tocitem" href="../../model_file_loading_and_export/">Loading Chemical Reaction Network Models from Files</a></li><li><a class="tocitem" href="../../model_visualisation/">Model Visualisation</a></li><li><a class="tocitem" href="../../network_analysis/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../../chemistry_related_functionality/">Chemistry-related functionality</a></li><li><input class="collapse-toggle" id="menuitem-3-11" type="checkbox" checked/><label class="tocitem" for="menuitem-3-11"><span class="docs-label">Model creation examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../basic_CRN_library/">Library of Basic Chemical Reaction Network Models</a></li><li><a class="tocitem" href="../programmatic_generative_linear_pathway/">Programmatic, generative, modelling of a linear pathway</a></li><li><a class="tocitem" href="../hodgkin_huxley_equation/">Hodgkin-Huxley Equation</a></li><li class="is-active"><a class="tocitem" href>Smoluchowski Coagulation Equation</a><ul class="internal"><li><a class="tocitem" href="#References"><span>References</span></a></li></ul></li></ul></li></ul></li><li><span class="tocitem">Model simulation</span><ul><li><a class="tocitem" href="../../../model_simulation/simulation_introduction/">Model Simulation Introduction</a></li><li><a class="tocitem" href="../../../model_simulation/simulation_plotting/">Simulation plotting</a></li><li><a class="tocitem" href="../../../model_simulation/simulation_structure_interfacing/">Interfacing problems, integrators, and solutions</a></li><li><a class="tocitem" href="../../../model_simulation/ensemble_simulations/">Ensemble/Monte Carlo Simulations</a></li><li><a class="tocitem" href="../../../model_simulation/ode_simulation_performance/">Advice for performant ODE simulations</a></li><li><a class="tocitem" href="../../../model_simulation/sde_simulation_performance/">Advice for performant SDE simulations</a></li></ul></li><li><span class="tocitem">Steady state analysis</span><ul><li><a class="tocitem" href="../../../steady_state_functionality/homotopy_continuation/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="../../../steady_state_functionality/nonlinear_solve/">Finding Steady States using NonlinearSolve.jl and SteadyStateDiffEq.jl</a></li><li><a class="tocitem" href="../../../steady_state_functionality/steady_state_stability_computation/">Steady state stability computation</a></li><li><a class="tocitem" href="../../../steady_state_functionality/bifurcation_diagrams/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../../../steady_state_functionality/dynamical_systems/">Analysing model steady state properties with DynamicalSystems.jl</a></li></ul></li><li><span class="tocitem">Inverse Problems</span><ul><li><a class="tocitem" href="../../../inverse_problems/optimization_ode_param_fitting/">Parameter Fitting for ODEs using Optimization.jl and DiffEqParamEstim.jl</a></li><li><a class="tocitem" href="../../../inverse_problems/behaviour_optimisation/">Optimization for non-data fitting purposes</a></li><li><a class="tocitem" href="../../../inverse_problems/structural_identifiability/">Structural Identifiability Analysis</a></li><li><a class="tocitem" href="../../../inverse_problems/global_sensitivity_analysis/">Global Sensitivity Analysis</a></li><li><input class="collapse-toggle" id="menuitem-6-5" type="checkbox"/><label class="tocitem" for="menuitem-6-5"><span class="docs-label">Inverse problem examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../inverse_problems/examples/ode_fitting_oscillation/">Fitting Parameters for an Oscillatory System</a></li></ul></li></ul></li><li><a class="tocitem" href="../../../faqs/">FAQs</a></li><li><a class="tocitem" href="../../../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Model Creation and Properties</a></li><li><a class="is-disabled">Model creation examples</a></li><li class="is-active"><a href>Smoluchowski Coagulation Equation</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Smoluchowski Coagulation Equation</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/SciML/Catalyst.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/model_creation/examples/smoluchowski_coagulation_equation.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="smoluchowski_coagulation_equation"><a class="docs-heading-anchor" href="#smoluchowski_coagulation_equation">Smoluchowski Coagulation Equation</a><a id="smoluchowski_coagulation_equation-1"></a><a class="docs-heading-anchor-permalink" href="#smoluchowski_coagulation_equation" title="Permalink"></a></h1><p>This tutorial shows how to programmatically construct a <a href="../../../api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> corresponding to the chemistry underlying the <a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">Smoluchowski coagulation model</a> using <a href="http://docs.sciml.ai/ModelingToolkit/stable/">ModelingToolkit</a>/<a href="http://docs.sciml.ai/Catalyst/stable/">Catalyst</a>. A jump process version of the model is then constructed from the <a href="../../../api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>, and compared to the model&#39;s analytical solution obtained by the <a href="https://journals.ametsoc.org/view/journals/atsc/25/1/1520-0469_1968_025_0054_asocdc_2_0_co_2.xml">method of Scott</a> (see also <a href="https://doi.org/10.1006/jcph.2002.7017">3</a>).</p><p>The Smoluchowski coagulation equation describes a system of reactions in which monomers may collide to form dimers, monomers and dimers may collide to form trimers, and so on. This models a variety of chemical/physical processes, including polymerization and flocculation.</p><p>We begin by importing some necessary packages.</p><pre><code class="language-julia hljs">using ModelingToolkit, Catalyst, LinearAlgebra
+using JumpProcesses
+using Plots, SpecialFunctions</code></pre><p>Suppose the maximum cluster size is <code>N</code>. We assume an initial concentration of monomers, <code>Nₒ</code>, and let <code>uₒ</code> denote the initial number of monomers in the system. We have <code>nr</code> total reactions, and label by <code>V</code> the bulk volume of the system (which plays an important role in the calculation of rate laws since we have bimolecular reactions). Our basic parameters are then</p><pre><code class="language-julia hljs"># maximum cluster size
+N = 10
+
+# volume of a monomers in cm³
+Vₒ = (4π / 3) * (10e-06 * 100)^3
+
+# initial conc. = (No. of init. monomers) / bulk volume
+Nₒ = 1e-06 / Vₒ
+
+# No. of monomers initially
+uₒ = 10000
+
+# Bulk volume of system in cm³
+V = uₒ / Nₒ
+n = floor(Int, N / 2)
+
+# No. of forward reactions
+nr = ((N % 2) == 0) ? (n*(n + 1) - n) : (n*(n + 1))</code></pre><p>The <a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">Smoluchowski coagulation equation</a> Wikipedia page illustrates the set of possible reactions that can occur. We can easily enumerate the <code>pair</code>s of multimer reactants that can combine when allowing a maximal cluster size of <code>N</code> monomers. We initialize the volumes of the reactant multimers as <code>volᵢ</code> and <code>volⱼ</code></p><pre><code class="language-julia hljs"># possible pairs of reactant multimers
+pair = []
+for i = 2:N
+    halfi = floor(Int, i/2)
+    push!(pair, [(1:halfi)  (i .- (1:halfi))])
+end
+pair = vcat(pair...)
+vᵢ = @view pair[:, 1]  # Reactant 1 indices
+vⱼ = @view pair[:, 2]  # Reactant 2 indices
+volᵢ = Vₒ * vᵢ         # cm⁻³
+volⱼ = Vₒ * vⱼ         # cm⁻³
+sum_vᵢvⱼ = @. vᵢ + vⱼ  # Product index</code></pre><p>We next specify the rates (i.e. kernel) at which reactants collide to form products. For simplicity, we allow a user-selected additive kernel or constant kernel. The constants(<code>B</code> and <code>C</code>) are adopted from Scott&#39;s paper <a href="https://journals.ametsoc.org/view/journals/atsc/25/1/1520-0469_1968_025_0054_asocdc_2_0_co_2.xml">2</a></p><pre><code class="language-julia hljs"># set i to  1 for additive kernel, 2  for constant
+i = 1
+if i == 1
+    B = 1.53e03    # s⁻¹
+
+    # dividing by volume as it is a bimolecular reaction chain
+    kv = @. B * (volᵢ + volⱼ) / V
+elseif i==2
+    C = 1.84e-04    # cm³ s⁻¹
+    kv = fill(C / V, nr)
+end</code></pre><p>We&#39;ll set the parameters and the initial condition that only monomers are present at <span>$t=0$</span> in <code>u₀map</code>.</p><pre><code class="language-julia hljs"># k is a vector of the parameters, with values given by the vector kv
+@parameters k[1:nr] = kv
+
+# create the vector of species X_1,...,X_N
+t = default_t()
+@species (X(t))[1:N]
+
+# time-span
+if i == 1
+    tspan = (0.0, 2000.0)
+elseif i == 2
+    tspan = (0.0, 350.0)
+end
+
+ # initial condition of monomers
+u₀    = zeros(Int64, N)
+u₀[1] = uₒ
+u₀map = Pair.(collect(X), u₀)   # map species to its initial value</code></pre><p>Here we generate the reactions programmatically. We systematically create Catalyst <code>Reaction</code>s for each possible reaction shown in the figure on <a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">Wikipedia</a>. When <code>vᵢ[n] == vⱼ[n]</code>, we set the stoichiometric coefficient of the reactant multimer to two.</p><pre><code class="language-julia hljs"># vector to store the Reactions in
+rx = []
+for n = 1:nr
+    # for clusters of the same size, double the rate
+    if (vᵢ[n] == vⱼ[n])
+        push!(rx, Reaction(k[n], [X[vᵢ[n]]], [X[sum_vᵢvⱼ[n]]], [2], [1]))
+    else
+        push!(rx, Reaction(k[n], [X[vᵢ[n]], X[vⱼ[n]]], [X[sum_vᵢvⱼ[n]]],
+                           [1, 1], [1]))
+    end
+end
+@named rs = ReactionSystem(rx, t, collect(X), collect(k))
+rs = complete(rs)</code></pre><p class="math-container">\[ \begin{align*}
+2 \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 1 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 2 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 3 \right)} \mathrm{X} \\
+2 \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 4 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 5 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 6 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 7 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 8 \right)} \mathrm{X} \\
+2 \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 9 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 10 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 11 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 12 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 13 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 14 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 15 \right)} \mathrm{X} \\
+2 \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 16 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 17 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 18 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 19 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 20 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 21 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 22 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 23 \right)} \mathrm{X} \\
+\mathrm{X} + \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 24 \right)} \mathrm{X} \\
+2 \mathrm{X} &amp;\xrightarrow{\mathrm{getindex}\left( k, 25 \right)} \mathrm{X}  
+ \end{align*}
+ \]</p><p>We now convert the <a href="../../../api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> into a <code>ModelingToolkit.JumpSystem</code>, and solve it using Gillespie&#39;s direct method. For details on other possible solvers (SSAs), see the <a href="https://docs.sciml.ai/DiffEqDocs/stable/types/jump_types/">DifferentialEquations.jl</a> documentation</p><pre><code class="language-julia hljs"># solving the system
+jumpsys = complete(convert(JumpSystem, rs))
+dprob   = DiscreteProblem(rs, u₀map, tspan)
+jprob   = JumpProblem(jumpsys, dprob, Direct(), save_positions = (false, false))
+jsol    = solve(jprob, SSAStepper(), saveat = tspan[2] / 30)</code></pre><p>Lets check the results for the first three polymers/cluster sizes. We compare to the analytical solution for this system:</p><pre><code class="language-julia hljs"># Results for first three polymers...i.e. monomers, dimers and trimers
+v_res = [1; 2; 3]
+
+# comparison with analytical solution
+# we only plot the stochastic solution at a small number of points
+# to ease distinguishing it from the exact solution
+t   = jsol.t
+sol = zeros(length(v_res), length(t))
+if i == 1
+    ϕ = @. 1 - exp(-B*Nₒ*Vₒ*t)
+    for j in v_res
+        sol[j,:] = @. Nₒ*(1 - ϕ)*(((j*ϕ)^(j-1))/gamma(j+1))*exp(-j*ϕ)
+    end
+elseif i == 2
+    ϕ = @. (C*Nₒ*t)
+    for j in v_res
+        sol[j,:] = @. 4Nₒ*((ϕ^(j-1))/((ϕ + 2)^(j+1)))
+    end
+end
+
+# plotting normalised concentration vs analytical solution
+default(lw = 2, xlabel = &quot;Time (sec)&quot;)
+scatter(ϕ, jsol(t)[1,:] / uₒ, label = &quot;X1 (monomers)&quot;, markercolor = :blue)
+plot!(ϕ, sol[1,:]/Nₒ, line = (:dot,4,:blue), label=&quot;Analytical sol--X1&quot;)
+
+scatter!(ϕ, jsol(t)[2,:] / uₒ, label = &quot;X2 (dimers)&quot;, markercolor = :orange)
+plot!(ϕ, sol[2,:] / Nₒ, line = (:dot, 4, :orange), label = &quot;Analytical sol--X2&quot;)
+
+scatter!(ϕ, jsol(t)[3,:] / uₒ, label = &quot;X3 (trimers)&quot;, markercolor = :purple)
+plot!(ϕ, sol[3,:] / Nₒ, line = (:dot, 4, :purple), label = &quot;Analytical sol--X3&quot;,
+      ylabel = &quot;Normalized Concentration&quot;)</code></pre><img src="f7c3bc91.svg" alt="Example block output"/><hr/><h2 id="References"><a class="docs-heading-anchor" href="#References">References</a><a id="References-1"></a><a class="docs-heading-anchor-permalink" href="#References" title="Permalink"></a></h2><ol><li><a href="https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation">https://en.wikipedia.org/wiki/Smoluchowski_coagulation_equation</a></li><li>Scott, W. T. (1968). Analytic Studies of Cloud Droplet Coalescence I, Journal of Atmospheric Sciences, 25(1), 54-65. Retrieved Feb 18, 2021, from https://journals.ametsoc.org/view/journals/atsc/25/1/1520-0469_1968_025_0054_asocdc_2_0_co_2.xml</li><li>Ian J. Laurenzi, John D. Bartels, Scott L. Diamond, A General Algorithm for Exact Simulation of Multicomponent Aggregation Processes, Journal of Computational Physics, Volume 177, Issue 2, 2002, Pages 418-449, ISSN 0021-9991, https://doi.org/10.1006/jcph.2002.7017.</li></ol></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../hodgkin_huxley_equation/">« Hodgkin-Huxley Equation</a><a class="docs-footer-nextpage" href="../../../model_simulation/simulation_introduction/">Model Simulation Introduction »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.5.0 on <span class="colophon-date" title="Tuesday 16 July 2024 14:59">Tuesday 16 July 2024</span>. Using Julia version 1.10.4.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

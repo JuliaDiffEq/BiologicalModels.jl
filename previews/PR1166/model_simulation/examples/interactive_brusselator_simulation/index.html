@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Interactive Simulation and Plotting · Catalyst.jl</title><meta name="title" content="Interactive Simulation and Plotting · Catalyst.jl"/><meta property="og:title" content="Interactive Simulation and Plotting · Catalyst.jl"/><meta property="twitter:title" content="Interactive Simulation and Plotting · Catalyst.jl"/><meta name="description" content="Documentation for Catalyst.jl."/><meta property="og:description" content="Documentation for Catalyst.jl."/><meta property="twitter:description" content="Documentation for Catalyst.jl."/><meta property="og:url" content="https://docs.sciml.ai/Catalyst/stable/model_simulation/examples/interactive_brusselator_simulation/"/><meta property="twitter:url" content="https://docs.sciml.ai/Catalyst/stable/model_simulation/examples/interactive_brusselator_simulation/"/><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/model_simulation/examples/interactive_brusselator_simulation/"/><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">Catalyst.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Introduction to Catalyst</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../introduction_to_catalyst/catalyst_for_new_julia_users/">Introduction to Catalyst and Julia for New Julia users</a></li><li><a class="tocitem" href="../../../introduction_to_catalyst/introduction_to_catalyst/">Introduction to Catalyst</a></li><li><a class="tocitem" href="../../../introduction_to_catalyst/math_models_intro/">Mathematical Models Catalyst can Generate</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox"/><label class="tocitem" for="menuitem-3"><span class="docs-label">Model creation and properties</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../model_creation/dsl_basics/">The Catalyst DSL - Introduction</a></li><li><a class="tocitem" href="../../../model_creation/dsl_advanced/">The Catalyst DSL - Advanced Features and Options</a></li><li><a class="tocitem" href="../../../model_creation/programmatic_CRN_construction/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="../../../model_creation/compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../../../model_creation/constraint_equations/">Constraint Equations and Events</a></li><li><a class="tocitem" href="../../../model_creation/conservation_laws/">Working with conservation laws</a></li><li><a class="tocitem" href="../../../model_creation/parametric_stoichiometry/">Symbolic Stochiometries</a></li><li><a class="tocitem" href="../../../model_creation/model_file_loading_and_export/">Loading Chemical Reaction Network Models from Files</a></li><li><a class="tocitem" href="../../../model_creation/model_visualisation/">Model Visualisation</a></li><li><a class="tocitem" href="../../../model_creation/reactionsystem_content_accessing/">Accessing model properties</a></li><li><a class="tocitem" href="../../../model_creation/network_analysis/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../../../model_creation/chemistry_related_functionality/">Chemistry-related functionality</a></li><li><input class="collapse-toggle" id="menuitem-3-13" type="checkbox"/><label class="tocitem" for="menuitem-3-13"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../model_creation/examples/basic_CRN_library/">Library of Basic Chemical Reaction Network Models</a></li><li><a class="tocitem" href="../../../model_creation/examples/programmatic_generative_linear_pathway/">Programmatic, generative, modelling of a linear pathway</a></li><li><a class="tocitem" href="../../../model_creation/examples/hodgkin_huxley_equation/">Hodgkin-Huxley Equation</a></li><li><a class="tocitem" href="../../../model_creation/examples/smoluchowski_coagulation_equation/">Smoluchowski Coagulation Equation</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox" checked/><label class="tocitem" for="menuitem-4"><span class="docs-label">Model simulation and visualization</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../simulation_introduction/">Model Simulation Introduction</a></li><li><a class="tocitem" href="../../simulation_plotting/">Simulation plotting</a></li><li><a class="tocitem" href="../../simulation_structure_interfacing/">Interfacing problems, integrators, and solutions</a></li><li><a class="tocitem" href="../../ensemble_simulations/">Ensemble/Monte Carlo Simulations</a></li><li><a class="tocitem" href="../../ode_simulation_performance/">Advice for performant ODE simulations</a></li><li><a class="tocitem" href="../../sde_simulation_performance/">Advice for performant SDE simulations</a></li><li><input class="collapse-toggle" id="menuitem-4-7" type="checkbox" checked/><label class="tocitem" for="menuitem-4-7"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../periodic_events_simulation/">Modelling a periodic event during ODE and jump simulations</a></li><li class="is-active"><a class="tocitem" href>Interactive Simulation and Plotting</a><ul class="internal"><li><a class="tocitem" href="#setup_brusselator"><span>Setting up the Brusselator model</span></a></li><li><a class="tocitem" href="#basic_static_plotting"><span>Basic static plotting</span></a></li><li><a class="tocitem" href="#adding_interactivity"><span>Adding interactivity</span></a></li><li><a class="tocitem" href="#adding_phase_plot"><span>Adding a phase plot</span></a></li><li><a class="tocitem" href="#common_makie_plotting_options"><span>Common plotting options</span></a></li><li><a class="tocitem" href="#extending_interactive_visualization"><span>Extending the interactive visualization</span></a></li></ul></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">Steady state analysis</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../steady_state_functionality/homotopy_continuation/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="../../../steady_state_functionality/nonlinear_solve/">Finding Steady States using NonlinearSolve.jl and SteadyStateDiffEq.jl</a></li><li><a class="tocitem" href="../../../steady_state_functionality/steady_state_stability_computation/">Steady state stability computation</a></li><li><a class="tocitem" href="../../../steady_state_functionality/bifurcation_diagrams/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../../../steady_state_functionality/dynamical_systems/">Analysing model steady state properties with DynamicalSystems.jl</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-6" type="checkbox"/><label class="tocitem" for="menuitem-6"><span class="docs-label">Inverse problems</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../inverse_problems/petab_ode_param_fitting/">Parameter Fitting for ODEs using PEtab.jl</a></li><li><a class="tocitem" href="../../../inverse_problems/optimization_ode_param_fitting/">Parameter Fitting for ODEs using Optimization.jl</a></li><li><a class="tocitem" href="../../../inverse_problems/behaviour_optimisation/">Optimization for non-data fitting purposes</a></li><li><a class="tocitem" href="../../../inverse_problems/global_sensitivity_analysis/">Global Sensitivity Analysis</a></li><li><input class="collapse-toggle" id="menuitem-6-5" type="checkbox"/><label class="tocitem" for="menuitem-6-5"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../inverse_problems/examples/ode_fitting_oscillation/">Fitting Parameters for an Oscillatory System</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-7" type="checkbox"/><label class="tocitem" for="menuitem-7"><span class="docs-label">Spatial modelling</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../spatial_modelling/lattice_reaction_systems/">Introduction to Spatial Modelling with Catalyst</a></li><li><a class="tocitem" href="../../../spatial_modelling/lattice_simulation_structure_ interaction/">Interfacing with Lattice Problems, Integrators, and Solutions</a></li><li><a class="tocitem" href="../../../spatial_modelling/lattice_simulation_plotting/">Plotting Spatial Simulations</a></li><li><a class="tocitem" href="../../../spatial_modelling/spatial_ode_simulations/">Spatial ODE simulations</a></li><li><a class="tocitem" href="../../../spatial_modelling/spatial_jump_simulations/">Spatial jump simulations</a></li></ul></li><li><a class="tocitem" href="../../../faqs/">FAQs</a></li><li><a class="tocitem" href="../../../api/">API</a></li><li><a class="tocitem" href="../../../devdocs/dev_guide/">Developer Documentation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Model simulation and visualization</a></li><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Interactive Simulation and Plotting</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Interactive Simulation and Plotting</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/SciML/Catalyst.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/model_simulation/examples/interactive_brusselator_simulation.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="interactive_brusselator"><a class="docs-heading-anchor" href="#interactive_brusselator">Interactive Simulation and Plotting</a><a id="interactive_brusselator-1"></a><a class="docs-heading-anchor-permalink" href="#interactive_brusselator" title="Permalink"></a></h1><p>Catalyst can utilize the <a href="https://github.com/JuliaPlots/GLMakie.jl">GLMakie.jl</a> package for creating interactive visualizations of your reaction network dynamics. This tutorial provides a step-by-step guide to creating an interactive visualization of the Brusselator model, building upon the basic <a href="../../../model_creation/examples/basic_CRN_library/#basic_CRN_library_brusselator">Brusselator</a> example.</p><h2 id="setup_brusselator"><a class="docs-heading-anchor" href="#setup_brusselator">Setting up the Brusselator model</a><a id="setup_brusselator-1"></a><a class="docs-heading-anchor-permalink" href="#setup_brusselator" title="Permalink"></a></h2><p>Let&#39;s again use the oscillating Brusselator model, extending the basic simulation <a href="../../simulation_plotting/#simulation_plotting">plotting</a> workflow we saw earlier. </p><pre><code class="language-julia hljs">using Catalyst
+using OrdinaryDiffEqTsit5</code></pre><pre><code class="language-julia hljs">using GLMakie</code></pre><pre><code class="language-julia hljs"># Define the Brusselator model
+brusselator = @reaction_network begin
+    A, ∅ → X
+    1, 2X + Y → 3X
+    B, X → Y
+    1, X → ∅
+end
+
+# Initial parameter values and conditions
+p = [:A =&gt; 1.0, :B =&gt; 4.0]
+u0 = [:X =&gt; 1.0, :Y =&gt; 0.0]
+tspan = (0.0, 50.0)
+
+oprob = ODEProblem(brusselator, u0, tspan, p)
+
+# Function to solve the ODE
+function solve_brusselator(A, B, X0, Y0, prob = oprob)
+    p = [:A =&gt; A, :B =&gt; B]
+    u0 = [:X =&gt; X0, :Y =&gt; Y0]
+    newprob = remake(prob, p=p, u0=u0)
+    solve(newprob, Tsit5(), saveat = 0.1)
+end</code></pre><pre class="documenter-example-output"><code class="nohighlight hljs ansi">solve_brusselator (generic function with 2 methods)</code></pre><p>This code sets up our Brusselator model using Catalyst.jl&#39;s <code>@reaction_network</code> macro. We also define initial parameters, initial conditions, create an <code>ODEProblem</code>, and define a function to solve the ODE with given parameters.  Setting <code>saveat = 0.1</code> in the call to <code>solve</code> ensures the solution is saved with the desired temporal frequency we want for our later plots.</p><div class="admonition is-info"><header class="admonition-header">Note</header><div class="admonition-body"><p>Be sure to set <code>saveat</code> to a value that is appropriate for your system; otherwise, the size of the solution can change during interactivity, which will cause dimension mismatch errors once we add our interactive elements.</p></div></div><h2 id="basic_static_plotting"><a class="docs-heading-anchor" href="#basic_static_plotting">Basic static plotting</a><a id="basic_static_plotting-1"></a><a class="docs-heading-anchor-permalink" href="#basic_static_plotting" title="Permalink"></a></h2><p>Let&#39;s start by creating a basic plot of our Brusselator model:</p><pre><code class="language-julia hljs"># Create the main figure
+fig = Figure(size = (800, 600), fontsize = 18);
+
+# Create an axis for the plot
+ax = Axis(fig[1, 1],
+    title = &quot;Brusselator Model&quot;,
+    xlabel = &quot;Time&quot;,
+    ylabel = &quot;Concentration&quot;)
+
+# Solve the ODE
+sol = solve_brusselator(1.0, 4.0, 1.0, 0.0)
+
+# Plot the solution
+lines!(ax, sol.t, sol[:X], label = &quot;X&quot;, color = :blue, linewidth = 3)
+lines!(ax, sol.t, sol[:Y], label = &quot;Y&quot;, color = :red, linewidth = 3)
+
+# Add a legend
+axislegend(ax, position = :rt)
+
+# Display the figure
+fig</code></pre><img src="73bb27aa.png" alt="Example block output"/><p>The plot shows the concentrations of species X and Y over time. Notice the oscillatory behavior characteristic of the Brusselator model.</p><h2 id="adding_interactivity"><a class="docs-heading-anchor" href="#adding_interactivity">Adding interactivity</a><a id="adding_interactivity-1"></a><a class="docs-heading-anchor-permalink" href="#adding_interactivity" title="Permalink"></a></h2><p>Now, let&#39;s add interactivity to our plot using Observables and sliders. We&#39;ll build this up step by step.</p><h3 id="creating_observables"><a class="docs-heading-anchor" href="#creating_observables">Creating Observables</a><a id="creating_observables-1"></a><a class="docs-heading-anchor-permalink" href="#creating_observables" title="Permalink"></a></h3><p>Observables are a key concept in reactive programming and are central to how Makie.jl creates interactive visualizations. You can read more about them <a href="https://docs.makie.org/stable/explanations/observables">here</a>.</p><pre><code class="language-julia hljs"># Create observables for parameters and initial conditions
+A = Observable(1.0)
+B = Observable(4.0)
+X0 = Observable(1.0)
+Y0 = Observable(0.0)</code></pre><p>An Observable is a container for a value that can change over time. When the value changes, any dependent computations are automatically updated.</p><h3 id="adding_sliders"><a class="docs-heading-anchor" href="#adding_sliders">Adding sliders and connecting to Observables</a><a id="adding_sliders-1"></a><a class="docs-heading-anchor-permalink" href="#adding_sliders" title="Permalink"></a></h3><p>Let&#39;s add <a href="https://docs.makie.org/stable/reference/blocks/slider">sliders</a> that will control our Observables:</p><pre><code class="language-julia hljs"># Create the main figure
+fig = Figure(size = (800, 600), fontsize = 18);
+
+# Create layout for plot and sliders
+plot_layout = fig[1, 1] = GridLayout()
+slider_layout = fig[2, 1] = GridLayout()
+
+# Create sliders
+slider_A = Slider(slider_layout[1, 1], range = 0.0:0.01:5.0, startvalue = to_value(A)) # to_value(A) unwraps the Observable to a value
+slider_B = Slider(slider_layout[2, 1], range = 0.0:0.01:5.0, startvalue = to_value(B))
+slider_X0 = Slider(slider_layout[3, 1], range = 0.0:0.01:5.0, startvalue = to_value(X0))
+slider_Y0 = Slider(slider_layout[4, 1], range = 0.0:0.01:5.0, startvalue = to_value(Y0))
+
+# Add labels for sliders
+Label(slider_layout[1, 1, Left()], &quot;A&quot;)
+Label(slider_layout[2, 1, Left()], &quot;B&quot;)
+Label(slider_layout[3, 1, Left()], &quot;X₀&quot;)
+Label(slider_layout[4, 1, Left()], &quot;Y₀&quot;)
+
+# Connect the values of the sliders to the observables
+connect!(A, slider_A.value)
+connect!(B, slider_B.value)
+connect!(X0, slider_X0.value)
+connect!(Y0, slider_Y0.value)</code></pre><p>These sliders allow us to interactively change the parameters A and B, as well as the initial conditions X₀ and Y₀.</p><h3 id="reactive_plot"><a class="docs-heading-anchor" href="#reactive_plot">Creating a reactive plot</a><a id="reactive_plot-1"></a><a class="docs-heading-anchor-permalink" href="#reactive_plot" title="Permalink"></a></h3><p>Now, let&#39;s create a plot that reacts to changes in our sliders:</p><pre><code class="language-julia hljs"># Create an axis for the plot
+ax = Axis(plot_layout[1, 1], 
+    title = &quot;Brusselator Model&quot;, 
+    xlabel = &quot;Time&quot;, 
+    ylabel = &quot;Concentration&quot;)
+
+# Create an observable for the solution
+# The `@lift` macro is used to create an Observable that depends on the observables `A`, `B`, `X0`, and `Y0`, and automatically updates when any of these observables change
+solution = @lift(solve_brusselator($A, $B, $X0, $Y0))
+
+# Plot the solution
+# We don&#39;t use the ODESolution plot recipe here, as you&#39;ve seen in the previous examples where only the solution and an `idxs` argument was passed to the plot method, because we are passing in an Observable wrapping the solution
+lines!(ax, lift(sol -&gt; sol.t, solution), lift(sol -&gt; sol[:X], solution), label = &quot;X&quot;, color = :blue, linewidth = 3) # `lift` can either be used as a function or a macro
+lines!(ax, lift(sol -&gt; sol.t, solution), lift(sol -&gt; sol[:Y], solution), label = &quot;Y&quot;, color = :red, linewidth = 3)
+
+# Add a legend
+axislegend(ax, position = :rt)
+
+# Display the figure
+fig</code></pre><p><img src="../../../assets/interactive_brusselator.png" alt="Interactive Brusselator Plot"/></p><p>This plot will now update in real-time as you move the sliders, allowing for interactive exploration of the Brusselator&#39;s behavior under different conditions. (Note the figure above is not interactive, but for illustrative purposes to show what you should see locally.)</p><h2 id="adding_phase_plot"><a class="docs-heading-anchor" href="#adding_phase_plot">Adding a phase plot</a><a id="adding_phase_plot-1"></a><a class="docs-heading-anchor-permalink" href="#adding_phase_plot" title="Permalink"></a></h2><p>To gain more insight into the system&#39;s behavior, let&#39;s enhance our visualization by adding a phase plot, along with some other improvements:</p><pre><code class="language-julia hljs"># Create the main figure
+fig = Figure(size = (1200, 800), fontsize = 18);
+
+# Create main layout: plots on top, sliders at bottom
+plot_grid = fig[1, 1] = GridLayout()
+slider_grid = fig[2, 1] = GridLayout()
+
+# Create sub-grids for plots
+time_plot = plot_grid[1, 1] = GridLayout()
+phase_plot = plot_grid[1, 2] = GridLayout()
+
+# Create axes for the time series plot and phase plot
+ax_time = Axis(time_plot[1, 1], 
+    title = &quot;Brusselator Model - Time Series&quot;, 
+    xlabel = &quot;Time&quot;, 
+    ylabel = &quot;Concentration&quot;)
+
+ax_phase = Axis(phase_plot[1, 1], 
+    title = &quot;Brusselator Model - Phase Plot&quot;, 
+    xlabel = &quot;X&quot;, 
+    ylabel = &quot;Y&quot;)
+
+# Create sub-grids for sliders
+param_grid = slider_grid[1, 1] = GridLayout()
+ic_grid = slider_grid[1, 2] = GridLayout()
+
+# Create observables for parameters and initial conditions
+A = Observable{Float64}(1.0) # We can specify the type of the Observable value, which can help with type stability and performance
+B = Observable{Float64}(4.0)
+X0 = Observable{Float64}(1.0)
+Y0 = Observable{Float64}(0.0)
+
+# Create sliders with labels and group titles
+Label(param_grid[1, 1:2], &quot;Parameters&quot;, fontsize = 22)
+slider_A = Slider(param_grid[2, 2], range = 0.0:0.01:5.0, startvalue = to_value(A))
+slider_B = Slider(param_grid[3, 2], range = 0.0:0.01:5.0, startvalue = to_value(B))
+Label(param_grid[2, 1], &quot;A&quot;)
+Label(param_grid[3, 1], &quot;B&quot;)
+
+Label(ic_grid[1, 1:2], &quot;Initial Conditions&quot;, fontsize = 22)
+slider_X0 = Slider(ic_grid[2, 2], range = 0.0:0.01:5.0, startvalue = to_value(X0))
+slider_Y0 = Slider(ic_grid[3, 2], range = 0.0:0.01:5.0, startvalue = to_value(Y0))
+Label(ic_grid[2, 1], &quot;X₀&quot;)
+Label(ic_grid[3, 1], &quot;Y₀&quot;)
+
+# Connect sliders to observables
+connect!(A, slider_A.value)
+connect!(B, slider_B.value)
+connect!(X0, slider_X0.value)
+connect!(Y0, slider_Y0.value)
+
+# Create an observable for the solution. 
+solution = @lift(solve_brusselator($A, $B, $X0, $Y0))
+
+# Plot the time series
+lines!(ax_time, lift(sol -&gt; sol.t, solution), lift(sol -&gt; sol[:X], solution), label = &quot;X&quot;, color = :blue, linewidth = 3) 
+lines!(ax_time, lift(sol -&gt; sol.t, solution), lift(sol -&gt; sol[:Y], solution), label = &quot;Y&quot;, color = :red, linewidth = 3)
+
+# Plot the phase plot
+phase_plot_obj = lines!(ax_phase, lift(sol -&gt; sol[:X], solution), lift(sol -&gt; sol[:Y], solution), 
+                        color = lift(sol -&gt; sol.t, solution), colormap = :viridis)
+
+# Add a colorbar for the phase plot
+Colorbar(phase_plot[1, 2], phase_plot_obj, label = &quot;Time&quot;)
+
+# Add legends
+axislegend(ax_time, position = :rt)
+
+# Adjust layout to your liking
+colgap!(plot_grid, 20)
+rowgap!(fig.layout, 20)
+colgap!(param_grid, 10)
+colgap!(ic_grid, 10)
+
+# Display the figure
+fig</code></pre><p>This will create a visualization with both time series and phase plots:</p><p><video src="../../../assets/interactive_brusselator.mp4" controls="true" title="Interactive Brusselator Plot with Time Series and Phase Plot"><a href="../../../assets/interactive_brusselator.mp4">Interactive Brusselator Plot with Time Series and Phase Plot</a></video></p><h2 id="common_makie_plotting_options"><a class="docs-heading-anchor" href="#common_makie_plotting_options">Common plotting options</a><a id="common_makie_plotting_options-1"></a><a class="docs-heading-anchor-permalink" href="#common_makie_plotting_options" title="Permalink"></a></h2><p>Various plotting options can be provided as optional arguments to the <code>lines!</code> command. Common options include:</p><ul><li><code>linewidth</code> or <code>lw</code>: Determine plot line widths.</li><li><code>linestyle</code>: Determines plot line style.</li><li><code>color</code>: Determines the line colors.</li><li><code>label</code>: Determines label texts displayed in the legend.</li></ul><p>For example:</p><pre><code class="language-julia hljs">lines!(ax_time, lift(sol -&gt; sol.t, solution), lift(sol -&gt; sol[:X], solution), 
+       label = &quot;X&quot;, color = :green, linewidth = 2, linestyle = :dash)</code></pre><h2 id="extending_interactive_visualization"><a class="docs-heading-anchor" href="#extending_interactive_visualization">Extending the interactive visualization</a><a id="extending_interactive_visualization-1"></a><a class="docs-heading-anchor-permalink" href="#extending_interactive_visualization" title="Permalink"></a></h2><p>You can further extend this visualization by:</p><ul><li>Adding other interactive elements, such as <a href="https://docs.makie.org/stable/reference/blocks/button">buttons</a> or <a href="https://docs.makie.org/stable/reference/blocks/menu">dropdown menus</a> to control different aspects of the simulation or visualization.</li><li>Adding additonal axes to the plot, such as plotting the derivatives of the species.</li><li>Color coding the slider and slider labels to match the plot colors.</li></ul></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../periodic_events_simulation/">« Modelling a periodic event during ODE and jump simulations</a><a class="docs-footer-nextpage" href="../../../steady_state_functionality/homotopy_continuation/">Finding Steady States through Homotopy Continuation »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Thursday 9 January 2025 01:02">Thursday 9 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

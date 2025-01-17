@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Using Catalyst · Catalyst.jl</title><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.044/juliamono.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.11/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">Catalyst.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li><span class="tocitem">Tutorials</span><ul><li class="is-active"><a class="tocitem" href>Using Catalyst</a><ul class="internal"><li><a class="tocitem" href="#Mass-Action-ODE-Models"><span>Mass Action ODE Models</span></a></li><li><a class="tocitem" href="#Stochastic-Simulation-Algorithms-(SSAs)-for-Stochastic-Chemical-Kinetics"><span>Stochastic Simulation Algorithms (SSAs) for Stochastic Chemical Kinetics</span></a></li><li><a class="tocitem" href="#Chemical-Langevin-Equation-(CLE)-Stochastic-Differential-Equation-(SDE)-Models"><span>Chemical Langevin Equation (CLE) Stochastic Differential Equation (SDE) Models</span></a></li><li><a class="tocitem" href="#Reaction-rate-laws-used-in-simulations"><span>Reaction rate laws used in simulations</span></a></li><li><a class="tocitem" href="#Notes"><span>Notes</span></a></li></ul></li><li><a class="tocitem" href="../dsl/">The Reaction DSL</a></li><li><a class="tocitem" href="../reaction_systems/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="../basic_examples/">Basic Chemical Reaction Network Examples</a></li><li><a class="tocitem" href="../compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../symbolic_stoich/">Parametric Stoichiometry</a></li><li><a class="tocitem" href="../reaction_network_representation/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../bifurcation_diagram/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../parameter_estimation/">Parameter Estimation</a></li><li><a class="tocitem" href="../generating_reactions_programmatically/">Smoluchowski Coagulation Equation</a></li></ul></li><li><a class="tocitem" href="../../faqs/">FAQs</a></li><li><span class="tocitem">API</span><ul><li><a class="tocitem" href="../../api/catalyst_api/">Catalyst.jl API</a></li></ul></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Tutorials</a></li><li class="is-active"><a href>Using Catalyst</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Using Catalyst</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/tutorials/using_catalyst.md" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Using-Catalyst"><a class="docs-heading-anchor" href="#Using-Catalyst">Using Catalyst</a><a id="Using-Catalyst-1"></a><a class="docs-heading-anchor-permalink" href="#Using-Catalyst" title="Permalink"></a></h1><p>In this tutorial we provide an introduction to using Catalyst to specify chemical reaction networks, and then to solve ODE, jump, and SDE models generated from them. At the end we show what mathematical rate laws and transition rate functions (i.e. intensities or propensities) are generated by Catalyst for ODE, SDE and jump process models.</p><p>Let&#39;s start by using the Catalyst <a href="../../api/catalyst_api/#Catalyst.@reaction_network"><code>@reaction_network</code></a> macro to specify a simple chemical reaction network: the well-known repressilator.</p><p>We first import the basic packages we&#39;ll need:</p><pre><code class="language-example hljs"># If not already installed, first hit &quot;]&quot; within a Julia REPL. Then type:
+# add Catalyst DifferentialEquations Plots Latexify
+
+using Catalyst, DifferentialEquations, Plots, Latexify</code></pre><p>We now construct the reaction network. The basic types of arrows and predefined rate laws one can use are discussed in detail within the tutorial, <a href="../dsl/#The-Reaction-DSL">The Reaction DSL</a>. Here, we use a mix of first order, zero order, and repressive Hill function rate laws. Note, <span>$\varnothing$</span> corresponds to the empty state, and is used for zeroth order production and first order degradation reactions:</p><pre><code class="language-julia hljs">repressilator = @reaction_network Repressilator begin
+    hillr(P₃,α,K,n), ∅ --&gt; m₁
+    hillr(P₁,α,K,n), ∅ --&gt; m₂
+    hillr(P₂,α,K,n), ∅ --&gt; m₃
+    (δ,γ), m₁ &lt;--&gt; ∅
+    (δ,γ), m₂ &lt;--&gt; ∅
+    (δ,γ), m₃ &lt;--&gt; ∅
+    β, m₁ --&gt; m₁ + P₁
+    β, m₂ --&gt; m₂ + P₂
+    β, m₃ --&gt; m₃ + P₃
+    μ, P₁ --&gt; ∅
+    μ, P₂ --&gt; ∅
+    μ, P₃ --&gt; ∅
+end α K n δ γ β μ</code></pre><p>which gives</p><pre><code class="nohighlight hljs">Model Repressilator with 15 equations
+States (6):
+  m₁(t)
+  m₂(t)
+  m₃(t)
+  P₁(t)
+  P₂(t)
+  P₃(t)
+Parameters (7):
+  α
+  K
+  n
+  δ
+  γ
+  β
+  μ</code></pre><p>showing that we&#39;ve created a new network model named <code>Repressilator</code> with the listed chemical species and states. <a href="../../api/catalyst_api/#Catalyst.@reaction_network"><code>@reaction_network</code></a> returns a <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>, which we saved in the <code>repressilator</code> variable. It can be converted to a variety of other mathematical models represented as <code>ModelingToolkit.AbstractSystem</code>s, or analyzed in various ways using the <a href="../../api/catalyst_api/#Catalyst.jl-API">Catalyst.jl API</a>. For example, to see the chemical species, parameters, and reactions we can use</p><pre><code class="language-julia hljs">species(repressilator)</code></pre><p>which gives</p><pre><code class="language-julia hljs">6-element Array{Term{Real},1}:
+ m₁(t)
+ m₂(t)
+ m₃(t)
+ P₁(t)
+ P₂(t)
+ P₃(t)</code></pre><pre><code class="language-julia hljs">parameters(repressilator)</code></pre><p>which gives</p><pre><code class="language-julia hljs">7-element Array{Sym{ModelingToolkit.Parameter{Real}},1}:
+ α
+ K
+ n
+ δ
+ γ
+ β
+ μ</code></pre><p>and</p><pre><code class="language-julia hljs">reactions(repressilator)</code></pre><p>which gives</p><pre><code class="nohighlight hljs">15-element Vector{Reaction}:
+ Catalyst.hillr(P₃(t), α, K, n), ∅ --&gt; m₁
+ Catalyst.hillr(P₁(t), α, K, n), ∅ --&gt; m₂
+ Catalyst.hillr(P₂(t), α, K, n), ∅ --&gt; m₃
+ δ, m₁ --&gt; ∅
+ γ, ∅ --&gt; m₁
+ δ, m₂ --&gt; ∅
+ γ, ∅ --&gt; m₂
+ δ, m₃ --&gt; ∅
+ γ, ∅ --&gt; m₃
+ β, m₁ --&gt; m₁ + P₁
+ β, m₂ --&gt; m₂ + P₂
+ β, m₃ --&gt; m₃ + P₃
+ μ, P₁ --&gt; ∅
+ μ, P₂ --&gt; ∅
+ μ, P₃ --&gt; ∅</code></pre><p>We can also use Latexify to see the corresponding reactions, which shows what the <code>hillr</code> terms correspond to mathematically</p><pre><code class="language-julia hljs">latexify(repressilator, starred=true)</code></pre><p class="math-container">\[\begin{align*}
+\require{mhchem}
+\ce{ \varnothing &amp;-&gt;[\frac{\alpha K^{n}}{K^{n} + P{_3}^{n}}] m{_1}}\\
+\ce{ \varnothing &amp;-&gt;[\frac{\alpha K^{n}}{K^{n} + P{_1}^{n}}] m{_2}}\\
+\ce{ \varnothing &amp;-&gt;[\frac{\alpha K^{n}}{K^{n} + P{_2}^{n}}] m{_3}}\\
+\ce{ m{_1} &amp;&lt;=&gt;[\delta][\gamma] \varnothing}\\
+\ce{ m{_2} &amp;&lt;=&gt;[\delta][\gamma] \varnothing}\\
+\ce{ m{_3} &amp;&lt;=&gt;[\delta][\gamma] \varnothing}\\
+\ce{ m{_1} &amp;-&gt;[\beta] m{_1} + P{_1}}\\
+\ce{ m{_2} &amp;-&gt;[\beta] m{_2} + P{_2}}\\
+\ce{ m{_3} &amp;-&gt;[\beta] m{_3} + P{_3}}\\
+\ce{ P{_1} &amp;-&gt;[\mu] \varnothing}\\
+\ce{ P{_2} &amp;-&gt;[\mu] \varnothing}\\
+\ce{ P{_3} &amp;-&gt;[\mu] \varnothing}
+\end{align*}\]</p><p>Assuming <a href="https://graphviz.org/">Graphviz</a> is installed and commandline accessible, within a Jupyter notebook we can also graph the reaction network by</p><pre><code class="language-julia hljs">g = Graph(repressilator)</code></pre><p>giving</p><p><img src="../../assets/repressilator.svg" alt="Repressilator solution"/></p><p>The network graph shows a variety of information, representing each species as a blue node, and each reaction as an orange dot. Black arrows from species to reactions indicate reactants, and are labelled with their input stoichiometry. Similarly, black arrows from reactions to species indicate products, and are labelled with their output stoichiometry. In contrast, red arrows from a species to reactions indicate the species is used within the reactions&#39; rate expressions. For the repressilator, the reactions</p><pre><code class="language-julia hljs">hillr(P₃,α,K,n), ∅ --&gt; m₁
+hillr(P₁,α,K,n), ∅ --&gt; m₂
+hillr(P₂,α,K,n), ∅ --&gt; m₃</code></pre><p>have rates that depend on the proteins, and hence lead to red arrows from each <code>Pᵢ</code>.</p><p>Note, from the REPL or scripts one can always use <a href="../../api/catalyst_api/#Catalyst.savegraph"><code>savegraph</code></a> to save the graph (assuming <code>Graphviz</code> is installed).</p><h2 id="Mass-Action-ODE-Models"><a class="docs-heading-anchor" href="#Mass-Action-ODE-Models">Mass Action ODE Models</a><a id="Mass-Action-ODE-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Mass-Action-ODE-Models" title="Permalink"></a></h2><p>Let&#39;s now use our <code>ReactionSystem</code> to generate and solve a corresponding mass action ODE model. We first convert the system to a <code>ModelingToolkit.ODESystem</code> by</p><pre><code class="language-julia hljs">odesys = convert(ODESystem, repressilator)</code></pre><p>We can once again use Latexify to look at the corresponding ODE model</p><pre><code class="language-julia hljs">latexify(odesys)</code></pre><p class="math-container">\[\begin{aligned}
+\frac{dm_1(t)}{dt} =&amp; \frac{\alpha K^{n}}{K^{n} + \left( \mathrm{P_3}\left( t \right) \right)^{n}} - \delta \mathrm{m_1}\left( t \right) + \gamma \\
+\frac{dm_2(t)}{dt} =&amp; \frac{\alpha K^{n}}{K^{n} + \left( \mathrm{P_1}\left( t \right) \right)^{n}} - \delta \mathrm{m_2}\left( t \right) + \gamma \\
+\frac{dm_3(t)}{dt} =&amp; \frac{\alpha K^{n}}{K^{n} + \left( \mathrm{P_2}\left( t \right) \right)^{n}} - \delta \mathrm{m_3}\left( t \right) + \gamma \\
+\frac{dP_1(t)}{dt} =&amp; \beta \mathrm{m_1}\left( t \right) - \mu \mathrm{P_1}\left( t \right) \\
+\frac{dP_2(t)}{dt} =&amp; \beta \mathrm{m_2}\left( t \right) - \mu \mathrm{P_2}\left( t \right) \\
+\frac{dP_3(t)}{dt} =&amp; \beta \mathrm{m_3}\left( t \right) - \mu \mathrm{P_3}\left( t \right)
+\end{aligned}\]</p><p>(Note, there is currently a Latexify bug that causes different fonts to be used for the species symbols on each side of the equations.)</p><p>Before we can solve the ODEs, we need to specify the values of the parameters in the model, the initial condition, and the time interval to solve the model on. To do this we need to build mappings from the symbolic parameters and the species to the corresponding numerical values for parameters and initial conditions. We can build such mappings in several ways. One is to use Julia <code>Symbols</code> to specify the values like</p><pre><code class="language-julia hljs">pmap  = (:α =&gt; .5, :K =&gt; 40, :n =&gt; 2, :δ =&gt; log(2)/120, 
+         :γ =&gt; 5e-3, :β =&gt; log(2)/6, :μ =&gt; log(2)/60)
+u₀map = [:m₁ =&gt; 0., :m₂ =&gt; 0., :m₃ =&gt; 0., :P₁ =&gt; 20., :P₂ =&gt; 0., :P₃ =&gt; 0.]</code></pre><p>Alternatively, we can use ModelingToolkit symbolic variables to specify these mappings like</p><pre><code class="language-julia hljs">@parameters  α K n δ γ β μ
+@variables t m₁(t) m₂(t) m₃(t) P₁(t) P₂(t) P₃(t)
+pmap  = (α =&gt; .5, K =&gt; 40, n =&gt; 2, δ =&gt; log(2)/120, 
+         γ =&gt; 5e-3, β =&gt; 20*log(2)/120, μ =&gt; log(2)/60)
+u₀map = [m₁ =&gt; 0., m₂ =&gt; 0., m₃ =&gt; 0., P₁ =&gt; 20., P₂ =&gt; 0., P₃ =&gt; 0.]
+</code></pre><p>Knowing these mappings we can set up the <code>ODEProblem</code> we want to solve:</p><pre><code class="language-julia hljs"># time interval to solve on
+tspan = (0., 10000.)
+
+# create the ODEProblem we want to solve
+oprob = ODEProblem(repressilator, u₀map, tspan, pmap)</code></pre><p>Note, by passing <code>repressilator</code> directly to the <code>ODEProblem</code>, Catalyst has to (internally) call <code>convert(ODESystem, repressilator)</code> again to generate the symbolic ODEs. We could instead pass <code>odesys</code> directly like</p><pre><code class="language-julia hljs">oprob2 = ODEProblem(odesys, u₀map, tspan, pmap)</code></pre><p><code>oprob</code> and <code>oprob2</code> are functionally equivalent, each representing the same underlying problem.</p><p>At this point we are all set to solve the ODEs. We can now use any ODE solver from within the <a href="https://diffeq.sciml.ai/latest/solvers/ode_solve/">DifferentialEquations.jl</a> package. We&#39;ll use the recommended default explicit solver, <code>Tsit5()</code>, and then plot the solutions:</p><pre><code class="language-julia hljs">sol = solve(oprob, Tsit5(), saveat=10.)
+plot(sol)</code></pre><p><img src="../../assets/repressilator_odes.svg" alt="Repressilator ODE Solutions"/></p><p>We see the well-known oscillatory behavior of the repressilator! For more on the choices of ODE solvers, see the <a href="https://diffeq.sciml.ai/dev/solvers/ode_solve/">DifferentialEquations.jl documentation</a>.</p><hr/><h2 id="Stochastic-Simulation-Algorithms-(SSAs)-for-Stochastic-Chemical-Kinetics"><a class="docs-heading-anchor" href="#Stochastic-Simulation-Algorithms-(SSAs)-for-Stochastic-Chemical-Kinetics">Stochastic Simulation Algorithms (SSAs) for Stochastic Chemical Kinetics</a><a id="Stochastic-Simulation-Algorithms-(SSAs)-for-Stochastic-Chemical-Kinetics-1"></a><a class="docs-heading-anchor-permalink" href="#Stochastic-Simulation-Algorithms-(SSAs)-for-Stochastic-Chemical-Kinetics" title="Permalink"></a></h2><p>Let&#39;s now look at a stochastic chemical kinetics model of the repressilator, modeling it with jump processes. Here, we will construct a <a href="https://github.com/SciML/DiffEqJump.jl">DiffEqJump</a> <code>JumpProblem</code> that uses Gillespie&#39;s <code>Direct</code> method, and then solve it to generate one realization of the jump process:</p><pre><code class="language-julia hljs"># redefine the initial condition to be integer valued
+u₀map = [:m₁ =&gt; 0, :m₂ =&gt; 0, :m₃ =&gt; 0, :P₁ =&gt; 20, :P₂ =&gt; 0, :P₃ =&gt; 0]
+
+# next we create a discrete problem to encode that our species are integer valued:
+dprob = DiscreteProblem(repressilator, u₀map, tspan, pmap)
+
+# now, we create a JumpProblem, and specify Gillespie&#39;s Direct Method as the solver:
+jprob = JumpProblem(repressilator, dprob, Direct(), save_positions=(false,false))
+
+# now, let&#39;s solve and plot the jump process:
+sol = solve(jprob, SSAStepper(), saveat=10.)
+plot(sol)</code></pre><p><img src="../../assets/repressilator_jumps.svg" alt="Repressilator SSA Solutions"/></p><p>We see that oscillations remain, but become much noisier. Note, in constructing the <code>JumpProblem</code> we could have used any of the SSAs that are part of DiffEqJump instead of the <code>Direct</code> method, see the list of SSAs (i.e., constant rate jump aggregators) in the <a href="https://diffeq.sciml.ai/dev/types/jump_types/#Constant-Rate-Jump-Aggregators-1">documentation</a>.</p><p>Common questions that arise in using the DiffEqJump SSAs (i.e. Gillespie methods)  are collated in the <a href="https://diffeq.sciml.ai/latest/tutorials/discrete_stochastic_example/#FAQ">DiffEqJump FAQ</a>.</p><hr/><h2 id="Chemical-Langevin-Equation-(CLE)-Stochastic-Differential-Equation-(SDE)-Models"><a class="docs-heading-anchor" href="#Chemical-Langevin-Equation-(CLE)-Stochastic-Differential-Equation-(SDE)-Models">Chemical Langevin Equation (CLE) Stochastic Differential Equation (SDE) Models</a><a id="Chemical-Langevin-Equation-(CLE)-Stochastic-Differential-Equation-(SDE)-Models-1"></a><a class="docs-heading-anchor-permalink" href="#Chemical-Langevin-Equation-(CLE)-Stochastic-Differential-Equation-(SDE)-Models" title="Permalink"></a></h2><p>At an intermediate physical scale between macroscopic ODE models and microscopic stochastic chemical kinetics models lies the CLE, given by a system of SDEs that add to each ODE above a noise term. As the repressilator has species that get very close to zero in size, it is not a good candidate to model with the CLE (where solutions can then go negative and become unphysical). Let&#39;s create a simpler reaction network for a birth-death process that will stay non-negative:</p><pre><code class="language-julia hljs">bdp = @reaction_network begin
+  c₁, X --&gt; 2X
+  c₂, X --&gt; 0
+  c₃, 0 --&gt; X
+end c₁ c₂ c₃
+p = (:c₁ =&gt; 1.0, :c₂ =&gt; 2.0, :c₃ =&gt; 50.)
+u₀ = [:X =&gt; 5.]
+tspan = (0.,4.)</code></pre><p>The corresponding Chemical Langevin Equation SDE is then</p><p class="math-container">\[dX(t) = \left( c_1 X\left( t \right) - c_2 X\left( t \right) + c_3 \right) dt + \sqrt{c_1 X(t)} dW_1(t) - \sqrt{c_2 X(t)} dW_2(t) + \sqrt{c_3} dW_3(t)\]</p><p>where each <span>$W_i(t)$</span> denotes an independent Brownian Motion. We can solve the CLE model by creating an <code>SDEProblem</code> and solving it similarly to what we did for ODEs above:</p><pre><code class="language-julia hljs"># SDEProblem for CLE
+sprob = SDEProblem(bdp, u₀, tspan, p)
+
+# solve and plot, tstops is used to specify enough points
+# that the plot looks well-resolved
+sol = solve(sprob, LambaEM(), tstops=range(0., step=4e-3, length=1001))
+plot(sol)</code></pre><p><img src="../../assets/birthdeath_cle.svg" alt="CLE Solution"/></p><p>We again have complete freedom to select any of the StochasticDiffEq.jl SDE solvers, see the <a href="https://diffeq.sciml.ai/dev/solvers/sde_solve/">documentation</a>.</p><hr/><h2 id="Reaction-rate-laws-used-in-simulations"><a class="docs-heading-anchor" href="#Reaction-rate-laws-used-in-simulations">Reaction rate laws used in simulations</a><a id="Reaction-rate-laws-used-in-simulations-1"></a><a class="docs-heading-anchor-permalink" href="#Reaction-rate-laws-used-in-simulations" title="Permalink"></a></h2><p>In generating mathematical models from a <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a>, reaction rates are treated as <em>microscopic</em> rates. That is, for a general mass action reaction of the form <span>$n_1 S_1 + n_2 S_2 + \dots n_M S_M \to \dots$</span> with stoichiometric substrate coefficients <span>$\{n_i\}_{i=1}^M$</span> and rate constant <span>$k$</span>, the corresponding ODE and SDE rate laws are taken to be</p><p class="math-container">\[k \prod_{i=1}^M \frac{(S_i)^{n_i}}{n_i!},\]</p><p>while the jump process transition rate (i.e., the propensity or intensity function) is</p><p class="math-container">\[k \prod_{i=1}^M \frac{S_i (S_i-1) \dots (S_i-n_i+1)}{n_i!}.\]</p><p>For example, the rate law of the reaction <span>$2X + 3Y \to Z$</span> with rate constant <span>$k$</span> would be</p><p class="math-container">\[k \frac{X^2}{2!} \frac{Y^3}{3!} \\\]</p><p>giving the ODE model</p><p class="math-container">\[\begin{align*}
+\frac{dX}{dt} &amp;=  -2 k \frac{X^2}{2!} \frac{Y^3}{3!}, &amp;
+\frac{dY}{dt} &amp;=  -3 k \frac{X^2}{2!} \frac{Y^3}{3!}, &amp;
+\frac{dZ}{dt} &amp;= k \frac{X^2}{2!} \frac{Y^3}{3!}.
+\end{align*}\]</p><p>This implicit rescaling of rate constants can be disabled through explicit conversion of a <a href="../../api/catalyst_api/#Catalyst.ReactionSystem"><code>ReactionSystem</code></a> to another system via <a href="../../api/catalyst_api/#Base.convert"><code>Base.convert</code></a> using the <code>combinatoric_ratelaws=false</code> keyword argument, i.e.</p><pre><code class="language-julia hljs">rn = @reaction_network ...
+convert(ODESystem, rn; combinatoric_ratelaws=false)</code></pre><p>For the previous example using this keyword argument would give the rate law</p><p class="math-container">\[k X^2 Y^3 \]</p><p>and the ODE model</p><p class="math-container">\[\begin{align*}
+\frac{dX}{dt} &amp;=  -2 k X^2 Y^3, &amp;
+\frac{dY}{dt} &amp;=  -3 k X^2 Y^3, &amp;
+\frac{dZ}{dt} &amp;= k X^2 Y^3.
+\end{align*}\]</p><hr/><h2 id="Notes"><a class="docs-heading-anchor" href="#Notes">Notes</a><a id="Notes-1"></a><a class="docs-heading-anchor-permalink" href="#Notes" title="Permalink"></a></h2><ol><li><p>For each of the preceding models we converted the <code>ReactionSystem</code> to, i.e., ODEs, jumps, or SDEs, we had two paths for conversion:</p><p>a. Convert to the corresponding ModelingToolkit system and then use it in     creating the corresponding problem.</p><p>b. Directly create the desired problem type from the <code>ReactionSystem</code>.</p><p>The latter is more convenient, however, the former will be more efficient if one needs to repeatedly create the associated <code>Problem</code>.</p></li><li><p>ModelingToolkit offers many options for optimizing the generated ODEs and SDEs, including options to build functions for evaluating Jacobians and/or multithreaded versions of derivative evaluation functions. See the options for <a href="https://mtk.sciml.ai/dev/systems/ODESystem/#DiffEqBase.ODEProblem"><code>ODEProblem</code>s</a> and <a href="https://mtk.sciml.ai/dev/systems/SDESystem/#DiffEqBase.SDEProblem"><code>SDEProblem</code>s</a>.</p></li></ol></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../dsl/">The Reaction DSL »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.19 on <span class="colophon-date" title="Wednesday 15 June 2022 14:22">Wednesday 15 June 2022</span>. Using Julia version 1.7.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>

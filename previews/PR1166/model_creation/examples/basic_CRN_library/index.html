@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Library of Basic Chemical Reaction Network Models · Catalyst.jl</title><meta name="title" content="Library of Basic Chemical Reaction Network Models · Catalyst.jl"/><meta property="og:title" content="Library of Basic Chemical Reaction Network Models · Catalyst.jl"/><meta property="twitter:title" content="Library of Basic Chemical Reaction Network Models · Catalyst.jl"/><meta name="description" content="Documentation for Catalyst.jl."/><meta property="og:description" content="Documentation for Catalyst.jl."/><meta property="twitter:description" content="Documentation for Catalyst.jl."/><meta property="og:url" content="https://docs.sciml.ai/Catalyst/stable/model_creation/examples/basic_CRN_library/"/><meta property="twitter:url" content="https://docs.sciml.ai/Catalyst/stable/model_creation/examples/basic_CRN_library/"/><link rel="canonical" href="https://docs.sciml.ai/Catalyst/stable/model_creation/examples/basic_CRN_library/"/><script async src="https://www.googletagmanager.com/gtag/js?id=UA-90474609-3"></script><script>  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-90474609-3', {'page_path': location.pathname + location.search + location.hash});
+</script><script data-outdated-warner src="../../../assets/warner.js"></script><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.050/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.8/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../../assets/documenter.js"></script><script src="../../../search_index.js"></script><script src="../../../siteinfo.js"></script><script src="../../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-mocha.css" data-theme-name="catppuccin-mocha"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-macchiato.css" data-theme-name="catppuccin-macchiato"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-frappe.css" data-theme-name="catppuccin-frappe"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/catppuccin-latte.css" data-theme-name="catppuccin-latte"/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../../assets/themeswap.js"></script><link href="../../../assets/favicon.ico" rel="icon" type="image/x-icon"/></head><body><div id="documenter"><nav class="docs-sidebar"><a class="docs-logo" href="../../../"><img src="../../../assets/logo.png" alt="Catalyst.jl logo"/></a><div class="docs-package-name"><span class="docs-autofit"><a href="../../../">Catalyst.jl</a></span></div><button class="docs-search-query input is-rounded is-small is-clickable my-2 mx-auto py-1 px-2" id="documenter-search-query">Search docs (Ctrl + /)</button><ul class="docs-menu"><li><a class="tocitem" href="../../../">Home</a></li><li><input class="collapse-toggle" id="menuitem-2" type="checkbox"/><label class="tocitem" for="menuitem-2"><span class="docs-label">Introduction to Catalyst</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../introduction_to_catalyst/catalyst_for_new_julia_users/">Introduction to Catalyst and Julia for New Julia users</a></li><li><a class="tocitem" href="../../../introduction_to_catalyst/introduction_to_catalyst/">Introduction to Catalyst</a></li><li><a class="tocitem" href="../../../introduction_to_catalyst/math_models_intro/">Mathematical Models Catalyst can Generate</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-3" type="checkbox" checked/><label class="tocitem" for="menuitem-3"><span class="docs-label">Model creation and properties</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../dsl_basics/">The Catalyst DSL - Introduction</a></li><li><a class="tocitem" href="../../dsl_advanced/">The Catalyst DSL - Advanced Features and Options</a></li><li><a class="tocitem" href="../../programmatic_CRN_construction/">Programmatic Construction of Symbolic Reaction Systems</a></li><li><a class="tocitem" href="../../compositional_modeling/">Compositional Modeling of Reaction Systems</a></li><li><a class="tocitem" href="../../constraint_equations/">Constraint Equations and Events</a></li><li><a class="tocitem" href="../../conservation_laws/">Working with conservation laws</a></li><li><a class="tocitem" href="../../parametric_stoichiometry/">Symbolic Stochiometries</a></li><li><a class="tocitem" href="../../model_file_loading_and_export/">Loading Chemical Reaction Network Models from Files</a></li><li><a class="tocitem" href="../../model_visualisation/">Model Visualisation</a></li><li><a class="tocitem" href="../../reactionsystem_content_accessing/">Accessing model properties</a></li><li><a class="tocitem" href="../../network_analysis/">Network Analysis in Catalyst</a></li><li><a class="tocitem" href="../../chemistry_related_functionality/">Chemistry-related functionality</a></li><li><input class="collapse-toggle" id="menuitem-3-13" type="checkbox" checked/><label class="tocitem" for="menuitem-3-13"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li class="is-active"><a class="tocitem" href>Library of Basic Chemical Reaction Network Models</a><ul class="internal"><li><a class="tocitem" href="#basic_CRN_library_bd"><span>Birth-death process</span></a></li><li><a class="tocitem" href="#basic_CRN_library_two_states"><span>Two-state model</span></a></li><li><a class="tocitem" href="#basic_CRN_library_mm"><span>Michaelis-Menten enzyme kinetics</span></a></li><li><a class="tocitem" href="#basic_CRN_library_sir"><span>SIR infection model</span></a></li><li><a class="tocitem" href="#basic_CRN_library_cc"><span>Chemical cross-coupling</span></a></li><li><a class="tocitem" href="#basic_CRN_library_wilhelm"><span>The Wilhelm model</span></a></li><li><a class="tocitem" href="#basic_CRN_library_self_activation"><span>Simple self-activation loop</span></a></li><li><a class="tocitem" href="#basic_CRN_library_brusselator"><span>The Brusselator</span></a></li><li><a class="tocitem" href="#basic_CRN_library_repressilator"><span>The Repressilator</span></a></li><li><a class="tocitem" href="#basic_CRN_library_wr"><span>The Willamowski–Rössler model</span></a></li></ul></li><li><a class="tocitem" href="../programmatic_generative_linear_pathway/">Programmatic, generative, modelling of a linear pathway</a></li><li><a class="tocitem" href="../hodgkin_huxley_equation/">Hodgkin-Huxley Equation</a></li><li><a class="tocitem" href="../smoluchowski_coagulation_equation/">Smoluchowski Coagulation Equation</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-4" type="checkbox"/><label class="tocitem" for="menuitem-4"><span class="docs-label">Model simulation and visualization</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../model_simulation/simulation_introduction/">Model Simulation Introduction</a></li><li><a class="tocitem" href="../../../model_simulation/simulation_plotting/">Simulation plotting</a></li><li><a class="tocitem" href="../../../model_simulation/simulation_structure_interfacing/">Interfacing problems, integrators, and solutions</a></li><li><a class="tocitem" href="../../../model_simulation/ensemble_simulations/">Ensemble/Monte Carlo Simulations</a></li><li><a class="tocitem" href="../../../model_simulation/ode_simulation_performance/">Advice for performant ODE simulations</a></li><li><a class="tocitem" href="../../../model_simulation/sde_simulation_performance/">Advice for performant SDE simulations</a></li><li><input class="collapse-toggle" id="menuitem-4-7" type="checkbox"/><label class="tocitem" for="menuitem-4-7"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../model_simulation/examples/periodic_events_simulation/">Modelling a periodic event during ODE and jump simulations</a></li><li><a class="tocitem" href="../../../model_simulation/examples/interactive_brusselator_simulation/">Interactive Simulation and Plotting</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-5" type="checkbox"/><label class="tocitem" for="menuitem-5"><span class="docs-label">Steady state analysis</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../steady_state_functionality/homotopy_continuation/">Finding Steady States through Homotopy Continuation</a></li><li><a class="tocitem" href="../../../steady_state_functionality/nonlinear_solve/">Finding Steady States using NonlinearSolve.jl and SteadyStateDiffEq.jl</a></li><li><a class="tocitem" href="../../../steady_state_functionality/steady_state_stability_computation/">Steady state stability computation</a></li><li><a class="tocitem" href="../../../steady_state_functionality/bifurcation_diagrams/">Bifurcation Diagrams</a></li><li><a class="tocitem" href="../../../steady_state_functionality/dynamical_systems/">Analysing model steady state properties with DynamicalSystems.jl</a></li></ul></li><li><input class="collapse-toggle" id="menuitem-6" type="checkbox"/><label class="tocitem" for="menuitem-6"><span class="docs-label">Inverse problems</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../inverse_problems/petab_ode_param_fitting/">Parameter Fitting for ODEs using PEtab.jl</a></li><li><a class="tocitem" href="../../../inverse_problems/optimization_ode_param_fitting/">Parameter Fitting for ODEs using Optimization.jl</a></li><li><a class="tocitem" href="../../../inverse_problems/behaviour_optimisation/">Optimization for non-data fitting purposes</a></li><li><a class="tocitem" href="../../../inverse_problems/global_sensitivity_analysis/">Global Sensitivity Analysis</a></li><li><input class="collapse-toggle" id="menuitem-6-5" type="checkbox"/><label class="tocitem" for="menuitem-6-5"><span class="docs-label">Examples</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../inverse_problems/examples/ode_fitting_oscillation/">Fitting Parameters for an Oscillatory System</a></li></ul></li></ul></li><li><input class="collapse-toggle" id="menuitem-7" type="checkbox"/><label class="tocitem" for="menuitem-7"><span class="docs-label">Spatial modelling</span><i class="docs-chevron"></i></label><ul class="collapsed"><li><a class="tocitem" href="../../../spatial_modelling/lattice_reaction_systems/">Introduction to Spatial Modelling with Catalyst</a></li><li><a class="tocitem" href="../../../spatial_modelling/lattice_simulation_structure_ interaction/">Interfacing with Lattice Problems, Integrators, and Solutions</a></li><li><a class="tocitem" href="../../../spatial_modelling/lattice_simulation_plotting/">Plotting Spatial Simulations</a></li><li><a class="tocitem" href="../../../spatial_modelling/spatial_ode_simulations/">Spatial ODE simulations</a></li><li><a class="tocitem" href="../../../spatial_modelling/spatial_jump_simulations/">Spatial jump simulations</a></li></ul></li><li><a class="tocitem" href="../../../faqs/">FAQs</a></li><li><a class="tocitem" href="../../../api/">API</a></li><li><a class="tocitem" href="../../../devdocs/dev_guide/">Developer Documentation</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><a class="docs-sidebar-button docs-navbar-link fa-solid fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a><nav class="breadcrumb"><ul class="is-hidden-mobile"><li><a class="is-disabled">Model creation and properties</a></li><li><a class="is-disabled">Examples</a></li><li class="is-active"><a href>Library of Basic Chemical Reaction Network Models</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Library of Basic Chemical Reaction Network Models</a></li></ul></nav><div class="docs-right"><a class="docs-navbar-link" href="https://github.com/SciML/Catalyst.jl" title="View the repository on GitHub"><span class="docs-icon fa-brands"></span><span class="docs-label is-hidden-touch">GitHub</span></a><a class="docs-navbar-link" href="https://github.com/SciML/Catalyst.jl/blob/master/docs/src/model_creation/examples/basic_CRN_library.md" title="Edit source on GitHub"><span class="docs-icon fa-solid"></span></a><a class="docs-settings-button docs-navbar-link fa-solid fa-gear" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-article-toggle-button fa-solid fa-chevron-up" id="documenter-article-toggle-button" href="javascript:;" title="Collapse all docstrings"></a></div></header><article class="content" id="documenter-page"><h1 id="basic_CRN_library"><a class="docs-heading-anchor" href="#basic_CRN_library">Library of Basic Chemical Reaction Network Models</a><a id="basic_CRN_library-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library" title="Permalink"></a></h1><p>Below we will present various simple and established chemical reaction network (CRN) models. Each model is given some brief background, implemented using the <code>@reaction_network</code> DSL, and basic simulations are performed.</p><h2 id="basic_CRN_library_bd"><a class="docs-heading-anchor" href="#basic_CRN_library_bd">Birth-death process</a><a id="basic_CRN_library_bd-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_bd" title="Permalink"></a></h2><p>The birth-death process is one of the simplest possible CRN models. It consists of a single component (<span>$X$</span>) which is both produced and degraded at linear rates:</p><pre><code class="language-julia hljs">using Catalyst
+bd_process = @reaction_network begin
+    (p,d), ∅ &lt;--&gt; X
+end</code></pre><p class="math-container">\[ \begin{align*}
+\varnothing &amp;\xrightleftharpoons[d]{p} \mathrm{X}  
+ \end{align*}
+ \]</p><p>Next, we define simulation conditions. Note that the initial condition is integer-valued (more natural than decimal numbers for jump simulations).</p><pre><code class="language-julia hljs">u0 = [:X =&gt; 1]
+tspan = (0.0, 10.0)
+ps = [:p =&gt; 1.0, :d =&gt; 0.2]</code></pre><p>We can now simulate our model using all three interpretations. First, we perform a reaction rate equation-based ODE simulation:</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault
+oprob = ODEProblem(bd_process, u0, tspan, ps)
+osol = solve(oprob)</code></pre><p>Next, a chemical Langevin equation-based SDE simulation:</p><pre><code class="language-julia hljs">using StochasticDiffEq
+sprob = SDEProblem(bd_process, u0, tspan, ps)
+ssol = solve(sprob, STrapezoid())</code></pre><p>Next, a stochastic chemical kinetics-based jump simulation:</p><pre><code class="language-julia hljs">using JumpProcesses
+jinput = JumpInputs(bd_process, u0, tspan, ps)
+jprob = JumpProblem(jinput)
+jsol = solve(jprob)</code></pre><p>Finally, we plot the results:</p><pre><code class="language-julia hljs">using Plots
+oplt = plot(osol; title = &quot;Reaction rate equation (ODE)&quot;)
+splt = plot(ssol; title = &quot;Chemical Langevin equation (SDE)&quot;)
+jplt = plot(jsol; title = &quot;Stochastic chemical kinetics (Jump)&quot;)
+plot(oplt, splt, jplt; lw = 3, size=(800,700), layout = (3,1))</code></pre><img src="b15b9b91.svg" alt="Example block output"/><h2 id="basic_CRN_library_two_states"><a class="docs-heading-anchor" href="#basic_CRN_library_two_states">Two-state model</a><a id="basic_CRN_library_two_states-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_two_states" title="Permalink"></a></h2><p>The two-state model describes a component (here called <span>$X$</span>) which can exist in two different forms (here called <span>$X₁$</span> and <span>$X₂$</span>). It switches between these forms at linear rates. First, we simulate the model using both ODEs and SDEs:</p><pre><code class="language-julia hljs">using Catalyst, OrdinaryDiffEqDefault, StochasticDiffEq, Plots
+two_state_model = @reaction_network begin
+    (k₁,k₂), X₁ &lt;--&gt; X₂
+end
+
+u0 = [:X₁ =&gt; 50.0, :X₂ =&gt; 50.0]
+tspan = (0.0, 1.0)
+ps = [:k₁ =&gt; 2.0, :k₂ =&gt; 3.0]
+
+oprob = ODEProblem(two_state_model, u0, tspan, ps)
+osol = solve(oprob)
+oplt = plot(osol; title = &quot;Reaction rate equation (ODE)&quot;)
+
+sprob = SDEProblem(two_state_model, u0, tspan, ps)
+ssol = solve(sprob, STrapezoid())
+splt = plot(ssol; title = &quot;Chemical Langevin equation (SDE)&quot;)
+
+plot(oplt, splt; lw = 3, size = (800,550), layout = (2,1))</code></pre><img src="27f42b4a.svg" alt="Example block output"/><p>What is interesting about this model is that it has a <em>conserved quantity</em>, where <span>$X₁ + X₂$</span> remains constant throughout the simulation (both in deterministic and stochastic cases). We can show this by instead plotting this conserved quantity.</p><pre><code class="language-julia hljs">@unpack X₁, X₂ = two_state_model
+oplt = plot(osol; idxs = X₁ + X₂, title = &quot;Reaction rate equation (ODE)&quot;)
+splt = plot(ssol; idxs = X₁ + X₂, title = &quot;Chemical Langevin equation (SDE)&quot;)
+plot(oplt, splt; lw = 3, ylimit = (99,101), size = (800,450), layout = (2,1))</code></pre><img src="a6c066aa.svg" alt="Example block output"/><h2 id="basic_CRN_library_mm"><a class="docs-heading-anchor" href="#basic_CRN_library_mm">Michaelis-Menten enzyme kinetics</a><a id="basic_CRN_library_mm-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_mm" title="Permalink"></a></h2><p><a href="https://en.wikipedia.org/wiki/Michaelis%E2%80%93Menten_kinetics">Michaelis-Menten enzyme kinetics</a> is a simple description of an enzyme (<span>$E$</span>) transforming a substrate (<span>$S$</span>) into a product (<span>$P$</span>). Under certain assumptions, it can be simplified to a single function (a Michaelis-Menten function) and used as a reaction rate. Here we instead present the full system model:</p><pre><code class="language-julia hljs">using Catalyst
+mm_system = @reaction_network begin
+    kB, S + E --&gt; SE
+    kD, SE --&gt; S + E
+    kP, SE --&gt; P + E
+end</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{S} + \mathrm{E} &amp;\xrightleftharpoons[\mathtt{kD}]{\mathtt{kB}} \mathrm{\mathtt{SE}} \\
+\mathrm{\mathtt{SE}} &amp;\xrightarrow{\mathtt{kP}} \mathrm{P} + \mathrm{E}  
+ \end{align*}
+ \]</p><p>Next, we perform ODE, SDE, and jump simulations of the model:</p><pre><code class="language-julia hljs">u0 = [:S =&gt; 301, :E =&gt; 100, :SE =&gt; 0, :P =&gt; 0]
+tspan = (0., 100.)
+ps = [:kB =&gt; 0.00166, :kD =&gt; 0.0001, :kP =&gt; 0.1]
+
+using OrdinaryDiffEqDefault
+oprob = ODEProblem(mm_system, u0, tspan, ps)
+osol  = solve(oprob)
+
+using StochasticDiffEq
+sprob = SDEProblem(mm_system, u0, tspan, ps)
+ssol = solve(sprob, STrapezoid())
+
+using JumpProcesses
+jinput = JumpInputs(mm_system, u0, tspan, ps)
+jprob = JumpProblem(jinput)
+jsol = solve(jprob)
+
+using Plots
+oplt = plot(osol; title = &quot;Reaction rate equation (ODE)&quot;)
+splt = plot(ssol; title = &quot;Chemical Langevin equation (SDE)&quot;)
+jplt = plot(jsol; title = &quot;Stochastic chemical kinetics (Jump)&quot;)
+plot(oplt, splt, jplt; lw = 2, size=(800,800), layout = (3,1))
+fullplt = plot(oplt, splt, jplt; lw = 2, size=(800,800), layout = (3,1), fmt = :png,</code></pre><img src="6a8d7997.png" alt="Example block output"/><h2 id="basic_CRN_library_sir"><a class="docs-heading-anchor" href="#basic_CRN_library_sir">SIR infection model</a><a id="basic_CRN_library_sir-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_sir" title="Permalink"></a></h2><p>The <a href="https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SIR_model">SIR model</a> is the simplest model of the spread of an infectious disease. While the real system is very different from the chemical and cellular processes typically modelled with CRNs, it (and several other epidemiological systems) can be modelled using the same CRN formalism. The SIR model consists of three species: susceptible (<span>$S$</span>), infected (<span>$I$</span>), and removed (<span>$R$</span>) individuals, and two reaction events: infection and recovery.</p><pre><code class="language-julia hljs">using Catalyst
+sir_model = @reaction_network begin
+    α, S + I --&gt; 2I
+    β, I --&gt; R
+end</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{S} + \mathrm{I} &amp;\xrightarrow{\alpha} 2 \mathrm{I} \\
+\mathrm{I} &amp;\xrightarrow{\beta} \mathrm{R}  
+ \end{align*}
+ \]</p><p>First, we perform a deterministic ODE simulation:</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault, Plots
+u0 = [:S =&gt; 99, :I =&gt; 1, :R =&gt; 0]
+tspan = (0.0, 500.0)
+ps = [:α =&gt; 0.001, :β =&gt; 0.01]
+
+# Solve ODEs.
+oprob = ODEProblem(sir_model, u0, tspan, ps)
+osol = solve(oprob)
+plot(osol; title = &quot;Reaction rate equation (ODE)&quot;, size=(800,350))</code></pre><img src="30ade26c.svg" alt="Example block output"/><p>Next, we perform 3 different Jump simulations. Note that for the stochastic model, the occurrence of an outbreak is not certain. Rather, there is a possibility that it fizzles out without a noteworthy peak.</p><pre><code class="language-julia hljs">using JumpProcesses
+jinput = JumpInputs(sir_model, u0, tspan, ps)
+jprob = JumpProblem(jinput)
+
+jsol1 = solve(jprob)
+jsol2 = solve(jprob)
+jsol3 = solve(jprob)
+
+jplt1 = plot(jsol1; title = &quot;Outbreak&quot;)
+jplt2 = plot(jsol2; title = &quot;Outbreak&quot;)
+jplt3 = plot(jsol3; title = &quot;No outbreak&quot;)
+plot(jplt1, jplt2, jplt3; lw = 3, size=(800,700), layout = (3,1))</code></pre><img src="124f3f79.png" alt="Example block output"/><h2 id="basic_CRN_library_cc"><a class="docs-heading-anchor" href="#basic_CRN_library_cc">Chemical cross-coupling</a><a id="basic_CRN_library_cc-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_cc" title="Permalink"></a></h2><p>In chemistry, <a href="https://en.wikipedia.org/wiki/Cross-coupling_reaction">cross-coupling</a> is when a catalyst combines two substrates to form a product. In this example, the catalyst (<span>$C$</span>) first binds one substrate (<span>$S₁$</span>) to form an intermediary complex (<span>$S₁C$</span>). Next, the complex binds the second substrate (<span>$S₂$</span>) to form another complex (<span>$CP$</span>). Finally, the catalyst releases the now-formed product (<span>$P$</span>). This system is an extended version of the <a href="#basic_CRN_library_mm">Michaelis-Menten system presented earlier</a>.</p><pre><code class="language-julia hljs">using Catalyst
+cc_system = @reaction_network begin
+    k₁, S₁ + C --&gt; S₁C
+    k₂, S₁C + S₂ --&gt; CP
+    k₃, CP --&gt; C + P
+end</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{\mathtt{S_1}} + \mathrm{C} &amp;\xrightarrow{\mathtt{k_1}} \mathrm{\mathtt{S_{1}C}} \\
+\mathrm{\mathtt{S_{1}C}} + \mathrm{\mathtt{S_2}} &amp;\xrightarrow{\mathtt{k_2}} \mathrm{\mathtt{CP}} \\
+\mathrm{\mathtt{CP}} &amp;\xrightarrow{\mathtt{k_3}} \mathrm{C} + \mathrm{P}  
+ \end{align*}
+ \]</p><p>Below, we perform a simple deterministic ODE simulation of the system. Next, we plot both:</p><ul><li>The concentration of the substrates and the product.</li><li>The concentration of the catalyst and the intermediaries.</li></ul><p>In two separate plots.</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault, Plots
+u0 = [:S₁ =&gt; 1.0, :C =&gt; 0.05, :S₂ =&gt; 1.2, :S₁C =&gt; 0.0, :CP =&gt; 0.0, :P =&gt; 0.0]
+tspan = (0., 15.)
+ps = [:k₁ =&gt; 5.0, :k₂ =&gt; 5.0, :k₃ =&gt; 100.0]
+
+# solve ODEs
+oprob = ODEProblem(cc_system, u0, tspan, ps)
+osol  = solve(oprob)
+
+plt1 = plot(osol; idxs = [:S₁, :S₂, :P], title = &quot;Substrate and product dynamics&quot;)
+plt2 = plot(osol; idxs = [:C, :S₁C, :CP], title = &quot;Catalyst and intermediaries dynamics&quot;)
+plot(plt1, plt2; lw = 3, size = (800,600), layout = (2,1))</code></pre><img src="74ddd004.svg" alt="Example block output"/><h2 id="basic_CRN_library_wilhelm"><a class="docs-heading-anchor" href="#basic_CRN_library_wilhelm">The Wilhelm model</a><a id="basic_CRN_library_wilhelm-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_wilhelm" title="Permalink"></a></h2><p>The Wilhelm model was introduced in <a href="https://bmcsystbiol.biomedcentral.com/articles/10.1186/1752-0509-3-90"><em>Wilhelm (2009)</em></a> as the smallest CRN model (with constant rates) that exhibits bistability.</p><pre><code class="language-julia hljs">using Catalyst
+wilhelm_model = @reaction_network begin
+    k1, Y --&gt; 2X
+    k2, 2X --&gt; X + Y
+    k3, X + Y --&gt; Y
+    k4, X --&gt; 0
+end</code></pre><p class="math-container">\[ \begin{align*}
+\mathrm{Y} &amp;\xrightarrow{\mathtt{k1}} 2 \mathrm{X} \\
+2 \mathrm{X} &amp;\xrightarrow{\mathtt{k2}} \mathrm{X} + \mathrm{Y} \\
+\mathrm{X} + \mathrm{Y} &amp;\xrightarrow{\mathtt{k3}} \mathrm{Y} \\
+\mathrm{X} &amp;\xrightarrow{\mathtt{k4}} \varnothing  
+ \end{align*}
+ \]</p><p>We can simulate the model for two different initial conditions, demonstrating the existence of two different stable steady states.</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault, Plots
+u0_1 = [:X =&gt; 1.5, :Y =&gt; 0.5]
+u0_2 = [:X =&gt; 2.5, :Y =&gt; 0.5]
+tspan = (0., 10.)
+ps = [:k1 =&gt; 8.0, :k2 =&gt; 2.0, :k3 =&gt; 1.0, :k4 =&gt; 1.5]
+
+oprob1 = ODEProblem(wilhelm_model, u0_1, tspan, ps)
+oprob2 = ODEProblem(wilhelm_model, u0_2, tspan, ps)
+osol1 = solve(oprob1)
+osol2 = solve(oprob2)
+plot(osol1; lw = 4, idxs = :X, label = &quot;X(0) = 1.5&quot;)
+plot!(osol2; lw = 4, idxs = :X, label = &quot;X(0) = 2.5&quot;, yguide = &quot;X&quot;, size = (800,350))</code></pre><img src="943c0315.svg" alt="Example block output"/><h2 id="basic_CRN_library_self_activation"><a class="docs-heading-anchor" href="#basic_CRN_library_self_activation">Simple self-activation loop</a><a id="basic_CRN_library_self_activation-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_self_activation" title="Permalink"></a></h2><p>The simplest self-activation loop consists of a single species (here called <span>$X$</span>) which activates its own production. If its production rate is modelled as a <a href="https://en.wikipedia.org/wiki/Hill_equation_(biochemistry)">Hill function</a> with <span>$n&gt;1$</span>, the system may exhibit bistability.</p><pre><code class="language-julia hljs">using Catalyst
+sa_loop = @reaction_network begin
+    v₀ + hill(X,v,K,n), ∅ --&gt; X
+    d, X --&gt; ∅
+end</code></pre><p class="math-container">\[ \begin{align*}
+\varnothing &amp;\xrightleftharpoons[d]{\mathtt{v_0} + \frac{X^{n} v}{K^{n} + X^{n}}} \mathrm{X}  
+ \end{align*}
+ \]</p><p>A simple example of such a loop is a transcription factor which activates its own gene. Here, <span>$v₀$</span> represents a basic transcription rate (leakage) in the absence of the transcription factor.</p><p>We simulate the self-activation loop from a single initial condition using both deterministic (ODE) and stochastic (jump) simulations. We note that while the deterministic simulation reaches a single steady state, the stochastic one switches between two different states.</p><pre><code class="language-julia hljs">using JumpProcesses, OrdinaryDiffEqDefault, Plots
+u0 = [:X =&gt; 4]
+tspan = (0.0, 1000.0)
+ps = [:v₀ =&gt; 0.1, :v =&gt; 2.0, :K =&gt; 10.0, :n =&gt; 2, :d =&gt; 0.1]
+
+oprob = ODEProblem(sa_loop, u0, tspan, ps)
+osol = solve(oprob)
+
+jinput = JumpInputs(sa_loop, u0, tspan, ps)
+jprob = JumpProblem(jinput)
+jsol = solve(jprob)
+
+fplt = plot(osol; lw = 3, label = &quot;Reaction rate equation (ODE)&quot;)
+plot!(fplt, jsol; lw = 3, label = &quot;Stochastic chemical kinetics (Jump)&quot;, yguide = &quot;X&quot;, size = (800,350))</code></pre><img src="a64d0213.png" alt="Example block output"/><h2 id="basic_CRN_library_brusselator"><a class="docs-heading-anchor" href="#basic_CRN_library_brusselator">The Brusselator</a><a id="basic_CRN_library_brusselator-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_brusselator" title="Permalink"></a></h2><p>The <a href="https://en.wikipedia.org/wiki/Brusselator">Brusselator</a> is a well-known (theoretical) CRN model able to produce oscillations (its name is a portmanteau of &quot;Brussels&quot; and &quot;oscillator&quot;).</p><pre><code class="language-julia hljs">using Catalyst
+brusselator = @reaction_network begin
+    A, ∅ --&gt; X
+    1, 2X + Y --&gt; 3X
+    B, X --&gt; Y
+    1, X --&gt; ∅
+end</code></pre><p class="math-container">\[ \begin{align*}
+\varnothing &amp;\xrightarrow{A} \mathrm{X} \\
+2 \mathrm{X} + \mathrm{Y} &amp;\xrightarrow{1} 3 \mathrm{X} \\
+\mathrm{X} &amp;\xrightarrow{B} \mathrm{Y} \\
+\mathrm{X} &amp;\xrightarrow{1} \varnothing  
+ \end{align*}
+ \]</p><p>It is generally known to (for reaction rate equation-based ODE simulations) produce oscillations when <span>$B &gt; 1 + A^2$</span>. However, this result is based on models generated when <em>combinatorial adjustment of rates is not performed</em>. Since Catalyst <a href="../../../introduction_to_catalyst/introduction_to_catalyst/#introduction_to_catalyst_ratelaws">automatically perform these adjustments</a>, and one reaction contains a stoichiometric constant <span>$&gt;1$</span>, the threshold will be different. Here, we trial two different values of <span>$B$</span>. In both cases, <span>$B &lt; 1 + A^2$</span>, however, in the second case the system can generate oscillations.</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault, Plots
+u0 = [:X =&gt; 1.0, :Y =&gt; 1.0]
+tspan = (0., 50.)
+ps1 = [:A =&gt; 1.0, :B =&gt; 1.0]
+ps2 = [:A =&gt; 1.0, :B =&gt; 1.8]
+
+oprob1 = ODEProblem(brusselator, u0, tspan, ps1)
+oprob2 = ODEProblem(brusselator, u0, tspan, ps2)
+osol1  = solve(oprob1)
+osol2  = solve(oprob2)
+oplt1 = plot(osol1; title = &quot;No Oscillation&quot;)
+oplt2 = plot(osol2; title = &quot;Oscillation&quot;)
+
+plot(oplt1, oplt2; lw = 3, size = (800,600), layout = (2,1))</code></pre><img src="aa6f30ab.svg" alt="Example block output"/><h2 id="basic_CRN_library_repressilator"><a class="docs-heading-anchor" href="#basic_CRN_library_repressilator">The Repressilator</a><a id="basic_CRN_library_repressilator-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_repressilator" title="Permalink"></a></h2><p>The Repressilator was introduced in <a href="https://www.nature.com/articles/35002125"><em>Elowitz &amp; Leibler (2000)</em></a> as a simple system that can generate oscillations (most notably, they demonstrated this both in a model and in a synthetic in vivo implementation in <em>Escherichia col</em>). It consists of three genes, repressing each other in a cycle. Here, we will implement it using three species (<span>$X$</span>, <span>$Y$</span>, and <span>$Z$</span>) whose production rates are (repressing) <a href="https://en.wikipedia.org/wiki/Hill_equation_(biochemistry)">Hill functions</a>.</p><pre><code class="language-julia hljs">using Catalyst
+repressilator = @reaction_network begin
+    hillr(Z,v,K,n), ∅ --&gt; X
+    hillr(X,v,K,n), ∅ --&gt; Y
+    hillr(Y,v,K,n), ∅ --&gt; Z
+    d, (X, Y, Z) --&gt; ∅
+end</code></pre><p class="math-container">\[ \begin{align*}
+\varnothing &amp;\xrightarrow{\frac{K^{n} v}{K^{n} + Z^{n}}} \mathrm{X} \\
+\varnothing &amp;\xrightarrow{\frac{K^{n} v}{K^{n} + X^{n}}} \mathrm{Y} \\
+\varnothing &amp;\xrightarrow{\frac{K^{n} v}{K^{n} + Y^{n}}} \mathrm{Z} \\
+\mathrm{X} &amp;\xrightarrow{d} \varnothing \\
+\mathrm{Y} &amp;\xrightarrow{d} \varnothing \\
+\mathrm{Z} &amp;\xrightarrow{d} \varnothing  
+ \end{align*}
+ \]</p><p>Whether the Repressilator oscillates or not depends on its parameter values. Here, we will perform deterministic (ODE) simulations for two different values of <span>$K$</span>, showing that it oscillates for one value and not the other one. Next, we will perform stochastic (SDE) simulations for both <span>$K$</span> values, showing that the stochastic model can sustain oscillations in both cases. This is an example of the phenomena of <em>noise-induced oscillation</em>.</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault, StochasticDiffEq, Plots
+u0 = [:X =&gt; 50.0, :Y =&gt; 15.0, :Z =&gt; 15.0]
+tspan = (0., 200.)
+ps1 = [:v =&gt; 10.0, :K =&gt; 20.0, :n =&gt; 3, :d =&gt; 0.1]
+ps2 = [:v =&gt; 10.0, :K =&gt; 50.0, :n =&gt; 3, :d =&gt; 0.1]
+
+oprob1 = ODEProblem(repressilator, u0, tspan, ps1)
+oprob2 = ODEProblem(repressilator, u0, tspan, ps2)
+osol1  = solve(oprob1)
+osol2  = solve(oprob2)
+oplt1 = plot(osol1; title = &quot;Oscillation (ODE, K = 20)&quot;)
+oplt2 = plot(osol2; title = &quot;No oscillation (ODE, K = 50)&quot;)
+
+sprob1 = SDEProblem(repressilator, u0, tspan, ps1)
+sprob2 = SDEProblem(repressilator, u0, tspan, ps2)
+ssol1  = solve(sprob1, STrapezoid())
+ssol2  = solve(sprob2, STrapezoid())
+splt1 = plot(ssol1; title = &quot;Oscillation (SDE, K = 20)&quot;)
+splt2 = plot(ssol2; title = &quot;Oscillation (SDE, K = 50)&quot;)
+
+plot(oplt1, oplt2, splt1, splt2; lw = 2, layout = (2,2), size = (800,600))</code></pre><img src="8f58d3d3.svg" alt="Example block output"/><h2 id="basic_CRN_library_wr"><a class="docs-heading-anchor" href="#basic_CRN_library_wr">The Willamowski–Rössler model</a><a id="basic_CRN_library_wr-1"></a><a class="docs-heading-anchor-permalink" href="#basic_CRN_library_wr" title="Permalink"></a></h2><p>The Willamowski–Rössler model was introduced in <a href="https://www.degruyter.com/document/doi/10.1515/zna-1980-0308/html?lang=en"><em>Willamowski &amp; Rössler (1979)</em></a> as an example of a simple CRN model which exhibits <a href="https://en.wikipedia.org/wiki/Chaos_theory"><em>chaotic behaviours</em></a>. This means that small changes in initial conditions can produce relatively large changes in the system&#39;s trajectory.</p><pre><code class="language-julia hljs">using Catalyst
+wr_model = @reaction_network begin
+    k1, 2X --&gt; 3X
+    k2, X --&gt; 2X
+    k3, Z + 2X --&gt; 2Z
+    k4, Y + X --&gt; 2Y
+    k5, Y --&gt; ∅
+    k6, 2Z --&gt; ∅
+    k7, Z --&gt; ∅
+end</code></pre><p class="math-container">\[ \begin{align*}
+2 \mathrm{X} &amp;\xrightleftharpoons[\mathtt{k2}]{\mathtt{k1}} 3 \mathrm{X} \\
+\mathrm{Z} + 2 \mathrm{X} &amp;\xrightarrow{\mathtt{k3}} 2 \mathrm{Z} \\
+\mathrm{Y} + \mathrm{X} &amp;\xrightarrow{\mathtt{k4}} 2 \mathrm{Y} \\
+\mathrm{Y} &amp;\xrightarrow{\mathtt{k5}} \varnothing \\
+2 \mathrm{Z} &amp;\xrightarrow{\mathtt{k6}} \varnothing \\
+\mathrm{Z} &amp;\xrightarrow{\mathtt{k7}} \varnothing  
+ \end{align*}
+ \]</p><p>Here we simulate the model for a single initial condition, showing both time-state space and phase space how it reaches a <a href="https://www.dynamicmath.xyz/strange-attractors/"><em>strange attractor</em></a>.</p><pre><code class="language-julia hljs">using OrdinaryDiffEqDefault, Plots
+u0 = [:X =&gt; 1.5, :Y =&gt; 1.5, :Z =&gt; 1.5]
+tspan = (0.0, 50.0)
+p = [:k1 =&gt; 2.1, :k2 =&gt; 0.7, :k3 =&gt; 2.9, :k4 =&gt; 1.1, :k5 =&gt; 1.0, :k6 =&gt; 0.5, :k7 =&gt; 2.7]
+oprob = ODEProblem(wr_model, u0, tspan, p)
+sol = solve(oprob)
+
+plt1 = plot(sol; title = &quot;Time-state space&quot;)
+plt2 = plot(sol; idxs = (:X, :Y, :Z), title = &quot;Phase space&quot;)
+plot(plt1, plt2; layout = (1,2), size = (800,400))</code></pre><img src="b237b772.svg" alt="Example block output"/></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../chemistry_related_functionality/">« Chemistry-related functionality</a><a class="docs-footer-nextpage" href="../programmatic_generative_linear_pathway/">Programmatic, generative, modelling of a linear pathway »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="auto">Automatic (OS)</option><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="catppuccin-latte">catppuccin-latte</option><option value="catppuccin-frappe">catppuccin-frappe</option><option value="catppuccin-macchiato">catppuccin-macchiato</option><option value="catppuccin-mocha">catppuccin-mocha</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.8.0 on <span class="colophon-date" title="Thursday 9 January 2025 01:02">Thursday 9 January 2025</span>. Using Julia version 1.11.2.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
