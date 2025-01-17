@@ -824,6 +824,16 @@ function numreactions(network)
 end
 
 """
+    has_nonreactions(network)
+
+Check if the given `network` has any non-reaction equations such as ODEs or algebraic
+equations.
+"""
+function has_nonreactions(network)
+    numreactions(network) != length(equations(network))
+end
+
+"""
     nonreactions(network)
 
 Return the non-reaction equations within the network (i.e. algebraic and differential equations).

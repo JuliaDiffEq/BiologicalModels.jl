@@ -360,3 +360,25 @@ let
     @named twostate = ReactionSystem([rx1, rx2], t)
     @test twostate == rn
 end
+
+############## tests related to hybrid systems ###################
+let
+    t = default_t()
+    D = default_time_deriv()
+    @parameters λ k
+    @variables V(t)
+    @species A(t)
+    rx = Reaction(k*V, [], [A])
+    eq = D(V) ~ λ*V
+    cevents = [[V ~ 2.0] => [V ~ V/2, A ~ A/2]]
+    @named hybrid = ReactionSystem([rx, eq], t; continuous_events = cevents)
+    rn = @reaction_network hybrid begin
+        @parameters λ
+        k*V, 0 --> A
+        @equations D(V) ~ λ*V
+        @continuous_events begin
+            [V ~ 2.0] => [V ~ V/2, A ~ A/2]
+        end
+    end        
+    @test hybrid == rn
+end

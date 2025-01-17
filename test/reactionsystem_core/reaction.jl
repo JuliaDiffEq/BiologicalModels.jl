@@ -4,6 +4,7 @@
 using Catalyst, Test
 using Catalyst: get_symbolics
 using ModelingToolkit: value, get_variables!, collect_vars!, eqtype_supports_collect_vars
+using Catalyst: has_physical_scale, get_physical_scale
 
 # Sets the default `t` to use.
 t = default_t()
@@ -251,4 +252,23 @@ let
     collect_vars!(us, ps, rx, t)
     @test us == Set((A, B, C, D, E, F))
     @test ps == Set((k1, k2, η))
+end
+
+# tests for PhysicalScales
+let
+    t = default_t()
+    @species A(t) B(t) C(t)
+    @parameters k1, k2
+
+    rx = Reaction(k1, [A], [B], [2], [1]; metadata = [:physical_scale => PhysicalScale.Jump])
+    @test has_physical_scale(rx)
+    @test get_physical_scale(rx) == PhysicalScale.Jump
+
+    rx2 = Reaction(k1, [A], [B], [2], [1])
+    @test has_physical_scale(rx2) == false
+
+    rx3 = Reaction(k1, [A], [B], [2], [1]; 
+        metadata = [:physical_scale => PhysicalScale.Jump, :noise_scaling => 0.1])
+    @test has_physical_scale(rx3)
+    @test get_physical_scale(rx3) == PhysicalScale.Jump    
 end

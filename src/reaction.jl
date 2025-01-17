@@ -244,9 +244,6 @@ function Reaction(rate, subs, prods; kwargs...)
     Reaction(rate, subs, prods, sstoich, pstoich; kwargs...)
 end
 
-# Union type for `Reaction`s and `Equation`s.
-const CatalystEqType = Union{Reaction, Equation}
-
 ### Base Function Dispatches ###
 
 # Used by `Base.show`.
@@ -677,6 +674,45 @@ function getmisc(reaction::Reaction)
     else
         error("Attempts to access `misc` metadata field for a reaction which does not have a value assigned for this metadata.")
     end
+end
+
+############## Metadata for the mathematical type of a reaction ##############
+
+"""
+    @enumx PhysicalScale
+
+EnumX instance representing the physical scale of a reaction. 
+
+Notes: The following values are possible:
+- `Auto`: (DEFAULT) Lets Catalyst decide at the time of system conversion and/or
+  problem generation at what physical scale to represent the reaction.
+- `ODE`: The reaction is to be treated via an ordinary differential equation term.
+- `SDE`: The reaction is to be treated via a stochastic differential equation (CLE) term.
+- `Jump`: The reaction is to be treated via a jump process (stochastic chemical kinetics)
+  term, letting Catalyst decide the specific jump type.
+- `VariableRateJump`: The reaction is to be treated as a jump process (stochastic chemical
+  kinetics) term, specifically assigning it to a VariableRateJump.
+"""
+@enumx PhysicalScale begin
+    Auto             # the default that lets Catalyst decide 
+    ODE
+    SDE
+    Jump             # lets Catalyst decide the jump type
+    VariableRateJump # forces a VariableRateJump
+end
+
+"""
+    has_physical_scale(rx::Reaction)
+
+Returns `true` if the input reaction has the `physical_scale` metadata field assigned, 
+else `false`.
+"""
+function has_physical_scale(rx::Reaction)
+    return hasmetadata(rx, :physical_scale)
+end
+
+function get_physical_scale(rx::Reaction)
+    return has_physical_scale(rx) ? getmetadata(rx, :physical_scale) : PhysicalScale.Auto
 end
 
 ### Units Handling ###

@@ -1005,23 +1005,28 @@ let
     @test size(nps.incidencemat) == (3,3)
 end
 
-# test JumpInputs function auto problem selection
+########## tests related to hybrid systems ##########
 let
-    rn = @reaction_network begin
-        k*(1 + sin(t)), 0 --> A
-    end
-    jinput = JumpInputs(rn, [:A => 0], (0.0, 10.0), [:k => .5])
+    t = default_t()
+    D = default_time_deriv()
+    @parameters λ k
+    @variables V(t)
+    @species A(t) B(t) C(t)
+    rxs = [Reaction(k*V, [], [A]), Reaction(λ*A, [B], nothing),
+        Reaction(k, [A, B], nothing), Reaction(λ, [C], [A])]
+    eqs = [D(V) ~ λ*V*C]
+    cevents = [[V ~ 2.0] => [V ~ V/2, A ~ A/2]]
+    @named rs = ReactionSystem(vcat(rxs, eqs), t; continuous_events = cevents)
+    rs = complete(rs)
+    jinput = JumpInputs(rn, [:A => 0, :V => 1.0], (0.0, 10.0), [:k => 1.0, :λ => .4])
     @test jinput.prob isa ODEProblem
-    jprob = JumpProblem(jinput; rng)
-    sol = solve(jprob, Tsit5())
-    @test sol(10.0; idxs = :A) > 0
-
-    rn = @reaction_network begin
-        k, 0 --> A
-    end
-    jinput = JumpInputs(rn, [:A => 0], (0.0, 10.0), [:k => .5])
-    @test jinput.prob isa DiscreteProblem
-    jprob = JumpProblem(jinput; rng)
-    sol = solve(jprob)
-    @test sol(10.0; idxs = :A) > 0
+    sys = jinput.sys
+    @test sys isa JumpSystem
+    @test MT.has_equations(sys)
+    eqs = MT.equations(sys)
+    @test isempty(eqs.x[1]) 
+    @test isempty(eqs.x[2]) 
+    @test length(eqs.x[3]) == 1
+    @test length(eqs.x[4]) == 2  # dA/dt and dV/dt
+    @test length(continuous_events(sys)) == 1
 end

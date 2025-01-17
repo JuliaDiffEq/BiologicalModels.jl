@@ -46,7 +46,8 @@ end
 # including non-species variables.
 drop_dynamics(s) = isconstant(s) || isbc(s) || (!isspecies(s))
 
-function assemble_oderhs(rs, ispcs; combinatoric_ratelaws = true, remove_conserved = false)
+function assemble_oderhs(rs, ispcs; combinatoric_ratelaws = true, remove_conserved = false, 
+        physical_scales = nothing)
     nps = get_networkproperties(rs)
     species_to_idx = Dict(x => i for (i, x) in enumerate(ispcs))
     rhsvec = Any[0 for _ in ispcs]
@@ -56,7 +57,11 @@ function assemble_oderhs(rs, ispcs; combinatoric_ratelaws = true, remove_conserv
         Dict()
     end
 
-    for rx in get_rxs(rs)
+    for (rxidx,rx) in enumerate(get_rxs(rs))
+        # check this reaction should be treated as an ODE
+        !((physical_scales === nothing) || 
+            (physical_scales[rxidx] == PhysicalScale.ODE)) && continue
+
         rl = oderatelaw(rx; combinatoric_ratelaw = combinatoric_ratelaws)
         remove_conserved && (rl = substitute(rl, depspec_submap))
         for (spec, stoich) in rx.netstoich
@@ -90,8 +95,10 @@ function assemble_oderhs(rs, ispcs; combinatoric_ratelaws = true, remove_conserv
 end
 
 function assemble_drift(rs, ispcs; combinatoric_ratelaws = true, as_odes = true,
-        include_zero_odes = true, remove_conserved = false)
-    rhsvec = assemble_oderhs(rs, ispcs; combinatoric_ratelaws, remove_conserved)
+        include_zero_odes = true, remove_conserved = false, physical_scales = nothing)
+
+    rhsvec = assemble_oderhs(rs, ispcs; combinatoric_ratelaws, remove_conserved, 
+        physical_scales)
     if as_odes
         D = Differential(get_iv(rs))
         eqs = [Equation(D(x), rhs)
@@ -242,12 +249,12 @@ function ismassaction(rx, rs; rxvars = get_variables(rx.rate),
             if (ivset === nothing)
                 ivs = Set(get_sivs(rs))
                 push!(ivs, get_iv(rs))
-                ivdep = any(var -> var ∈ ivs, rxvars)
+                ivdep = any(in(ivs), rxvars)
             else
-                ivdep = any(var -> var ∈ ivset, rxvars)
+                ivdep = any(in(ivset), rxvars)
             end
         else
-            ivdep = any(var -> isequal(get_iv(rs), var), rxvars)
+            ivdep = any(isequal(get_iv(rs)), rxvars)
         end
         ivdep && return false
     else
@@ -313,27 +320,23 @@ function get_depgraph(rs)
     eqeq_dependencies(jdeps, vdeps).fadjlist
 end
 
-function assemble_jumps(rs; combinatoric_ratelaws = true)
-    meqs = MassActionJump[]
-    ceqs = ConstantRateJump[]
-    veqs = VariableRateJump[]
-    unknownset = Set(get_unknowns(rs))
-    all(isspecies, unknownset) ||
-        error("Conversion to JumpSystem currently requires all unknowns to be species.")
-    rxvars = []
-
-    isempty(get_rxs(rs)) &&
-        error("Must give at least one reaction before constructing a JumpSystem.")
-
+function classify_vrjs(rs, physcales)
     # first we determine vrjs with an explicit time-dependent rate
     rxs = get_rxs(rs)
     isvrjvec = falses(length(rxs))
     havevrjs = false
+    rxvars = Set()
     for (i, rx) in enumerate(rxs)
+        if physcales[i] == PhysicalScale.VariableRateJump
+            isvrjvec[i] = true
+            havevrjs = true
+            continue
+        end
+
         empty!(rxvars)
         (rx.rate isa Symbolic) && get_variables!(rxvars, rx.rate)
         @inbounds for rxvar in rxvars
-            if isequal(rxvar, get_iv(rs))
+            if isequal(rxvar, get_iv(rs)) || (!MT.isparameter(rxvar) && !isspecies(rxvar))
                 isvrjvec[i] = true
                 havevrjs = true
                 break
@@ -353,7 +356,31 @@ function assemble_jumps(rs; combinatoric_ratelaws = true)
         end
     end
 
+    isvrjvec
+end
+
+function assemble_jumps(rs; combinatoric_ratelaws = true, physical_scales = nothing)
+    meqs = MassActionJump[]
+    ceqs = ConstantRateJump[]
+    veqs = VariableRateJump[]
+    unknownset = Set(get_unknowns(rs))
+    rxs = get_rxs(rs)
+
+    if physical_scales === nothing 
+        physcales = [PhysicalScale.Jump for _ in enumerate(rxs)]
+    else
+        physcales = physical_scales
+    end
+    jump_scales = (PhysicalScale.Jump, PhysicalScale.VariableRateJump)
+    (isempty(get_rxs(rs)) || !any(in(jump_scales), physcales)) &&
+        error("Must have at least one reaction that will be represented as a jump when constructing a JumpSystem.")
+    isvrjvec = classify_vrjs(rs, physcales)
+
+    rxvars = []
     for (i, rx) in enumerate(rxs)
+        # only process reactions that should give jumps
+        (physcales[i] in jump_scales) || continue
+
         empty!(rxvars)
         (rx.rate isa Symbolic) && get_variables!(rxvars, rx.rate)
 
@@ -367,14 +394,14 @@ function assemble_jumps(rs; combinatoric_ratelaws = true)
                 # don't change species that are constant or BCs
                 (!drop_dynamics(spec)) && push!(affect, spec ~ spec + stoich)
             end
-            if isvrj
+            if isvrj 
                 push!(veqs, VariableRateJump(rl, affect))
             else
                 push!(ceqs, ConstantRateJump(rl, affect))
             end
         end
     end
-    vcat(meqs, ceqs, veqs)
+    reduce(vcat, (meqs, ceqs, veqs); init = Any[])
 end
 
 ### Equation Coupling ###
@@ -644,11 +671,42 @@ function Base.convert(::Type{<:SDESystem}, rs::ReactionSystem;
     SDESystem(eqs, noiseeqs, get_iv(flatrs), us, ps;
         observed = obs,
         name,
-        defaults = defs,
+        defaults = _merge(defaults, defs),
         checks,
         continuous_events = MT.get_continuous_events(flatrs),
         discrete_events = MT.get_discrete_events(flatrs),
         kwargs...)
+end
+
+"""
+    merge_physical_scales(rxs, physical_scales; default = PhysicalScale.Auto)
+
+Merge physical scales for a set of reactions.
+
+# Arguments
+- `rxs`, a vector of `Reaction`s.
+- `physical_scales`, an iterable of pairs mapping integer reaction indices to
+  `PhysicalScale`s.
+- `default`, the default physical scale to use for reactions that set PhysicalScale.Auto.
+"""
+function merge_physical_scales(rxs, physical_scales, default)
+    scales = get_physical_scale.(rxs)
+
+    # override metadata attached scales 
+    if physical_scales !== nothing
+        for (key, scale) in physical_scales
+            scales[key] = scale
+        end
+    end
+
+    # transform any "Auto" scales to the default
+    for (idx, scale) in enumerate(scales)
+        if scale == PhysicalScale.Auto
+            scales[idx] = default
+        end
+    end
+    
+    scales
 end
 
 """
@@ -673,7 +731,8 @@ function Base.convert(::Type{<:JumpSystem}, rs::ReactionSystem; name = nameof(rs
         combinatoric_ratelaws = get_combinatoric_ratelaws(rs),
         remove_conserved = nothing, checks = false,
         default_u0 = Dict(), default_p = Dict(),
-        defaults = _merge(Dict(default_u0), Dict(default_p)),
+        defaults = _merge(Dict(default_u0), Dict(default_p)), include_zero_odes = true,
+        physical_scales = nothing,
         kwargs...)
     iscomplete(rs) || error(COMPLETENESS_ERROR)
     spatial_convert_err(rs::ReactionSystem, JumpSystem)
@@ -681,24 +740,42 @@ function Base.convert(::Type{<:JumpSystem}, rs::ReactionSystem; name = nameof(rs
         throw(ArgumentError("Catalyst does not support removing conserved species when converting to JumpSystems."))
 
     flatrs = Catalyst.flatten(rs)
-    error_if_constraints(JumpSystem, flatrs)
 
-    (length(MT.continuous_events(flatrs)) > 0) &&
-        (@warn "continuous_events will be dropped as they are not currently supported by JumpSystems.")
+    physical_scales = merge_physical_scales(reactions(flatrs), physical_scales, 
+        PhysicalScale.Jump)
+    admissible_scales = (PhysicalScale.ODE, PhysicalScale.Jump, 
+        PhysicalScale.VariableRateJump)
+    unique_scales = unique(physical_scales)
+    (unique_scales ⊆ admissible_scales) || 
+        error("Physical scales must currently be one of $admissible_scales for hybrid systems.")
 
-    eqs = assemble_jumps(flatrs; combinatoric_ratelaws)
+    # basic jump states and equations
+    eqs = assemble_jumps(flatrs; combinatoric_ratelaws, physical_scales)
+    ists, ispcs = get_indep_sts(flatrs)
 
-    # handle BC species
-    sts, ispcs = get_indep_sts(flatrs)
-    any(isbc, get_unknowns(flatrs)) && (sts = vcat(sts, filter(isbc, get_unknowns(flatrs))))
-    ps = get_ps(flatrs)
+    # handle coupled ODEs and BC species    
+    if (PhysicalScale.ODE in unique_scales) || has_nonreactions(flatrs)       
+        odeeqs = assemble_drift(flatrs, ispcs; combinatoric_ratelaws, 
+            remove_conserved = false, include_zero_odes, physical_scales)
+        append!(eqs, odeeqs)
+        eqs, us, ps, obs, defs = addconstraints!(eqs, flatrs, ists, ispcs; 
+            remove_conserved = false)
+    else
+        any(isbc, get_unknowns(flatrs)) && 
+            (ists = vcat(ists, filter(isbc, get_unknowns(flatrs))))
+        us = ists
+        ps = get_ps(flatrs)
+        obs = MT.observed(flatrs)
+        defs = MT.defaults(flatrs)
+    end
 
-    JumpSystem(eqs, get_iv(flatrs), sts, ps;
-        observed = MT.observed(flatrs),
+    JumpSystem(eqs, get_iv(flatrs), us, ps;
+        observed = obs,
         name,
-        defaults = _merge(defaults, MT.defaults(flatrs)),
+        defaults = _merge(defaults, defs),
         checks,
         discrete_events = MT.discrete_events(flatrs),
+        continuous_events = MT.continuous_events(flatrs),
         kwargs...)
 end
 
@@ -817,11 +894,14 @@ plot(sol, idxs = :A)
 """
 function JumpInputs(rs::ReactionSystem, u0, tspan, p = DiffEqBase.NullParameters();
         name = nameof(rs), combinatoric_ratelaws = get_combinatoric_ratelaws(rs),
-        checks = false, kwargs...)
+        checks = false, physical_scales = nothing, kwargs...)
     u0map = symmap_to_varmap(rs, u0)
     pmap = symmap_to_varmap(rs, p)
-    jsys = complete(convert(JumpSystem, rs; name, combinatoric_ratelaws, checks))
-    if MT.has_variableratejumps(jsys)
+    jsys = complete(convert(JumpSystem, rs; name, combinatoric_ratelaws, checks, 
+        physical_scales))
+
+    if MT.has_variableratejumps(jsys) || MT.has_equations(jsys) || 
+            !isempty(MT.continuous_events(jsys))
         prob = ODEProblem(jsys, u0map, tspan, pmap; kwargs...)
     else
         prob = DiscreteProblem(jsys, u0map, tspan, pmap; kwargs...)
