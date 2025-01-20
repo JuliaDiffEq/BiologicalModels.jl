@@ -3339,9 +3339,9 @@ version = "0.6.43"
 
 [[deps.SciMLBase]]
 deps = ["ADTypes", "Accessors", "ArrayInterface", "CommonSolve", "ConstructionBase", "Distributed", "DocStringExtensions", "EnumX", "Expronicon", "FunctionWrappersWrappers", "IteratorInterfaceExtensions", "LinearAlgebra", "Logging", "Markdown", "PrecompileTools", "Preferences", "Printf", "RecipesBase", "RecursiveArrayTools", "Reexport", "RuntimeGeneratedFunctions", "SciMLOperators", "SciMLStructures", "StaticArraysCore", "Statistics", "SymbolicIndexingInterface"]
-git-tree-sha1 = "48eff689aad5e2d8de83818141b69f90905a298f"
+git-tree-sha1 = "dbf501ba9edc97bd4a03e69b3186f04721160c65"
 uuid = "0bca4576-84f4-4d90-8ffe-ffa030f20462"
-version = "2.71.1"
+version = "2.71.2"
 
     [deps.SciMLBase.extensions]
     SciMLBaseChainRulesCoreExt = "ChainRulesCore"
@@ -4362,9 +4362,9 @@ weakdeps = ["Colors", "Distances", "Tracker"]
 
 [[deps.ZygoteRules]]
 deps = ["ChainRulesCore", "MacroTools"]
-git-tree-sha1 = "27798139afc0a2afa7b1824c206d5e87ea587a00"
+git-tree-sha1 = "e5fde37ee23176902a9826f71abf0b9913f02b10"
 uuid = "700de1a5-db45-46bc-99cf-38207098b444"
-version = "0.2.5"
+version = "0.2.6"
 
 [[deps.eudev_jll]]
 deps = ["Artifacts", "JLLWrappers", "Libdl", "Pkg", "gperf_jll"]
