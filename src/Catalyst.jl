@@ -72,11 +72,6 @@ const CONSERVED_CONSTANT_SYMBOL = :Γ
 const forbidden_symbols_skip = Set([:ℯ, :pi, :π, :t, :∅])
 const forbidden_symbols_error = union(Set([:im, :nothing, CONSERVED_CONSTANT_SYMBOL]),
     forbidden_symbols_skip)
-const forbidden_variables_error = let
-    fvars = copy(forbidden_symbols_error)
-    delete!(fvars, :t)
-    fvars
-end
 
 ### Package Main ###
 

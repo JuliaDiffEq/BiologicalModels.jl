@@ -100,6 +100,7 @@ of all options currently available.
 - [`continuous_events`](@ref constraint_equations_events): Allows the creation of continuous events.
 - [`discrete_events`](@ref constraint_equations_events): Allows the creation of discrete events.
 - [`combinatoric_ratelaws`](@ref faq_combinatoric_ratelaws): Takes a single option (`true` or `false`), which sets whether to use combinatorial rate laws.
+- [`require_declaration`](@ref dsl_advanced_options_require_dec): Turns off all inference of parameters, species, variables, the default differential, and observables (requiring these to be explicitly declared using e.g. `@species`).
 
 ## [ModelingToolkit and Catalyst accessor functions](@id api_accessor_functions)
 A [`ReactionSystem`](@ref) is an instance of a

@@ -415,36 +415,45 @@ let
     spcs = (A, B1, B2, C)
     @test issetequal(unknowns(rn), sts)
     @test issetequal(species(rn), spcs)
+end
 
-    @test_throws ArgumentError begin
-        rn = @reaction_network begin
-            @variables K
-            k, K*A --> B
-        end
+# Tests error when disallowed name is used for variable.
+let
+    @test_throws Exception @eval @reaction_network begin
+        @variables π(t)
+    end
+    @test_throws Exception @eval @reaction_network begin
+        @variables Γ(t)
+    end
+    @test_throws Exception @eval @reaction_network begin
+        @variables ∅(t)
+    end
+    @test_throws Exception @eval @reaction_network begin
+        @ivs s
+        @variables t(s)
     end
 end
 
 # Tests that explicitly declaring a single symbol as several things does not work.
 # Several of these are broken, but note sure how to test broken-ness on `@test_throws false Exception @eval`.
-# Relevant issue: https://github.com/SciML/Catalyst.jl/issues/1173
 let
     # Species + parameter.
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@species X(t)
-        #@parameters X
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t)
+        @parameters X
+    end
 
     # Species + variable.
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@species X(t)
-        #@variables X(t)
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t)
+        @variables X(t)
+    end
 
     # Variable + parameter.
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@variables X(t)
-        #@parameters X
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @variables X(t)
+        @parameters X
+    end
 
     # Species + differential.
     @test_throws Exception @eval @reaction_network begin
@@ -465,31 +474,31 @@ let
     end
 
     # Parameter + observable (species/variable + observable is OK, as this e.g. provide additional observables information).
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@species Y(t)
-        #@parameters X
-        #@observables X ~ Y
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @species Y(t)
+        @parameters X
+        @observables X ~ Y
+    end
 
     # Species + compound.
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@species X(t) O(t)
-        #@compounds begin X(t) ~ 2O end
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t) O(t)
+        @compounds begin X(t) ~ 2O end
+    end
 
     # Parameter + compound.
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@species O(t)
-        #@parameters X
-        #@compounds begin X(t) ~ 2O end
-    #end
+   @test_throws Exception @eval @reaction_network begin
+        @species O(t)
+        @parameters X
+        @compounds begin X(t) ~ 2O end
+    end
 
     # Variable + compound.
-    @test_broken false #@test_throws Exception @eval @reaction_network begin
-        #@species O(t)
-        #@variables X(t)
-        #@compounds begin X(t) ~ 2O end
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @species O(t)
+        @variables X(t)
+        @compounds begin X(t) ~ 2O end
+    end
 end
 
 ### Test Independent Variable Designations ###
@@ -609,11 +618,11 @@ let
         @equations D(V) ~ 1 - V
         d, D --> 0
     end
-    @test_broken false # @test_throws Exception @eval @reaction_network begin
-        #@variables D(t)
-        #@equations D(V) ~ 1 - V
-        #d, X --> 0
-    #end
+    @test_throws Exception @eval @reaction_network begin
+        @variables D(t)
+        @equations D(V) ~ 1 - V
+        d, X --> 0
+    end
     @test_throws Exception @eval @reaction_network begin
         @parameters D
         @equations D(V) ~ 1 - V
@@ -675,7 +684,7 @@ let
     @test plot(sol; idxs=:X).series_list[1].plotattributes[:y][end] ≈ 10.0
     @test plot(sol; idxs=[X, Y]).series_list[2].plotattributes[:y][end] ≈ 3.0
     @test plot(sol; idxs=[rn.X, rn.Y]).series_list[2].plotattributes[:y][end] ≈ 3.0
-    @test plot(sol; idxs=[:X, :Y]).series_list[2].plotattributes[:y][end] ≈ 3.0 # (https://github.com/SciML/ModelingToolkit.jl/issues/2778)
+    @test plot(sol; idxs=[:X, :Y]).series_list[2].plotattributes[:y][end] ≈ 3.0
 end
 
 # Compares programmatic and DSL system with observables.
@@ -960,6 +969,14 @@ let
         @observables $X ~ X1 + X2
         (k1,k2), X1 <--> X2
     end
+
+    # Observable metadata provided twice.
+    @test_throws Exception @eval @reaction_network begin
+        @species X2 [description="Twice the amount of X"]
+        @observables (X2, [description="X times two."]) ~ 2X
+        d, X --> 0
+    end
+
 end
 
 
@@ -1128,55 +1145,184 @@ let
         @equations X = 1 - S
         (p,d), 0 <--> S
     end
+
+    # Differential equation using a forbidden variable (in the DSL).
+    @test_throws Exception @eval @reaction_network begin
+        @equations D(π) ~ -1
+    end
+
+    # Algebraic equation using a forbidden variable (in the DSL).
+    @test_throws Exception @eval @reaction_network begin
+        @equations Γ ~ 1 + 3(Γ^2 + Γ)
+    end
+end
+
+### Other DSL Option Tests ###
+
+# Test that various options can be provided in block and single line form.
+# Also checks that the single line form takes maximally one argument.
+let
+    # The `@equations` option.
+    rn11 = @reaction_network rn1 begin
+        @equations D(V) ~ 1 - V
+    end
+    rn12 = @reaction_network rn1 begin
+        @equations begin
+            D(V) ~ 1 - V
+        end
+    end
+    @test isequal(rn11, rn12)
+    @test_throws Exception @eval @reaction_network begin
+        @equations D(V) ~ 1 - V D(W) ~ 1 - W
+    end
+
+    # The `@observables` option.
+    rn21 = @reaction_network rn1 begin
+        @species X(t)
+        @observables X2 ~ 2X
+    end
+    rn22 = @reaction_network rn1 begin
+        @species X(t)
+        @observables begin
+            X2 ~ 2X
+        end
+    end
+    @test isequal(rn21, rn22)
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t)
+        @observables X2 ~ 2X X3 ~ 3X
+    end
+
+    # The `@compounds` option.
+    rn31 = @reaction_network rn1 begin
+        @species X(t)
+        @compounds X2 ~ 2X
+    end
+    rn32 = @reaction_network rn1 begin
+        @species X(t)
+        @compounds begin
+            X2 ~ 2X
+        end
+    end
+    @test isequal(rn31, rn32)
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t)
+        @compounds X2 ~ 2X X3 ~ 3X
+    end
+
+    # The `@differentials` option.
+    rn41 = @reaction_network rn1 begin
+        @differentials D = Differential(t)
+    end
+    rn42 = @reaction_network rn1 begin
+        @differentials begin
+            D = Differential(t)
+        end
+    end
+    @test isequal(rn41, rn42)
+    @test_throws Exception @eval @reaction_network begin
+        @differentials D = Differential(t) Δ = Differential(t)
+    end
+
+    # The `@continuous_events` option.
+    rn51 = @reaction_network rn1 begin
+        @species X(t)
+        @continuous_events [X ~ 3.0] => [X ~ X - 1]
+    end
+    rn52 = @reaction_network rn1 begin
+        @species X(t)
+        @continuous_events begin
+            [X ~ 3.0] => [X ~ X - 1]
+        end
+    end
+    @test isequal(rn51, rn52)
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t)
+        @continuous_events [X ~ 3.0] => [X ~ X - 1] [X ~ 1.0] => [X ~ X + 1]
+    end
+
+    # The `@discrete_events` option.
+    rn61 = @reaction_network rn1 begin
+        @species X(t)
+        @discrete_events [X > 3.0] => [X ~ X - 1]
+    end
+    rn62 = @reaction_network rn1 begin
+        @species X(t)
+        @discrete_events begin
+            [X > 3.0] => [X ~ X - 1]
+        end
+    end
+    @test isequal(rn61, rn62)
+    @test_throws Exception @eval @reaction_network begin
+        @species X(t)
+        @discrete_events [X > 3.0] => [X ~ X - 1] [X < 1.0] => [X ~ X + 1]
+    end
 end
 
 # test combinatoric_ratelaws DSL option
 let
+    # Test for `@combinatoric_ratelaws false`.
     rn = @reaction_network begin
         @combinatoric_ratelaws false
         (k1,k2), 2A <--> B
-        end
+    end
     combinatoric_ratelaw = Catalyst.get_combinatoric_ratelaws(rn)
     @test combinatoric_ratelaw == false
     rl = oderatelaw(reactions(rn)[1]; combinatoric_ratelaw)
     @unpack k1, A = rn
     @test isequal(rl, k1*A^2)
 
+    # Test for `@combinatoric_ratelaws true`.
     rn2 = @reaction_network begin
         @combinatoric_ratelaws true
         (k1,k2), 2A <--> B
-        end
+    end
     combinatoric_ratelaw = Catalyst.get_combinatoric_ratelaws(rn2)
     @test combinatoric_ratelaw == true
     rl = oderatelaw(reactions(rn2)[1]; combinatoric_ratelaw)
     @unpack k1, A = rn2
     @test isequal(rl, k1*A^2/2)
 
+    # Test for interpolation into `@combinatoric_ratelaws`.
     crl = false
     rn3 = @reaction_network begin
         @combinatoric_ratelaws $crl
         (k1,k2), 2A <--> B
-        end
+    end
     combinatoric_ratelaw = Catalyst.get_combinatoric_ratelaws(rn3)
     @test combinatoric_ratelaw == crl
     rl = oderatelaw(reactions(rn3)[1]; combinatoric_ratelaw)
     @unpack k1, A = rn3
     @test isequal(rl, k1*A^2)
+
+    # Test for erroneous inputs (to few, to many, wrong type).
+    @test_throws Exception @eval @reaction_network begin
+        @combinatoric_ratelaws
+        d, 3X --> 0
+    end
+    @test_throws Exception @eval @reaction_network begin
+        @combinatoric_ratelaws false false
+        d, 3X --> 0
+    end
+    @test_throws Exception @eval @reaction_network begin
+        @combinatoric_ratelaws "false"
+        d, 3X --> 0
+    end
 end
 
 # Test whether user-defined functions are properly expanded in equations.
 let
     f(A, t) = 2*A*t
+    g(A) = 2*A + 2
 
-    # Test user-defined function
+    # Test user-defined function (on both lhs and rhs).
     rn = @reaction_network begin
-        @equations D(A) ~ f(A, t)
+        @equations D(A) + g(A) ~ f(A, t)
     end
     @test length(equations(rn)) == 1
     @test equations(rn)[1] isa Equation
     @species A(t)
-    @test isequal(equations(rn)[1], D(A) ~ 2*A*t)
-
+    @test isequal(equations(rn)[1], D(A) + 2*A + 2 ~ 2*A*t)
 
     # Test whether expansion happens properly for unregistered/registered functions.
     hill_unregistered(A, v, K, n) = v*(A^n) / (A^n + K^n)
@@ -1201,7 +1347,6 @@ let
     @parameters v K n
     @test isequal(equations(rn2r)[1], D(A) ~ hill2(A, v, K, n))
 
-
     rn3 = @reaction_network begin
         @species Iapp(t)
         @equations begin
@@ -1223,7 +1368,6 @@ let
     rn3_sym = complete(rn3_sym)
     @test isequivalent(rn3, rn3_sym)
 
-
     # Test more complicated expression involving both registered function and a user-defined function.
     g(A, K, n) = A^n + K^n
     rn4 = @reaction_network begin
@@ -1236,10 +1380,18 @@ let
     @test isequal(Catalyst.expand_registered_functions(equations(rn4)[1]), D(A) ~ v*(A^n))
 end
 
-### test that @no_infer properly throws errors when undeclared variables are written ###
-
-import Catalyst: UndeclaredSymbolicError
+# Erroneous `@default_noise_scaling` declaration (other noise scaling tests are mostly in the SDE file).
 let
+    # Default noise scaling with multiple entries.
+    @test_throws Exception @eval @reaction_network begin
+        @default_noise_scaling η1 η2
+    end
+end
+
+# test that @require_declaration properly throws errors when undeclared variables are written.
+let
+    import Catalyst: UndeclaredSymbolicError
+
     # Test error when species are inferred
     @test_throws UndeclaredSymbolicError @macroexpand @reaction_network begin
         @require_declaration

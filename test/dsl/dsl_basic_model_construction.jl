@@ -55,6 +55,65 @@ end
 
 ## Run Tests ###
 
+# Tests the various network constructors. Test for `@network_component` and `@network_component`.
+# Tests for combinations of reactions/no reactions, no name/name/interpolated name.
+let
+    # Declare comparison networks programmatically.
+    @parameters d
+    @species X(t)
+    rx = Reaction(d, [X], [])
+
+    rs_empty = ReactionSystem([], t; name = :name)
+    rs = ReactionSystem([rx], t; name = :name)
+    rs_empty_comp = complete(rs_empty)
+    rs_comp = complete(rs)
+
+    # Declare empty networks.
+    name_sym = :name
+    rs_empty_1 = @network_component
+    rs_empty_2 = @network_component name
+    rs_empty_3 = @network_component $name_sym
+    rs_empty_comp_1 = @reaction_network
+    rs_empty_comp_2 = @reaction_network name
+    rs_empty_comp_3 = @reaction_network $name_sym
+
+    # Check that empty networks are correct.
+    isequivalent(rs_empty_1, rs_empty)
+    rs_empty_2 == rs_empty
+    rs_empty_3 == rs_empty
+    isequivalent(rs_empty_comp_1, rs_empty_comp)
+    rs_empty_comp_2 == rs_empty_comp
+    rs_empty_comp_3 == rs_empty_comp
+
+    # Declare non-empty networks.
+    rs_1 = @network_component begin
+        d, X --> 0
+    end
+    rs_2 = @network_component name begin
+        d, X --> 0
+    end
+    rs_3 = @network_component $name_sym begin
+        d, X --> 0
+    end
+    rs_comp_1 = @reaction_network begin
+        d, X --> 0
+    end
+    rs_comp_2 = @reaction_network name begin
+        d, X --> 0
+    end
+    rs_comp_3 = @reaction_network $name_sym begin
+        d, X --> 0
+    end
+
+    # Check that non-empty networks are correct.
+    isequivalent(rs_1, rs)
+    rs_2 == rs
+    rs_3 == rs
+    isequivalent(rs_empty_1, rs_empty)
+    rs_empty_2 == rs_empty
+    rs_empty_3 == rs_empty
+end
+
 # Test basic properties of networks.
 let
     basic_test(reaction_networks_standard[1], 10, [:X1, :X2, :X3],
@@ -130,7 +189,7 @@ let
             u0 = rnd_u0(networks[1], rng; factor)
             p = rnd_ps(networks[1], rng; factor)
             t = rand(rng)
-            
+
             @test f_eval(networks[1], u0, p, t) ≈ f_eval(networks[2], u0, p, t)
             @test jac_eval(networks[1], u0, p, t) ≈ jac_eval(networks[2], u0, p, t)
             @test g_eval(networks[1], u0, p, t) ≈ g_eval(networks[2], u0, p, t)
@@ -148,7 +207,7 @@ let
         (l3, l4), Y2 ⟷ Y3
         (l5, l6), Y3 ⟷ Y4
         c, Y4 → ∅
-    end    
+    end
 
     # Checks that the networks' functions evaluates equally for various randomised inputs.
     @unpack X1, X2, X3, X4, p, d, k1, k2, k3, k4, k5, k6 = network
@@ -156,10 +215,10 @@ let
         u0_1 = Dict(rnd_u0(network, rng; factor))
         p_1 = Dict(rnd_ps(network, rng; factor))
         u0_2 = [:Y1 => u0_1[X1], :Y2 => u0_1[X2], :Y3 => u0_1[X3], :Y4 => u0_1[X4]]
-        p_2 = [:q => p_1[p], :c => p_1[d], :l1 => p_1[k1], :l2 => p_1[k2], :l3 => p_1[k3], 
+        p_2 = [:q => p_1[p], :c => p_1[d], :l1 => p_1[k1], :l2 => p_1[k2], :l3 => p_1[k3],
                :l4 => p_1[k4], :l5 => p_1[k5], :l6 => p_1[k6]]
         t = rand(rng)
-        
+
         @test f_eval(network, u0_1, p_1, t) ≈ f_eval(differently_written_5, u0_2, p_2, t)
         @test jac_eval(network, u0_1, p_1, t) ≈ jac_eval(differently_written_5, u0_2, p_2, t)
         @test g_eval(network, u0_1, p_1, t) ≈ g_eval(differently_written_5, u0_2, p_2, t)
@@ -212,7 +271,7 @@ let
             u0 = rnd_u0(networks[1], rng; factor)
             p = rnd_ps(networks[1], rng; factor)
             t = rand(rng)
-            
+
             @test f_eval(networks[1], u0, p, t) ≈ f_eval(networks[2], u0, p, t)
             @test jac_eval(networks[1], u0, p, t) ≈ jac_eval(networks[2], u0, p, t)
             @test g_eval(networks[1], u0, p, t) ≈ g_eval(networks[2], u0, p, t)
@@ -234,7 +293,7 @@ let
         (sqrt(3.7), exp(1.9)), X4 ⟷ X1 + X2
     end
     push!(identical_networks_3, reaction_networks_standard[9] => no_parameters_9)
-    push!(parameter_sets, [:p1 => 1.5, :p2 => 1, :p3 => 2, :d1 => 0.01, :d2 => 2.3, :d3 => 1001, 
+    push!(parameter_sets, [:p1 => 1.5, :p2 => 1, :p3 => 2, :d1 => 0.01, :d2 => 2.3, :d3 => 1001,
                            :k1 => π, :k2 => 42, :k3 => 19.9, :k4 => 999.99, :k5 => sqrt(3.7), :k6 => exp(1.9)])
 
     no_parameters_10 = @reaction_network begin
@@ -246,14 +305,14 @@ let
         1.0, X5 ⟶ ∅
     end
     push!(identical_networks_3, reaction_networks_standard[10] => no_parameters_10)
-    push!(parameter_sets, [:p => 0.01, :k1 => 3.1, :k2 => 3.2, :k3 => 0.0, :k4 => 2.1, :k5 => 901.0, 
+    push!(parameter_sets, [:p => 0.01, :k1 => 3.1, :k2 => 3.2, :k3 => 0.0, :k4 => 2.1, :k5 => 901.0,
                            :k6 => 63.5, :k7 => 7, :k8 => 8, :d => 1.0])
 
     for (networks, p_1) in zip(identical_networks_3, parameter_sets)
         for factor in [1e-2, 1e-1, 1e0, 1e1, 1e2, 1e3]
             u0 = rnd_u0(networks[1], rng; factor)
             t = rand(rng)
-            
+
             @test f_eval(networks[1], u0, p_1, t) ≈ f_eval(networks[2], u0, [], t)
             @test jac_eval(networks[1], u0, p_1, t) ≈ jac_eval(networks[2], u0, [], t)
             @test g_eval(networks[1], u0, p_1, t) ≈ g_eval(networks[2], u0, [], t)
@@ -324,7 +383,7 @@ let
         τ = rand(rng)
         u = rnd_u0(reaction_networks_conserved[1], rng; factor)
         p_2 = rnd_ps(time_network, rng; factor)
-        p_1 = [p_2; reaction_networks_conserved[1].k1 => τ; 
+        p_1 = [p_2; reaction_networks_conserved[1].k1 => τ;
                reaction_networks_conserved[1].k4 => τ; reaction_networks_conserved[1].k5 => τ]
 
         @test f_eval(reaction_networks_conserved[1], u, p_1, τ) ≈ f_eval(time_network, u, p_2, τ)
@@ -404,7 +463,7 @@ let
     @test rn1 == rn2
 end
 
-# Tests arrow variants in `@reaction`` macro .
+# Tests arrow variants in `@reaction` macro.
 let
     @test isequal((@reaction k, 0 --> X), (@reaction k, X <-- 0))
     @test isequal((@reaction k, 0 --> X), (@reaction k, X ⟻ 0))
@@ -412,8 +471,8 @@ let
     @test isequal((@reaction k, 0 --> X), (@reaction k, 0 ⥟ X))
 end
 
-# Test that symbols with special meanings, or that are forbidden, are handled properly.
-let
+# Test that symbols with special meanings are handled properly.
+let 
     test_network = @reaction_network begin t * k, X --> ∅ end
     @test length(species(test_network)) == 1
     @test length(parameters(test_network)) == 1
@@ -432,11 +491,74 @@ let
     @test length(species(test_network)) == 1
     @test length(parameters(test_network)) == 0
     @test reactions(test_network)[1].rate == ℯ
-
-    @test_throws LoadError @eval @reaction im, 0 --> B
-    @test_throws LoadError @eval @reaction nothing, 0 --> B
-    @test_throws LoadError @eval @reaction k, 0 --> im
-    @test_throws LoadError @eval @reaction k, 0 --> nothing
 end
 
+### Error Test ###
 
+# Erroneous `@reaction` usage.
+let
+    # Bi-directional reaction using the `@reaction` macro.
+    @test_throws Exception @eval @reaction (k1,k2), X1 <--> X2
+
+    # Bundles reactions.
+    @test_throws Exception @eval @reaction k, (X1,X2) --> 0
+end
+
+# Tests that malformed reactions yields errors.
+let
+    # Checks that malformed combinations of entries yields errors.
+    @test_throws Exception @eval @reaction_network begin
+        d, X --> 0, Y --> 0
+    end
+    @test_throws Exception @eval @reaction_network begin
+        d, X --> 0, [misc="Ok metadata"], [description="Metadata in (erroneously) extra []."]
+    end
+
+    # Checks that incorrect bundling yields error.
+    @test_throws Exception @eval @reaction_network begin
+        (k1,k2,k3), (X1,X2) --> 0
+    end
+
+    # Checks that incorrect stoichiometric expression yields an error.
+    @test_throws Exception @eval @reaction_network begin
+        k, X^Y --> XY
+    end
+end
+
+# Check that forbidden symbols correctly generates errors.
+let
+    # @reaction macro, symbols that cannot be in the rate.
+    @test_throws Exception @eval @reaction im, 0 --> X
+    @test_throws Exception @eval @reaction nothing, 0 --> X
+    @test_throws Exception @eval @reaction Γ, 0 --> X
+    @test_throws Exception @eval @reaction ∅, 0 --> X
+    
+    # @reaction macro, symbols that cannot be a reactant.
+    @test_throws Exception @eval @reaction 1, 0 --> im
+    @test_throws Exception @eval @reaction 1, 0 --> nothing
+    @test_throws Exception @eval @reaction 1, 0 --> Γ
+    @test_throws Exception @eval @reaction 1, 0 --> ℯ
+    @test_throws Exception @eval @reaction 1, 0 --> pi
+    @test_throws Exception @eval @reaction 1, 0 --> π
+    @test_throws Exception @eval @reaction 1, 0 --> t
+    
+    # @reaction_network macro, symbols that cannot be in the rate.
+    @test_throws Exception @eval @reaction_network begin im, 0 --> X end
+    @test_throws Exception @eval @reaction_network begin nothing, 0 --> X end
+    @test_throws Exception @eval @reaction_network begin Γ, 0 --> X end
+    @test_throws Exception @eval @reaction_network begin ∅, 0 --> X end
+    
+    # @reaction_network macro, symbols that cannot be a reactant.
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> im end
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> nothing end
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> Γ end
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> ℯ end
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> pi end
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> π end
+    @test_throws Exception @eval @reaction_network begin 1, 0 --> t end
+
+    # Checks that non-supported arrow type usage yields error.
+    @test_throws Exception @eval @reaction_network begin
+        d, X ⇻ 0
+    end
+end
